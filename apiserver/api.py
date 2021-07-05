@@ -81,5 +81,7 @@ class APIHandler:
 
     def loop(self, request: Request):
         if request is None:
-            return Response({}, 505)
+            return Response({
+                "error": "I did not understand you!",
+            }, 505)
         return self.router(request)
