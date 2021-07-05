@@ -7,7 +7,6 @@ import time
 class LEDDriver:
 
     LED_PIN = 4
-    MAX_HUE = 150
 
     def __init__(self, leds, meters) -> None:
         self.len_leds = leds * meters
@@ -16,9 +15,12 @@ class LEDDriver:
     def write(self):
         self.pixels.write()
 
+    def set(self, rgb, unit):
+        self.pixels[unit] = rgb
+
     def set_all(self, rgb):
         for counter in range(self.len_leds):
-            self.pixels[counter] = rgb
+            self.set(rgb, counter)
 
     def dimm_desc(self, factor=5, steps=5):
         for _ in range(steps):
@@ -61,18 +63,6 @@ class LEDDriver:
     #     for i in range(length,)
     def black(self):
         self.set_all((0, 0, 0))
-
-    def red(self):
-        self.set_all((self.MAX_HUE, 0, 0))
-
-    def green(self):
-        self.set_all((0, self.MAX_HUE, 0))
-
-    def purple(self):
-        self.set_all((self.MAX_HUE, 0, self.MAX_HUE))
-
-    def blue(self):
-        self.set_all((0, 0, self.MAX_HUE))
 
     def loop(self, count):
         self.set_all((25, 0, 0))

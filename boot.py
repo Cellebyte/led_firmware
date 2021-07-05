@@ -8,6 +8,7 @@ import micropython
 from apiserver.api import APIHandler
 from driver.led import LEDDriver
 from webserver.http import HTTPServer
+from apiserver.objects.rgb import RGB
 from secure import wlan, password
 esp.osdebug(None)
 
@@ -22,7 +23,7 @@ def gc_info():
 
 
 led_driver = LEDDriver(144, 1)
-api_handler = APIHandler(led=led_driver)
+api_handler = APIHandler(leds=led_driver)
 http_server = HTTPServer(wlan, password, 80, handler=api_handler)
 led_driver.reset()
 http_server.init()
