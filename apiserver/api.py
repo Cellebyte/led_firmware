@@ -27,7 +27,13 @@ class APIHandler:
     def post_leds(self, body, unit=None):
         if not body:
             return Response({"error": "Body needs to be provided!"}, 400)
-        rgb = RGB(**json.loads(body))
+        try:
+            rgb = RGB(**json.loads(body))
+        except ValueError as e:
+            return Response(
+                {"error": "{}".format(e)},
+                400
+            )
         if unit is None:
             self.leds.set_all(rgb.as_vector())
         else:
