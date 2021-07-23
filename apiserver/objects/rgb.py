@@ -44,6 +44,12 @@ class RGB:
 
     __radd__ = __add__
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, RGB):
+            return self.r == other.r and self.g == other.g and self.b == other.b
+        else:
+            raise ValueError("RGB is required")
+
     def __sub__(self, other):
         if isinstance(other, RGB):
             return RGB(self.r - other.r, self.g - other.g, self.b - other.b)

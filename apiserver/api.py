@@ -1,8 +1,11 @@
 import json
-from . import util
-from webserver.http import Request
-from driver.led import LEDDriver
+
 import ure
+from driver.led import LEDDriver
+from webserver.http import Request
+
+from . import util
+from .objects.animation import Animation
 from .objects.rgb import RGB
 
 
@@ -19,21 +22,40 @@ class Response:
 class APIHandler:
     led_paths = ["/leds", "/leds/"]
     led_path_regex = ure.compile("/leds/(\d+)")
-    len_paths = ["/len", "/lens/"]
+    len_paths = ["/lens", "/lens/"]
+    color_paths = ["/colors", "/colors/"]
+    color_path_regex = ure.compile("/colors/(\d+)")
+    animation_paths = ["/animation", "/animation/"]
 
     def __init__(self, leds) -> None:
         self.leds: LEDDriver = leds
+
+    def post_animation(self, body):
+        if not body:
+            return Response({"error": "Body needs to be provided!"}, 400)
+        try:
+            animation = Animation(**json.loads(body))
+            self.leds.set_animation(animation)
+        except (ValueError, TypeError) as e:
+            return Response({"error": "{}".format(e)}, 400)
+        return Response(
+            animation.as_dict(),
+            201
+        )
+
+    def get_animation(self):
+        return Response(
+            self.leds.animation.as_dict(),
+            200,
+        )
 
     def post_leds(self, body, unit=None):
         if not body:
             return Response({"error": "Body needs to be provided!"}, 400)
         try:
             rgb = RGB(**json.loads(body))
-        except ValueError as e:
-            return Response(
-                {"error": "{}".format(e)},
-                400
-            )
+        except (ValueError, TypeError) as e:
+            return Response({"error": "{}".format(e)}, 400)
         if unit is None:
             self.leds.set_all(rgb.as_vector())
         else:
@@ -80,14 +102,26 @@ class APIHandler:
         elif request.path in self.len_paths:
             if "GET" == request.method:
                 return self.get_strip()
-        else:
-            return Response(
-                {"error": "This combination of method and path is not available"}, 501
-            )
+        elif request.path in self.animation_paths:
+            if "POST" == request.method:
+                return self.post_animation(request.body)
+            elif "GET" == request.method:
+                return self.get_animation()
+        return Response(
+            {
+                "error": "Not supported combination of method and path {} :: {}".format(
+                    request.method, request.path
+                )
+            },
+            501,
+        )
 
     def loop(self, request: Request):
         if request is None:
-            return Response({
-                "error": "I did not understand you!",
-            }, 505)
+            return Response(
+                {
+                    "error": "I did not understand you!",
+                },
+                505,
+            )
         return self.router(request)

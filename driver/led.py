@@ -1,22 +1,31 @@
+from apiserver.objects.animation import Animation
+from apiserver.objects.rgb import RGB
 from neopixel import NeoPixel
 from machine import Pin
 from .util import sub_tuple, add_tuple, multiply_tuple
-import time
 
 
 class LEDDriver:
 
     LED_PIN = 4
+    BLACK = RGB(0, 0, 0)
+    MAX_HUE = 255
 
     def __init__(self, leds, meters) -> None:
         self.len_leds = leds * meters
         self.pixels = NeoPixel(Pin(self.LED_PIN, Pin.OUT), self.len_leds)
+        self.position = 0
+        self.color = self.BLACK
+        self.animation: Animation = Animation(animation="normal")
 
     def write(self):
         self.pixels.write()
 
     def set(self, rgb, unit):
         self.pixels[unit] = rgb
+
+    def set_animation(self, animation: Animation):
+        self.animation = animation
 
     def set_all(self, rgb):
         for counter in range(self.len_leds):
@@ -26,6 +35,24 @@ class LEDDriver:
         for _ in range(steps):
             self.dimm_all(factor=factor, ascending=False)
             self.write()
+
+    def moving_snake(self, length=10):
+        if self.position - length - 1 == self.len_leds and self.position != 0:
+            self.position = 0
+        elif self.position <= length:
+            for i in range(0, self.position):
+                self.pixels[i] = self.color.as_vector()
+        elif self.position > length and self.position <= self.len_leds:
+            for i in range(self.position - length, self.position):
+                self.pixels[i] = self.color.as_vector()
+            for i in range(0, self.position - length):
+                self.pixels[i] = self.BLACK.as_vector()
+        elif self.position > self.len_leds:
+            for i in range(self.position - length, self.len_leds):
+                self.pixels[i] = self.color.as_vector()
+            for i in range(0, self.position - length):
+                self.pixels[i] = self.BLACK.as_vector()
+        self.position += 1
 
     def dimm_asc(self, factor=5, steps=5):
         for _ in range(steps):
@@ -54,26 +81,18 @@ class LEDDriver:
             )
 
     def reset(self):
-        self.black()
+        self.set_all(self.BLACK.as_vector())
         self.write()
-
-    # def moving_snake(self, length=10, rgb=(40,200,80)):
-    #     for counter in range(length):
-    #         self.pixels[counter]
-    #     for i in range(length,)
-    def black(self):
-        self.set_all((0, 0, 0))
 
     def loop(self, count):
-        self.set_all((25, 0, 0))
+        if self.animation == "snake":
+            self.moving_snake()
+        elif self.animation == "breath":
+            print("Not Implemented the breath animation.")
+            pass
+        elif self.animation == "off":
+            self.reset()
+            return
+        else:
+            self.set_all(self.color.as_vector())
         self.write()
-        self.dimm_asc(factor=5, steps=35)
-        self.dimm_desc(factor=5, steps=35)
-        self.set_all((0, 25, 0))
-        self.write()
-        self.dimm_asc(factor=5, steps=35)
-        self.dimm_desc(factor=5, steps=35)
-        self.set_all((0, 0, 25))
-        self.write()
-        self.dimm_asc(factor=5, steps=35)
-        self.dimm_desc(factor=5, steps=35)
