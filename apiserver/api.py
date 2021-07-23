@@ -116,7 +116,7 @@ class APIHandler:
             501,
         )
 
-    def loop(self, request: Request):
+    def loop(self, request: Request, count):
         if request is None:
             return Response(
                 {

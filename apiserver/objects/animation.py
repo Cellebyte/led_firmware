@@ -5,7 +5,11 @@ class Animation:
         if animation in self.SUPPORTED:
             self.value = animation
         else:
-            raise ValueError("{} not in {}".format(animation, ",".join(self.SUPPORTED)))
+            raise ValueError(
+                "Animation `{}` not in [{}]".format(
+                    animation, ", ".join(self.SUPPORTED)
+                )
+            )
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Animation):

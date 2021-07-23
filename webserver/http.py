@@ -10,6 +10,9 @@ class Request:
         self.path = path
         self.headers = headers
         self.body = body
+    
+    def __repr__(self) -> str:
+        return "Request({}, {}, {}, {})".format(self.method, self.path, self.headers, self.body)
 
 
 class HTTPServer:
@@ -70,7 +73,7 @@ class HTTPServer:
         conn, addr = self.socket.accept()
         print("Hey got a connection from {} ;)".format(str(addr)))
         request = self.parse_request(conn.recv(1024).decode("utf-8"))
-        response = self.handler.loop(request)
+        response = self.handler.loop(request, count)
         print("Content = {}".format(request))
         conn.send(
             "HTTP/1.1 {} {}{}".format(response.code, response.message, self.end_line)
