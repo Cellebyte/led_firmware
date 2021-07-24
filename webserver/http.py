@@ -86,14 +86,14 @@ class HTTPServer:
             await writer.awrite("Content-Type: application/json{}".format(self.end_line))
             await writer.awrite("Connection: close{}{}".format(self.end_line, self.end_line))
             await writer.awrite("{}{}".format(response, self.end_line))
+            gc.collect()
+            await uasyncio.sleep_ms(10)
+        except OSError as e:
+            print(e)
+        finally:
             await reader.drain()
             reader.close
             await reader.wait_closed()
             await writer.drain()
             writer.close()
             await writer.wait_closed()
-
-            gc.collect()
-            await uasyncio.sleep_ms(10)
-        except OSError as e:
-            print(e)
