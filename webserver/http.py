@@ -1,18 +1,21 @@
-import socket
+import gc
 
 import network
+import uasyncio
 import ure
 
 
 class Request:
     def __init__(self, method, path, headers, body):
-        self.method = method
-        self.path = path
+        self.method = method.upper()
+        self.path = path.lower()
         self.headers = headers
         self.body = body
-    
+
     def __repr__(self) -> str:
-        return "Request({}, {}, {}, {})".format(self.method, self.path, self.headers, self.body)
+        return "Request({}, {}, {}, {})".format(
+            self.method, self.path, self.headers, self.body
+        )
 
 
 class HTTPServer:
@@ -30,10 +33,10 @@ class HTTPServer:
         self.port = port
         self.handler = handler
 
-    def start_server(self):
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.bind(("", self.port))
-        self.socket.listen(self.backlog)
+    def start(self):
+        return uasyncio.start_server(
+            self.handle_request, "0.0.0.0", self.port, backlog=self.backlog
+        )
 
     def reconnect(self):
         while not self.wlan.isconnected():
@@ -52,7 +55,6 @@ class HTTPServer:
 
     def init(self):
         self.start_internet_connection()
-        self.start_server()
 
     def parse_request(self, request):
         splitted = request.split("{}{}".format(self.end_line, self.end_line), 1)
@@ -69,16 +71,29 @@ class HTTPServer:
         del request
         return Request(method, path, headers, body)
 
-    def loop(self, count):
-        conn, addr = self.socket.accept()
-        print("Hey got a connection from {} ;)".format(str(addr)))
-        request = self.parse_request(conn.recv(1024).decode("utf-8"))
-        response = self.handler.loop(request, count)
-        print("Content = {}".format(request))
-        conn.send(
-            "HTTP/1.1 {} {}{}".format(response.code, response.message, self.end_line)
-        )
-        conn.send("Content-Type: application/json{}".format(self.end_line))
-        conn.send("Connection: close{}{}".format(self.end_line, self.end_line))
-        conn.sendall("{}{}".format(response, self.end_line))
-        conn.close()
+    async def handle_request(self, reader, writer):
+        try:
+            request = None
+            request = await reader.read(512)
+            request = self.parse_request(request.decode("utf8"))
+            response = self.handler.handle(request)
+            print("Content = {}".format(request))
+            await writer.awrite(
+                "HTTP/1.1 {} {}{}".format(
+                    response.code, response.message, self.end_line
+                )
+            )
+            await writer.awrite("Content-Type: application/json{}".format(self.end_line))
+            await writer.awrite("Connection: close{}{}".format(self.end_line, self.end_line))
+            await writer.awrite("{}{}".format(response, self.end_line))
+            await reader.drain()
+            reader.close
+            await reader.wait_closed()
+            await writer.drain()
+            writer.close()
+            await writer.wait_closed()
+
+            gc.collect()
+            await uasyncio.sleep_ms(10)
+        except OSError as e:
+            print(e)

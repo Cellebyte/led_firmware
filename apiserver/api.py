@@ -34,7 +34,7 @@ class APIHandler:
         if not body:
             return Response({"error": "Body needs to be provided!"}, 400)
         try:
-            animation = Animation(**json.loads(body))
+            animation = Animation(**(json.loads(body)))
             self.leds.set_animation(animation)
         except (ValueError, TypeError) as e:
             return Response({"error": "{}".format(e)}, 400)
@@ -53,7 +53,7 @@ class APIHandler:
         if not body:
             return Response({"error": "Body needs to be provided!"}, 400)
         try:
-            rgb = RGB(**json.loads(body))
+            rgb = RGB(**(json.loads(body)))
         except (ValueError, TypeError) as e:
             return Response({"error": "{}".format(e)}, 400)
         if unit is None:
@@ -116,7 +116,7 @@ class APIHandler:
             501,
         )
 
-    def loop(self, request: Request, count):
+    def handle(self, request: Request):
         if request is None:
             return Response(
                 {

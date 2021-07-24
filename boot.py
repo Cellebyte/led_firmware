@@ -1,38 +1,38 @@
 # This file is executed on every boot (including wake-boot from deepsleep)
 # uos.dupterm(None, 1) # disable REPL on UART(0)
-import gc
 
 import esp
-import micropython
+import uasyncio
 
 from apiserver.api import APIHandler
 from driver.led import LEDDriver
+from secure import password, wlan
 from webserver.http import HTTPServer
-from apiserver.objects.rgb import RGB
-from secure import wlan, password
+
 esp.osdebug(None)
-
-
-def gc_info():
-    print("--------------------------------------------------")
-    print("Memory allocated: {} bytes".format(gc.mem_alloc()))
-    print("Memory free:      {} bytes".format(gc.mem_free()))
-    print("--------------------------------------------------")
-    print(micropython.mem_info())
-    print("--------------------------------------------------")
-
 
 led_driver = LEDDriver(144, 1)
 api_handler = APIHandler(leds=led_driver)
 http_server = HTTPServer(wlan, password, 80, handler=api_handler)
 led_driver.reset()
 http_server.init()
-count = 0
+
+
+async def main(http_server: HTTPServer, led_driver: LEDDriver):
+    loop = uasyncio.get_event_loop()
+    server = http_server.start()
+    loop.create_task(server)
+    loop.create_task(led_driver.start())
+    server = await server
+    await server.wait_closed()
+    # await uasyncio.sleep_ms(10_000)
+
+
 while True:
-    count += 1
-    if count >= 60:
-        count = 0
-    http_server.loop(count)
-    gc_info()
-    gc.collect()
-    gc_info()
+    try:
+        uasyncio.run(main(http_server, led_driver))
+    except KeyboardInterrupt:
+        loop = uasyncio.get_event_loop()
+        print("closing")
+        loop.stop()
+        uasyncio.close()

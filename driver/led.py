@@ -1,8 +1,12 @@
+import gc
+
+import uasyncio
 from apiserver.objects.animation import Animation
 from apiserver.objects.rgb import RGB
-from neopixel import NeoPixel
 from machine import Pin
-from .util import sub_tuple, add_tuple, multiply_tuple
+from neopixel import NeoPixel
+
+from .util import add_tuple, multiply_tuple, sub_tuple
 
 
 class LEDDriver:
@@ -18,8 +22,19 @@ class LEDDriver:
         self.color = self.BLACK
         self.animation: Animation = Animation(animation="normal")
 
-    def write(self):
-        self.pixels.write()
+    async def write(self):
+        await self.pixels.write()
+        print("Pixels")
+
+    async def start(self):
+        count = 0
+        while True:
+            count += 1
+            if count >= 60:
+                count = 0
+            await self.loop(count)
+            gc.collect()
+            await uasyncio.sleep_ms(10)
 
     def set(self, rgb, unit):
         self.pixels[unit] = rgb
@@ -84,15 +99,16 @@ class LEDDriver:
         self.set_all(self.BLACK.as_vector())
         self.write()
 
-    def loop(self, count):
-        if self.animation == "snake":
+    async def loop(self, count):
+        if self.animation == Animation("snake"):
             self.moving_snake()
-        elif self.animation == "breath":
+        elif self.animation == Animation("breath"):
             print("Not Implemented the breath animation.")
             pass
-        elif self.animation == "off":
+        elif self.animation == Animation("off"):
             self.reset()
             return
         else:
             self.set_all(self.color.as_vector())
         self.write()
+        print("Hello from LED Driver :: {}".format(count))
