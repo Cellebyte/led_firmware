@@ -74,7 +74,7 @@ class HTTPServer:
     async def handle_request(self, reader, writer):
         try:
             request = None
-            request = await reader.read(512)
+            request = await reader.read(1024)
             request = self.parse_request(request.decode("utf8"))
             response = self.handler.handle(request)
             print("Content = {}".format(request))
