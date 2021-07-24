@@ -19,15 +19,14 @@ http_server.init()
 
 
 async def main(http_server: HTTPServer, led_driver: LEDDriver):
-    try:
-        loop = uasyncio.get_event_loop()
-        server = http_server.start()
-        loop.create_task(server)
-        loop.create_task(led_driver.start())
-        await uasyncio.sleep_ms(10_000)
-    finally:
-        server = await server
-        await server.wait_closed()
+    loop = uasyncio.get_event_loop()
+    server = http_server.start()
+    loop.create_task(server)
+    loop.create_task(led_driver.start())
+    server = await server
+    await server.wait_closed()
+    await uasyncio.sleep_ms(10_000)
+
 
 while True:
     try:
