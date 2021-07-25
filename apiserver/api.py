@@ -2,6 +2,7 @@ import json
 
 import ure
 from driver.led import LEDDriver
+from driver.store import Store
 from webserver.http import Request
 
 from . import util
@@ -26,6 +27,7 @@ class APIHandler:
     color_paths = ["/colors", "/colors/"]
     color_path_regex = ure.compile("/colors/(\d+)")
     animation_paths = ["/animation", "/animation/"]
+    animation_path_regex = ure.compile("/animation/{}".format('|'.join(Animation.SUPPORTED)))
 
     def __init__(self, leds) -> None:
         self.leds: LEDDriver = leds
@@ -35,13 +37,10 @@ class APIHandler:
             return Response({"error": "Body needs to be provided!"}, 400)
         try:
             animation = Animation(**(json.loads(body)))
-            self.leds.set_animation(animation)
+            self.leds.animation = animation
         except (ValueError, TypeError) as e:
             return Response({"error": "{}".format(e)}, 400)
-        return Response(
-            animation.as_dict(),
-            201
-        )
+        return Response(animation.as_dict(), 201)
 
     def get_animation(self):
         return Response(
@@ -57,10 +56,9 @@ class APIHandler:
         except (ValueError, TypeError) as e:
             return Response({"error": "{}".format(e)}, 400)
         if unit is None:
-            self.leds.set_all(rgb.as_vector())
+            self.leds.set_all(rgb)
         else:
-            self.leds.set(rgb.as_vector(), unit)
-        self.leds.write()
+            self.leds.set(rgb, unit)
         return Response(rgb.as_dict(), 201)
 
     def get_strip(self):
@@ -107,6 +105,17 @@ class APIHandler:
                 return self.post_animation(request.body)
             elif "GET" == request.method:
                 return self.get_animation()
+        elif self.animation_path_regex.match(request.path):
+            # TODO: Needs implementation.
+            animation_match = self.led_path_regex.match(request.path)
+            animation = Animation(animation=str(animation_match.group(1)))
+            if "POST" == request.method:
+                return self.post_animation_options(request.body, animation=animation)
+            elif "GET" == request.method:
+                return self.get_animations_options(animation=animation)
+            elif "PUT" == request.method:
+                return self.put_animations_options(request.body, animation=animation)
+
         return Response(
             {
                 "error": "Not supported combination of method and path {} :: {}".format(

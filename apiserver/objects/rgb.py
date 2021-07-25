@@ -78,3 +78,11 @@ class RGB:
 
     def __repr__(self):
         return "RGB({},{},{})".format(self.r, self.g, self.b)
+
+
+BLACK = RGB(RGB.MIN, RGB.MIN, RGB.MIN)
+WHITE = RGB(RGB.MAX, RGB.MAX, RGB.MAX)
+RED = RGB(RGB.MAX, RGB.MIN, RGB.MIN)
+GREEN = RGB(RGB.MIN, RGB.MAX, RGB.MIN)
+BLUE = RGB(RGB.MIN, RGB.MIN, RGB.MAX)
+PURPLE = RGB(RGB.MAX / 2, 0, RGB.MAX / 2)

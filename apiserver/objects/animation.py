@@ -19,3 +19,6 @@ class Animation:
 
     def as_dict(self):
         return {"animation": self.value}
+
+    def __hash__(self) -> int:
+        return hash(self.value)

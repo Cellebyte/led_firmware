@@ -1,4 +1,5 @@
 import gc
+import os
 
 import micropython
 
@@ -22,3 +23,8 @@ async def gc_info():
     print("--------------------------------------------------")
     print(micropython.mem_info())
     print("--------------------------------------------------")
+
+
+def df():
+    s = os.statvfs("//")
+    return "{0} MB".format((s[0] * s[3]) / 1048576)
