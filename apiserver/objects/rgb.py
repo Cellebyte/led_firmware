@@ -43,10 +43,6 @@ class RGB:
     def as_hsl(self) -> apiserver.objects.hsl.HSL:
         return util.rgb_to_hsl(self)
 
-    @classmethod
-    def from_hsl(cls, value: apiserver.objects.hsl.HSL):
-        return cls(util.hsl_to_rgb(value))
-
     def __add__(self, other: "RGB"):
         if isinstance(other, RGB):
             return RGB(
