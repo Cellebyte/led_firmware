@@ -1,83 +1,108 @@
+import apiserver.util as util
+import apiserver.objects.hsl
+
+
 class RGB:
     MIN = 0
     MAX = 255
 
-    def __init__(self, r, g, b):
-        self.r = int(r)
-        self.g = int(g)
-        self.b = int(b)
+    def __init__(self, red, green, blue):
+        self.red = red
+        self.green = green
+        self.blue = blue
 
     def normalize(self):
-        self.r = round(self.r)
-        self.g = round(self.g)
-        self.b = round(self.b)
-        if self.r < self.MIN:
-            self.r = self.MIN
-        if self.g < self.MIN:
-            self.g = self.MIN
-        if self.b < self.MIN:
-            self.b = self.MIN
-        if self.r > self.MAX:
-            self.r = self.MAX
-        if self.g > self.MAX:
-            self.g = self.MAX
-        if self.b > self.MAX:
-            self.b = self.MAX
+        self.red = round(self.red)
+        self.green = round(self.green)
+        self.blue = round(self.blue)
+        if self.red < self.MIN:
+            self.red = self.MIN
+        if self.green < self.MIN:
+            self.green = self.MIN
+        if self.blue < self.MIN:
+            self.blue = self.MIN
+        if self.red > self.MAX:
+            self.red = self.MAX
+        if self.green > self.MAX:
+            self.green = self.MAX
+        if self.blue > self.MAX:
+            self.blue = self.MAX
         return self
 
     def as_dict(self):
-        return {"r": self.r, "g": self.g, "b": self.b}
+        return {"red": self.red, "green": self.green, "blue": self.blue}
 
     def as_vector(self):
-        return (self.r, self.g, self.b)
+        return (self.red, self.green, self.blue)
 
     def from_vector(self, vector):
-        self.r = vector[0]
-        self.g = vector[1]
-        self.b = vector[2]
+        self.red = vector[0]
+        self.green = vector[1]
+        self.blue = vector[2]
 
-    def __add__(self, other):
+    def as_hsl(self) -> apiserver.objects.hsl.HSL:
+        return util.rgb_to_hsl(self)
+
+    @classmethod
+    def from_hsl(cls, value: apiserver.objects.hsl.HSL):
+        return cls(util.hsl_to_rgb(value))
+
+    def __add__(self, other: "RGB"):
         if isinstance(other, RGB):
-            return RGB(self.r + other.r, self.g + other.g, self.b + other.b)
+            return RGB(
+                self.red + other.red, self.green + other.green, self.blue + other.blue
+            )
         else:
             raise ValueError("RGB is required")
 
     __radd__ = __add__
 
-    def __eq__(self, other: object) -> bool:
+    def __eq__(self, other: "RGB") -> bool:
         if isinstance(other, RGB):
-            return self.r == other.r and self.g == other.g and self.b == other.b
+            return (
+                self.red == other.red
+                and self.green == other.green
+                and self.blue == other.blue
+            )
         else:
             raise ValueError("RGB is required")
 
-    def __sub__(self, other):
+    def __sub__(self, other: "RGB"):
         if isinstance(other, RGB):
-            return RGB(self.r - other.r, self.g - other.g, self.b - other.b)
+            return RGB(
+                self.red - other.red, self.green - other.green, self.blue - other.blue
+            )
         else:
             raise ValueError("RGB is required")
 
-    def __rsub__(self, other):
+    def __rsub__(self, other: "RGB"):
         if isinstance(other, RGB):
-            return RGB(other.r - self.r, other.g - self.g, other.b - self.b)
+            return RGB(
+                other.red - self.red, other.green - self.green, other.blue - self.blue
+            )
         else:
             raise ValueError("RGB is required")
 
-    def __mul__(self, other):
+    def __mul__(self, other: "RGB"):
         if isinstance(other, RGB):
-            return RGB(self.r * other.r, self.g * other.g, self.b * other.b)
+            return RGB(
+                self.red * other.red, self.green * other.green, self.blue * other.blue
+            )
         else:
             raise ValueError("RGB is required")
 
     __rmul__ = __mul__
 
-    def __truediv__(self, other):
-        if isinstance(other, int):
-            return RGB(self.r / other, self.g / other, self.b / other)
+    def __truediv__(self, other: "RGB"):
+        if isinstance(other, RGB):
+            return RGB(
+                self.red / other.red, self.green / other.green, self.blue / other.blue
+            )
         else:
-            raise ValueError("Scalar <int> is required")
+            raise ValueError("RGB is required")
 
     def __repr__(self):
-        return "RGB({},{},{})".format(self.r, self.g, self.b)
+        return "RGB({},{},{})".format(self.red, self.green, self.blue)
 
 
 BLACK = RGB(RGB.MIN, RGB.MIN, RGB.MIN)

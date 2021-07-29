@@ -19,7 +19,10 @@ class HSL:
 
     def as_dict(self) -> dict:
         return {
-            'hue': self.hue,
-            'saturation': self.saturation,
-            'luminance': self.luminance
+            "hue": self.hue,
+            "saturation": self.saturation,
+            "luminance": self.luminance,
         }
+
+    def __repr__(self) -> str:
+        return "HSL({},{},{})".format(self.hue, self.saturation, self.luminance)

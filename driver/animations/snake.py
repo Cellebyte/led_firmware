@@ -1,7 +1,6 @@
 from driver.animations.normal import Normal
 from driver.led import LEDDriver
 from apiserver.objects.animation import Animation
-from apiserver.objects.rgb import BLACK
 from driver.store import Store
 
 
@@ -10,6 +9,7 @@ class Snake(Normal):
 
     def __init__(self, store: Store, leds: LEDDriver):
         self.position = 0
+        self.end_position = 0
         super().__init__(store, leds)
 
     @property
@@ -22,19 +22,19 @@ class Snake(Normal):
         self.store.save("{}.length".format(self.ANIMATION.value), value)
 
     def loop(self):
-        if self.position - self.length - 1 == self.leds.len_leds and self.position != 0:
-            self.position = 0
-        elif self.position <= self.length:
+        self.leds.reset()
+        if self.position <= self.length:
             for i in range(0, self.position):
                 self.leds.set(self.color, i)
         elif self.position > self.length and self.position <= self.leds.len_leds:
+            self.end_position = 0
             for i in range(self.position - self.length, self.position):
                 self.leds.set(self.color, i)
-            for i in range(0, self.position - self.length):
-                self.leds.set(BLACK, i)
         elif self.position > self.leds.len_leds:
-            for i in range(self.position - self.length, self.leds.len_leds):
+            self.end_position = self.position
+            self.position = -1
+        if self.end_position > self.leds.len_leds:
+            for i in range(self.end_position - self.length, self.leds.len_leds):
                 self.leds.set(self.color, i)
-            for i in range(0, self.position - self.length):
-                self.leds.set(BLACK, i)
+            self.end_position += 1
         self.position += 1

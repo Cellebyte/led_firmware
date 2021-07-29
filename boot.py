@@ -7,6 +7,7 @@ from driver.store import Store
 import esp
 import uasyncio
 
+import machine
 from apiserver.api import APIHandler
 from driver.led import LEDDriver
 from driver.animations import Snake
@@ -28,6 +29,9 @@ http_server = HTTPServer(wlan, password, 80, handler=api_handler)
 led_driver.reset()
 led_driver.write()
 http_server.init()
+machine.freq(160000000)
+
+print(machine.freq())
 
 
 async def main(http_server: HTTPServer, led_driver: LEDDriver):
@@ -43,6 +47,7 @@ async def main(http_server: HTTPServer, led_driver: LEDDriver):
 
 while True:
     try:
+
         uasyncio.run(main(http_server, led_driver))
     except KeyboardInterrupt:
         loop = uasyncio.get_event_loop()
