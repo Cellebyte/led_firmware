@@ -13,7 +13,16 @@ class Snake(Normal):
         super().__init__(store, leds)
 
     @property
-    def length(self):
+    def steps(self) -> int:
+        return self.store.load("{}.steps".format(self.ANIMATION.value), default=1)
+
+    @steps.setter
+    def steps(self, value: int):
+        assert isinstance(value, int)
+        self.store.save("{}.steps".format(self.ANIMATION.value), value)
+
+    @property
+    def length(self) -> int:
         return self.store.load("{}.length".format(self.ANIMATION.value), default=30)
 
     @length.setter
@@ -36,5 +45,5 @@ class Snake(Normal):
         if self.end_position > self.leds.len_leds:
             for i in range(self.end_position - self.length, self.leds.len_leds):
                 self.leds.set(self.color, i)
-            self.end_position += 1
-        self.position += 1
+            self.end_position += self.speed
+        self.position += self.speed
