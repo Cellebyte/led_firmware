@@ -45,5 +45,5 @@ class Snake(Normal):
         if self.end_position > self.leds.len_leds:
             for i in range(self.end_position - self.length, self.leds.len_leds):
                 self.leds.set(self.color, i)
-            self.end_position += self.speed
-        self.position += self.speed
+            self.end_position += self.steps
+        self.position += self.steps
