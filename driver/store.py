@@ -1,7 +1,6 @@
 import json
 
 import uasyncio
-import gc
 
 
 class Store:
@@ -32,8 +31,7 @@ class Store:
             if count >= self.max_count:
                 count = 0
             await self.loop(count)
-            gc.collect()
-            await uasyncio.sleep_ms(15)
+            await uasyncio.sleep_ms(100)
 
     def save(self, key, objects):
         self.state[key] = objects

@@ -1,15 +1,17 @@
+import driver.animations.base
 from apiserver.objects.animation import Animation
-from apiserver.objects.rgb import RGB, PURPLE
-from driver.animations.base import BaseAnimation
+from apiserver.objects.rgb import PURPLE, RGB
 
 
-class Normal(BaseAnimation):
+class Normal(driver.animations.base.BaseAnimation):
     ANIMATION = Animation("normal")
 
     @property
     def color(self) -> RGB:
         return RGB(
-            **self.store.load("{}.color".format(self.ANIMATION.value), default=PURPLE.as_dict())
+            **self.store.load(
+                "{}.color".format(self.ANIMATION.value), default=PURPLE.as_dict()
+            )
         )
 
     @color.setter
@@ -18,4 +20,4 @@ class Normal(BaseAnimation):
         self.store.save("{}.color".format(self.ANIMATION.value), value.as_dict())
 
     def loop(self):
-        self.leds.set_all(self.color)
+        self.leds.set_all(self.color.normalize())

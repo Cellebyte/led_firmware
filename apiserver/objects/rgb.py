@@ -1,5 +1,5 @@
-import apiserver.util as util
 import apiserver.objects.hsl
+import apiserver.util as util
 
 
 class RGB:
@@ -11,23 +11,45 @@ class RGB:
         self.green = green
         self.blue = blue
 
+    @staticmethod
+    def validate_rgb_value(color, value: int) -> int:
+        if not isinstance(value, (int, float,)):
+            raise ValueError("{} value {} should be an int".format(color, type(value)))
+        if not (RGB.MIN <= value <= RGB.MAX):
+            raise ValueError(
+                "{} value {} not in {} - {}".format(color, value, RGB.MIN, RGB.MAX)
+            )
+        return value
+    
     def normalize(self):
         self.red = round(self.red)
         self.green = round(self.green)
         self.blue = round(self.blue)
-        if self.red < self.MIN:
-            self.red = self.MIN
-        if self.green < self.MIN:
-            self.green = self.MIN
-        if self.blue < self.MIN:
-            self.blue = self.MIN
-        if self.red > self.MAX:
-            self.red = self.MAX
-        if self.green > self.MAX:
-            self.green = self.MAX
-        if self.blue > self.MAX:
-            self.blue = self.MAX
         return self
+
+    @property
+    def red(self) -> int:
+        return self._red
+
+    @red.setter
+    def red(self, value: int):
+        self._red = RGB.validate_rgb_value("Red", value)
+
+    @property
+    def green(self) -> int:
+        return self._green
+
+    @green.setter
+    def green(self, value: int):
+        self._green = RGB.validate_rgb_value("Green", value)
+
+    @property
+    def blue(self) -> int:
+        return self._blue
+
+    @blue.setter
+    def blue(self, value: int):
+        self._blue = RGB.validate_rgb_value("Blue", value)
 
     def as_dict(self):
         return {"red": self.red, "green": self.green, "blue": self.blue}
@@ -106,4 +128,4 @@ WHITE = RGB(RGB.MAX, RGB.MAX, RGB.MAX)
 RED = RGB(RGB.MAX, RGB.MIN, RGB.MIN)
 GREEN = RGB(RGB.MIN, RGB.MAX, RGB.MIN)
 BLUE = RGB(RGB.MIN, RGB.MIN, RGB.MAX)
-PURPLE = RGB(RGB.MAX / 2, 0, RGB.MAX / 2)
+PURPLE = RGB(RGB.MAX / 2, 0, RGB.MAX / 2).normalize()

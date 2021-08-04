@@ -1,12 +1,10 @@
-import driver.animations.base
-import gc
-
 import uasyncio
 from apiserver.objects.animation import Animation
-from apiserver.objects.rgb import RGB, BLACK
+from apiserver.objects.rgb import BLACK, RGB
 from machine import Pin
 from neopixel import NeoPixel
 
+import driver.animations.base
 from driver.store import Store
 
 
@@ -53,8 +51,7 @@ class LEDDriver:
             if count >= 60:
                 count = 0
             await self.loop(count)
-            gc.collect()
-            await uasyncio.sleep_ms(10)
+            await uasyncio.sleep_ms(5)
 
     def set(self, rgb: RGB, unit):
         self.pixels[unit] = rgb.as_vector()

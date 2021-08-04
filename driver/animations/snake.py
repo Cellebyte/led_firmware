@@ -1,16 +1,30 @@
-from driver.animations.normal import Normal
-from driver.led import LEDDriver
+import driver.led
+import driver.store
 from apiserver.objects.animation import Animation
-from driver.store import Store
+from driver.animations.base import BaseAnimation
+from apiserver.objects.rgb import PURPLE, RGB
 
 
-class Snake(Normal):
+class Snake(BaseAnimation):
     ANIMATION = Animation("snake")
 
-    def __init__(self, store: Store, leds: LEDDriver):
+    def __init__(self, store: driver.store.Store, leds: driver.led.LEDDriver):
         self.position = 0
         self.end_position = 0
         super().__init__(store, leds)
+
+    @property
+    def color(self) -> RGB:
+        return RGB(
+            **self.store.load(
+                "{}.color".format(self.ANIMATION.value), default=PURPLE.as_dict()
+            )
+        )
+
+    @color.setter
+    def color(self, value: RGB):
+        assert isinstance(value, RGB)
+        self.store.save("{}.color".format(self.ANIMATION.value), value.as_dict())
 
     @property
     def steps(self) -> int:

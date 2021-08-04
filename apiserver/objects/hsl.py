@@ -18,5 +18,35 @@ class HSL:
             "luminance": self.luminance,
         }
 
+    def __sub__(self, other: "HSL"):
+        if isinstance(other, HSL):
+            return HSL(
+                self.hue - other.hue,
+                self.saturation - other.saturation,
+                self.luminance - other.luminance,
+            )
+        else:
+            raise ValueError("HSL is required")
+
+    def __rsub__(self, other: "HSL"):
+        if isinstance(other, HSL):
+            return HSL(
+                other.hue - self.hue,
+                other.saturation - self.saturation,
+                other.luminance - self.luminance,
+            )
+        else:
+            raise ValueError("HSL is required")
+
+    def __add__(self, other: "HSL"):
+        if isinstance(other, HSL):
+            return HSL(
+                self.red + other.red, self.green + other.green, self.blue + other.blue
+            )
+        else:
+            raise ValueError("HSL is required")
+
+    __radd__ = __add__
+
     def __repr__(self) -> str:
         return "HSL({},{},{})".format(self.hue, self.saturation, self.luminance)

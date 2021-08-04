@@ -1,5 +1,3 @@
-import gc
-
 import network
 import uasyncio
 import ure
@@ -83,11 +81,14 @@ class HTTPServer:
                     response.code, response.message, self.end_line
                 )
             )
-            await writer.awrite("Content-Type: application/json{}".format(self.end_line))
-            await writer.awrite("Connection: close{}{}".format(self.end_line, self.end_line))
+            await writer.awrite(
+                "Content-Type: application/json{}".format(self.end_line)
+            )
+            await writer.awrite(
+                "Connection: close{}{}".format(self.end_line, self.end_line)
+            )
             await writer.awrite("{}{}".format(response, self.end_line))
-            gc.collect()
-            await uasyncio.sleep_ms(10)
+            await uasyncio.sleep_ms(5)
         except OSError as e:
             print(e)
         finally:

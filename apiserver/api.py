@@ -25,12 +25,18 @@ class APIHandler:
     led_path_regex = ure.compile("/leds/(\d+)")
     len_paths = ["/lens", "/lens/"]
     color_paths = ["/colors", "/colors/"]
-    color_path_regex = ure.compile("/colors/(\d+)")
+    color_path_regex = ure.compile("/colors/(\d+)/?")
     animation_paths = ["/animation", "/animation/"]
-    animation_path_regex = ure.compile("/animation/{}".format('|'.join(Animation.SUPPORTED)))
+    animation_path_regex = ure.compile(
+        "/animation/({})/?".format("|".join(Animation.SUPPORTED))
+    )
 
     def __init__(self, leds) -> None:
         self.leds: LEDDriver = leds
+
+    def get_animations_options(self, animation: Animation):
+        print(animation)
+        return Response({"error": "This function is not implemented!"}, 500)
 
     def post_animation(self, body):
         if not body:
@@ -58,6 +64,8 @@ class APIHandler:
         if unit is None:
             self.leds.set_all(rgb)
         else:
+            # If a single LED gets set Move controller to manual mode
+            self.leds.animation = Animation("manual")
             self.leds.set(rgb, unit)
         return Response(rgb.as_dict(), 201)
 
@@ -107,7 +115,7 @@ class APIHandler:
                 return self.get_animation()
         elif self.animation_path_regex.match(request.path):
             # TODO: Needs implementation.
-            animation_match = self.led_path_regex.match(request.path)
+            animation_match = self.animation_path_regex.match(request.path)
             animation = Animation(animation=str(animation_match.group(1)))
             if "POST" == request.method:
                 return self.post_animation_options(request.body, animation=animation)

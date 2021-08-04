@@ -1,14 +1,14 @@
 from apiserver.objects.animation import Animation
-from driver.store import Store
-from driver.led import LEDDriver
+import driver.store
+import driver.led
 
 
 class BaseAnimation:
     ANIMATION: Animation = None
 
-    def __init__(self, store: Store, leds: LEDDriver):
-        self.store: Store = store
-        self.leds: LEDDriver = leds
+    def __init__(self, store: driver.store.Store, leds: driver.led.LEDDriver):
+        self.store: driver.store.Store = store
+        self.leds: driver.led.LEDDriver = leds
 
     def loop(self):
         raise NotImplementedError("This function needs to be implemented by a ChildAnimation")

@@ -1,5 +1,5 @@
 class Animation:
-    SUPPORTED = ["normal", "snake", "breath", "off"]
+    SUPPORTED = ["normal", "snake", "breath", "off", "manual"]
 
     def __init__(self, animation):
         if animation in self.SUPPORTED:
@@ -19,6 +19,9 @@ class Animation:
 
     def as_dict(self):
         return {"animation": self.value}
+
+    def __repr__(self) -> str:
+        return "Animation('{}')".format(self.value)
 
     def __hash__(self) -> int:
         return hash(self.value)
