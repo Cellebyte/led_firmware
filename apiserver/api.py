@@ -60,11 +60,11 @@ class APIHandler:
             rgb = RGB(**(json.loads(body)))
         except (ValueError, TypeError) as e:
             return EXCEPTION_ERROR(e)
+        # If the led endpoint is used controller gets forced to manual mode
+        self.leds.animation = Animation("manual")
         if unit is None:
             self.leds.set_all(rgb)
         else:
-            # If a single LED gets set Move controller to manual mode
-            self.leds.animation = Animation("manual")
             self.leds.set(rgb, unit)
         return Response(rgb.as_dict(), 201)
 
