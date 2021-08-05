@@ -21,13 +21,13 @@ class Normal(driver.animations.base.BaseAnimation):
         self.store.save("{}.color".format(self.ANIMATION.value), value.as_dict())
 
     def update(self, data: dict):
-        if "color" in data.keys() and RGB(data["color"]) != self.color:
-            self.color = RGB(data["color"])
-            return self.as_dict()
+        if "color" in data.keys() and RGB(**data["color"]) != self.color:
+            self.color = RGB(**data["color"])
+            return self
         else:
             raise ValueError(PUT_NOT_USEFUL)
 
-    def as_dict(self):
+    def as_dict(self) -> dict:
         return {"color": self.color.as_dict()}
 
     def loop(self):

@@ -4,21 +4,10 @@ import ure
 from driver.led import LEDDriver
 from webserver.http import Request
 
-from apiserver.constants import BODY_MISSING
-
-from . import util
+from apiserver.constants import BODY_MISSING, EXCEPTION_ERROR
+from .objects.response import Response
 from .objects.animation import Animation
 from .objects.rgb import RGB
-
-
-class Response:
-    def __init__(self, body, code) -> None:
-        self.code = code
-        self.body = body
-        self.message = util.code_to_message(code)
-
-    def __str__(self):
-        return json.dumps(self.body)
 
 
 class APIHandler:
@@ -36,15 +25,27 @@ class APIHandler:
         self.leds: LEDDriver = leds
 
     def get_animations_options(self, animation: Animation):
-        return Response(self.leds.animations[animation.value].as_dict(), 200)
+        return Response(self.leds.animations[animation].as_dict(), 200)
 
-    def put_animations(self, body, animation: Animation):
+    def put_animations_options(self, body, animation: Animation):
         if not body:
-            return Response(BODY_MISSING)
+            return BODY_MISSING
         try:
-            return Response(self.leds.animations[animation.value].update(body), 200)
+            return Response(
+                self.leds.animations[animation].update(json.loads(body)).as_dict(), 200
+            )
         except (ValueError, TypeError) as e:
-            return Response(util.exception_error(e))
+            return EXCEPTION_ERROR(e)
+
+    def post_animation(self, body: dict):
+        if not body:
+            return BODY_MISSING
+        try:
+            animation = Animation(**(json.loads(body)))
+            self.leds.animation = animation
+        except (ValueError, TypeError) as e:
+            return EXCEPTION_ERROR(e)
+        return Response(animation.as_dict(), 201)
 
     def get_animation(self):
         return Response(
@@ -54,11 +55,11 @@ class APIHandler:
 
     def post_leds(self, body, unit=None):
         if not body:
-            return Response(BODY_MISSING)
+            return BODY_MISSING
         try:
             rgb = RGB(**(json.loads(body)))
         except (ValueError, TypeError) as e:
-            return Response(util.exception_error(e))
+            return EXCEPTION_ERROR(e)
         if unit is None:
             self.leds.set_all(rgb)
         else:

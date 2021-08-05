@@ -47,21 +47,20 @@ class Snake(BaseAnimation):
         self.store.save("{}.length".format(self.ANIMATION.value), value)
 
     def update(self, data: dict):
-        if "color" in data.keys() and RGB(data["color"]) != self.color:
+        if "color" in data.keys() and RGB(**data["color"]) != self.color:
             self.found_key = True
-            self.color = RGB(data["color"])
+            self.color = RGB(**data["color"])
         if "length" in data.keys() and int(data["length"]) != self.length:
             self.found_key = True
             self.length = int(data["length"])
         if "steps" in data.keys() and int(data["steps"]) != self.steps:
             self.found_key = True
             self.steps = int(data["steps"])
-        if self.found_key:
-            self.found_key = False
-            return self.as_dict()
-        raise ValueError(PUT_NOT_USEFUL)
+        if not self.found_key:
+            raise ValueError(PUT_NOT_USEFUL)
+        return self
 
-    def as_dict(self):
+    def as_dict(self) -> dict:
         return {
             "color": self.color.as_dict(),
             "length": self.length,

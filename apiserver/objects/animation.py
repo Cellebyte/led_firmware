@@ -11,7 +11,7 @@ class Animation:
                 )
             )
 
-    def __eq__(self, other: object) -> bool:
+    def __eq__(self, other: "Animation") -> bool:
         if isinstance(other, Animation):
             return self.value == other.value
         else:

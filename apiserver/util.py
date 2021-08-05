@@ -2,10 +2,6 @@ import apiserver.objects.hsl
 import apiserver.objects.rgb
 
 
-def exception_error(e: Exception):
-    return ({"error": "{}".format(e)}, 400)
-
-
 def code_to_message(code):
     if code == 100:
         return "Continue"
