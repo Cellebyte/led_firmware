@@ -54,8 +54,9 @@ while True:
         uasyncio.run(main(http_server, led_driver))
         gc.collect()
     except KeyboardInterrupt:
-        loop = uasyncio.get_event_loop()
         print("closing")
+    finally:
+        loop = uasyncio.get_event_loop()
         loop.stop()
         loop.close()
         break
