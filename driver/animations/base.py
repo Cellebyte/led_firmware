@@ -1,3 +1,4 @@
+from driver.constants import IMPLEMENTATION_NEEDED
 from apiserver.objects.animation import Animation
 import driver.store
 import driver.led
@@ -10,5 +11,11 @@ class BaseAnimation:
         self.store: driver.store.Store = store
         self.leds: driver.led.LEDDriver = leds
 
+    def update(self, data: dict):
+        raise NotImplementedError(IMPLEMENTATION_NEEDED)
+
+    def as_dict(self):
+        raise NotImplementedError(IMPLEMENTATION_NEEDED)
+
     def loop(self):
-        raise NotImplementedError("This function needs to be implemented by a ChildAnimation")
+        raise NotImplementedError(IMPLEMENTATION_NEEDED)

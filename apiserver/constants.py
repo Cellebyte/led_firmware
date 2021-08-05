@@ -1,0 +1,1 @@
+BODY_MISSING = ({"error": "Body needs to be provided!"}, 400)

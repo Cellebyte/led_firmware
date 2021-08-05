@@ -20,7 +20,7 @@ class RGB:
                 "{} value {} not in {} - {}".format(color, value, RGB.MIN, RGB.MAX)
             )
         return value
-    
+
     def normalize(self):
         self.red = round(self.red)
         self.green = round(self.green)

@@ -1,3 +1,4 @@
+from driver.constants import PUT_NOT_USEFUL
 import driver.led
 import driver.store
 from apiserver.objects.animation import Animation
@@ -11,6 +12,7 @@ class Snake(BaseAnimation):
     def __init__(self, store: driver.store.Store, leds: driver.led.LEDDriver):
         self.position = 0
         self.end_position = 0
+        self.found_key = False
         super().__init__(store, leds)
 
     @property
@@ -43,6 +45,28 @@ class Snake(BaseAnimation):
     def length(self, value: int):
         assert isinstance(value, int)
         self.store.save("{}.length".format(self.ANIMATION.value), value)
+
+    def update(self, data: dict):
+        if "color" in data.keys() and RGB(data["color"]) != self.color:
+            self.found_key = True
+            self.color = RGB(data["color"])
+        if "length" in data.keys() and int(data["length"]) != self.length:
+            self.found_key = True
+            self.length = int(data["length"])
+        if "steps" in data.keys() and int(data["steps"]) != self.steps:
+            self.found_key = True
+            self.steps = int(data["steps"])
+        if self.found_key:
+            self.found_key = False
+            return self.as_dict()
+        raise ValueError(PUT_NOT_USEFUL)
+
+    def as_dict(self):
+        return {
+            "color": self.color.as_dict(),
+            "length": self.length,
+            "steps": self.steps,
+        }
 
     def loop(self):
         self.leds.reset()

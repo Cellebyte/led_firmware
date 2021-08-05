@@ -1,3 +1,4 @@
+from driver.constants import MISSING_STATE_FILE
 import json
 
 import uasyncio
@@ -13,7 +14,7 @@ class Store:
             with open(self.state_file, "r") as file:
                 self.state = json.load(file)
         except OSError as e:
-            print("Cannot find state file {}".format(e))
+            print(MISSING_STATE_FILE.format(e))
         self.debug = debug
 
     async def load_state(self):
@@ -21,7 +22,7 @@ class Store:
             with open(self.state_file, "r") as file:
                 return json.loads(file.read())
         except OSError as e:
-            print("Cannot find state file {}".format(e))
+            print(MISSING_STATE_FILE.format(e))
         return {}
 
     async def start(self):

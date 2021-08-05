@@ -2,8 +2,9 @@ import json
 
 import ure
 from driver.led import LEDDriver
-from driver.store import Store
 from webserver.http import Request
+
+from apiserver.constants import BODY_MISSING
 
 from . import util
 from .objects.animation import Animation
@@ -35,18 +36,15 @@ class APIHandler:
         self.leds: LEDDriver = leds
 
     def get_animations_options(self, animation: Animation):
-        print(animation)
-        return Response({"error": "This function is not implemented!"}, 500)
+        return Response(self.leds.animations[animation.value].as_dict(), 200)
 
-    def post_animation(self, body):
+    def put_animations(self, body, animation: Animation):
         if not body:
-            return Response({"error": "Body needs to be provided!"}, 400)
+            return Response(BODY_MISSING)
         try:
-            animation = Animation(**(json.loads(body)))
-            self.leds.animation = animation
+            return Response(self.leds.animations[animation.value].update(body), 200)
         except (ValueError, TypeError) as e:
-            return Response({"error": "{}".format(e)}, 400)
-        return Response(animation.as_dict(), 201)
+            return Response(util.exception_error(e))
 
     def get_animation(self):
         return Response(
@@ -56,11 +54,11 @@ class APIHandler:
 
     def post_leds(self, body, unit=None):
         if not body:
-            return Response({"error": "Body needs to be provided!"}, 400)
+            return Response(BODY_MISSING)
         try:
             rgb = RGB(**(json.loads(body)))
         except (ValueError, TypeError) as e:
-            return Response({"error": "{}".format(e)}, 400)
+            return Response(util.exception_error(e))
         if unit is None:
             self.leds.set_all(rgb)
         else:
@@ -114,12 +112,9 @@ class APIHandler:
             elif "GET" == request.method:
                 return self.get_animation()
         elif self.animation_path_regex.match(request.path):
-            # TODO: Needs implementation.
             animation_match = self.animation_path_regex.match(request.path)
             animation = Animation(animation=str(animation_match.group(1)))
-            if "POST" == request.method:
-                return self.post_animation_options(request.body, animation=animation)
-            elif "GET" == request.method:
+            if "GET" == request.method:
                 return self.get_animations_options(animation=animation)
             elif "PUT" == request.method:
                 return self.put_animations_options(request.body, animation=animation)

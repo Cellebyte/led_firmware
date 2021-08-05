@@ -4,3 +4,6 @@ from driver.animations.base import BaseAnimation
 
 class Breath(BaseAnimation):
     ANIMATION = Animation("breath")
+
+    def loop(self):
+        pass
