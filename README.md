@@ -17,7 +17,7 @@ the Arduino Nano RP2040H.
 ## How-To Start
 
 The initial main file is the `boot.py`.
-From their it is separated by api objects and handling
+From there it is separated by api objects and handling
 the http server and the led driver as well as the store module.
 
 ```tree
