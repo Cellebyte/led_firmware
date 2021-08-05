@@ -1,3 +1,4 @@
+from apiserver.constants import RGB_IS_REQUIRED
 import apiserver.objects.hsl
 import apiserver.util as util
 
@@ -71,7 +72,7 @@ class RGB:
                 self.red + other.red, self.green + other.green, self.blue + other.blue
             )
         else:
-            raise ValueError("RGB is required")
+            raise ValueError(RGB_IS_REQUIRED)
 
     __radd__ = __add__
 
@@ -83,7 +84,7 @@ class RGB:
                 and self.blue == other.blue
             )
         else:
-            raise ValueError("RGB is required")
+            raise ValueError(RGB_IS_REQUIRED)
 
     def __sub__(self, other: "RGB"):
         if isinstance(other, RGB):
@@ -91,7 +92,7 @@ class RGB:
                 self.red - other.red, self.green - other.green, self.blue - other.blue
             )
         else:
-            raise ValueError("RGB is required")
+            raise ValueError(RGB_IS_REQUIRED)
 
     def __rsub__(self, other: "RGB"):
         if isinstance(other, RGB):
@@ -99,7 +100,7 @@ class RGB:
                 other.red - self.red, other.green - self.green, other.blue - self.blue
             )
         else:
-            raise ValueError("RGB is required")
+            raise ValueError(RGB_IS_REQUIRED)
 
     def __mul__(self, other: "RGB"):
         if isinstance(other, RGB):
@@ -107,7 +108,7 @@ class RGB:
                 self.red * other.red, self.green * other.green, self.blue * other.blue
             )
         else:
-            raise ValueError("RGB is required")
+            raise ValueError(RGB_IS_REQUIRED)
 
     __rmul__ = __mul__
 
@@ -117,7 +118,7 @@ class RGB:
                 self.red / other.red, self.green / other.green, self.blue / other.blue
             )
         else:
-            raise ValueError("RGB is required")
+            raise ValueError(RGB_IS_REQUIRED)
 
     def __repr__(self):
         return "RGB({},{},{})".format(self.red, self.green, self.blue)

@@ -1,3 +1,4 @@
+from apiserver.constants import HSL_IS_REQUIRED
 import apiserver.util
 import apiserver.objects.rgb
 
@@ -26,7 +27,7 @@ class HSL:
                 self.luminance - other.luminance,
             )
         else:
-            raise ValueError("HSL is required")
+            raise ValueError(HSL_IS_REQUIRED)
 
     def __rsub__(self, other: "HSL"):
         if isinstance(other, HSL):
@@ -36,7 +37,7 @@ class HSL:
                 other.luminance - self.luminance,
             )
         else:
-            raise ValueError("HSL is required")
+            raise ValueError(HSL_IS_REQUIRED)
 
     def __add__(self, other: "HSL"):
         if isinstance(other, HSL):
@@ -44,7 +45,7 @@ class HSL:
                 self.red + other.red, self.green + other.green, self.blue + other.blue
             )
         else:
-            raise ValueError("HSL is required")
+            raise ValueError(HSL_IS_REQUIRED)
 
     __radd__ = __add__
 
