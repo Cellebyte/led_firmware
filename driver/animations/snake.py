@@ -57,6 +57,7 @@ class Snake(BaseAnimation):
             self.found_key = True
             self.steps = int(data["steps"])
         if not self.found_key:
+            self.found_key = False
             raise ValueError(PUT_NOT_USEFUL)
         return self
 
