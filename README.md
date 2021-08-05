@@ -5,7 +5,16 @@
 This project is built with micropython for either the ESP8266 NodeMCU or in the future
 the Arduino Nano RP2040H.
 
-## how to start
+
+## Known Issues
+
+1. Implementation of the `HEAD` function is missing
+1. Implement `Content-Type: application/json` for Requests.
+1. Implement `Accept: ` for Requests.
+1. Moar Animations
+1. Implement a way of streaming the current color of each LED of the connected stripe.
+
+## How-To Start
 
 The initial main file is the `boot.py`.
 From their it is separated by api objects and handling
@@ -49,7 +58,7 @@ the http server and the led driver as well as the store module.
 
 ## The Store Module
 
-`driver.store.Store` is handling all the state keeping between shutdowns.
+`driver.store.Store` is handling all the state keeping between reboots.
 This keeps the colors and necessary data from the animations persisted onto the Microcontroller.
 It does that by reading every 240 ticks the json file and comparing it with the current state.
 If the state changed it dumps it back to disk. This is working as redisdump.
@@ -84,10 +93,32 @@ This is a normal color selector which sets the color of all LEDs at once and is 
 This mode is automatically activated when the `/leds/` and the `/leds/{unit}` endpoint is used.
 It does nothing directly with the LEDs except displaying the current state of each NeoPixel.
 
-
 ## API
 
-### :: [GET,POST]/leds/?
+### RGB Object
+
+```json
+{
+    "green": 0,
+    "blue": 128,
+    "red": 135
+}
+```
+
+### HSL Object
+```jsonc
+// this is missing and only internally used currently.
+// RGB is convertible to HSL and it also works the other way around.
+```
+
+### Animation Object
+```jsonc
+// animation.SUPPORTED = ["normal", "snake", "breath", "off", "manual"]
+{
+    "animation": "snake"
+}
+```
+### :: [GET,POST] /leds/?
 
 Gets and sets all LEDs.
 
@@ -152,4 +183,6 @@ curl -X GET "$ENDPOINT/animation/snake"
 export ENDPOINT=127.0.2.1
 curl -d {"steps": 2} -X PUT "$ENDPOINT/animation/snake"
 {"color": {"green": 0, "blue": 128, "red": 135}, "steps": 2, "length": 53}
+curl -d {"steps": 2} -X PUT "$ENDPOINT/animation/snake"
+{"error": "Nothing useful provided for update!"}
 ```
