@@ -2,6 +2,8 @@ import network
 import uasyncio
 import ure
 
+from webserver.util import CODE_TO_MESSAGE
+
 
 class Request:
     def __init__(self, method, path, headers, body):
@@ -78,7 +80,7 @@ class HTTPServer:
             print("Content = {}".format(request))
             await writer.awrite(
                 "HTTP/1.1 {} {}{}".format(
-                    response.code, response.message, self.end_line
+                    response.code, CODE_TO_MESSAGE(response.code), self.end_line
                 )
             )
             await writer.awrite(

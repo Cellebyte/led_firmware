@@ -8,14 +8,13 @@ class Store:
     state_file = "state.json"
     max_count = 240
 
-    def __init__(self, debug=False) -> None:
+    def __init__(self) -> None:
         self.state = {}
         try:
             with open(self.state_file, "r") as file:
                 self.state = json.load(file)
         except OSError as e:
             print(MISSING_STATE_FILE.format(e))
-        self.debug = debug
 
     async def load_state(self):
         try:
@@ -48,8 +47,6 @@ class Store:
         if count % self.max_count == 1:
             if self.state != (await self.load_state()):
                 self.store_state()
-                print("Saved state! ;)")
+                print("State is Updated!")
             else:
-                print("State on Disk is the same as the store.")
-        if self.debug:
-            print("Hello from Store :: {}".format(count))
+                print("State is Current!")
