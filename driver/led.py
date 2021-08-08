@@ -1,10 +1,11 @@
+from objects.constants import ANIMATION_NORMAL
 import uasyncio
-from apiserver.objects.animation import Animation
-from apiserver.objects.rgb import BLACK, RGB
+from objects.animation import Animation
+from objects.rgb import BLACK, RGB
 from machine import Pin
 from neopixel import NeoPixel
 
-import driver.animations.base
+import animations.base
 from driver.store import Store
 
 
@@ -28,18 +29,19 @@ class LEDDriver:
     def animation(self):
         return Animation(
             **self.store.load(
-                "animation", default=Animation(animation="normal").as_dict()
+                self.__class__.__name__,
+                default=Animation(animation=ANIMATION_NORMAL).as_dict(),
             )
         )
 
-    def register_animation(self, animation: driver.animations.base.BaseAnimation):
-        assert isinstance(animation, driver.animations.base.BaseAnimation)
+    def register_animation(self, animation: animations.base.BaseAnimation):
+        assert isinstance(animation, animations.base.BaseAnimation)
         self.animations[animation.ANIMATION] = animation
 
     @animation.setter
     def animation(self, value: Animation):
         assert isinstance(value, Animation)
-        self.store.save("animation", value.as_dict())
+        self.store.save(self.__class__.__name__, value.as_dict())
 
     def write(self):
         self.pixels.write()
@@ -69,6 +71,8 @@ class LEDDriver:
             self.write()
         except KeyError:
             if count % 30 == 0:
-                print("Animation('{}') is not implementd".format(self.animation.value))
-        if self.debug:
-            print("Hello from LED Driver  :: {}".format(count))
+                print(
+                    "{}('{}') is not implementd".format(
+                        self.animation.__class__.__name__, self.animation.value
+                    )
+                )

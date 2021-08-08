@@ -1,18 +1,18 @@
 # This file is executed on every boot (including wake-boot from deepsleep)
 # uos.dupterm(None, 1) # disable REPL on UART(0)
 
-from driver.animations.manual import Manual
 import gc
 
 import esp
 import machine
 import uasyncio
 
+from animations.manual import Manual
+from animations.normal import Normal
+from animations.off import Off
+from animations.snake import Snake
 from apiserver.api import APIHandler
-from driver.animations.normal import Normal
-from driver.animations.off import Off
-from driver.animations.snake import Snake
-
+from driver.color_store import ColorStore
 from driver.led import LEDDriver
 from driver.store import Store
 from secure import password, wlan
@@ -21,10 +21,11 @@ from webserver.http import HTTPServer
 esp.osdebug(None)
 
 store = Store()
+color_store = ColorStore(store=store, slots=6)
 led_driver = LEDDriver(144, 1, store=store)
-snake = Snake(store, led_driver)
+snake = Snake(store, color_store, led_driver)
+normal = Normal(store, color_store, led_driver)
 off = Off(store, led_driver)
-normal = Normal(store, led_driver)
 manual = Manual(store, led_driver)
 led_driver.register_animation(snake)
 led_driver.register_animation(off)

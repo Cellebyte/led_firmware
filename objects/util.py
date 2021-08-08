@@ -1,5 +1,5 @@
-import apiserver.objects.hsl
-import apiserver.objects.rgb
+import objects.hsl
+import objects.rgb
 
 
 def project_into_range(value):
@@ -28,12 +28,12 @@ def project_onto_circle(value):
     return value
 
 
-def hsl_to_rgb(value: apiserver.objects.hsl.HSL) -> apiserver.objects.rgb.RGB:
+def hsl_to_rgb(value: objects.hsl.HSL) -> objects.rgb.RGB:
     if value.saturation == 0:
-        return apiserver.objects.rgb.RGB(
-            value.luminance * apiserver.objects.rgb.RGB.MAX,
-            value.luminance * apiserver.objects.rgb.RGB.MAX,
-            value.luminance * apiserver.objects.rgb.RGB.MAX,
+        return objects.rgb.RGB(
+            value.luminance * objects.rgb.RGB.MAX,
+            value.luminance * objects.rgb.RGB.MAX,
+            value.luminance * objects.rgb.RGB.MAX,
         )
     temporary_1 = value.luminance * (1.0 + value.saturation)
     if value.luminance >= 0.5:
@@ -45,21 +45,21 @@ def hsl_to_rgb(value: apiserver.objects.hsl.HSL) -> apiserver.objects.rgb.RGB:
     temporary_R = project_into_range(temporary_hue + 0.333)
     temporary_G = project_into_range(temporary_hue)
     temporary_B = project_into_range(temporary_hue - 0.333)
-    return apiserver.objects.rgb.RGB(
+    return objects.rgb.RGB(
         probe_variable(temporary_R, temporary_1, temporary_2)
-        * apiserver.objects.rgb.RGB.MAX,
+        * objects.rgb.RGB.MAX,
         probe_variable(temporary_G, temporary_1, temporary_2)
-        * apiserver.objects.rgb.RGB.MAX,
+        * objects.rgb.RGB.MAX,
         probe_variable(temporary_B, temporary_1, temporary_2)
-        * apiserver.objects.rgb.RGB.MAX,
+        * objects.rgb.RGB.MAX,
     )
 
 
-def rgb_to_hsl(value: apiserver.objects.rgb.RGB) -> apiserver.objects.hsl.HSL:
-    rgb_percent = value / apiserver.objects.rgb.RGB(
-        apiserver.objects.rgb.RGB.MAX,
-        apiserver.objects.rgb.RGB.MAX,
-        apiserver.objects.rgb.RGB.MAX,
+def rgb_to_hsl(value: objects.rgb.RGB) -> objects.hsl.HSL:
+    rgb_percent = value / objects.rgb.RGB(
+        objects.rgb.RGB.MAX,
+        objects.rgb.RGB.MAX,
+        objects.rgb.RGB.MAX,
     )
     rgb_sorted = sorted(rgb_percent.as_vector())
     max = rgb_sorted[2]
@@ -78,7 +78,7 @@ def rgb_to_hsl(value: apiserver.objects.rgb.RGB) -> apiserver.objects.hsl.HSL:
     else:
         hue = 4.0 + (rgb_percent.red - rgb_percent.green) / (max - min)
 
-    return apiserver.objects.hsl.HSL(
+    return objects.hsl.HSL(
         hue=project_onto_circle(hue * 60),
         saturation=saturation,
         luminance=luminance,

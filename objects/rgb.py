@@ -1,6 +1,9 @@
-from apiserver.constants import RGB_IS_REQUIRED
-import apiserver.objects.hsl
-import apiserver.util as util
+import objects.util as util
+from errors import IS_REQUIRED, VALUE_NOT_IN_RANGE, VALUE_NOT_OF_TYPE
+
+from objects.constants import RGB_BLUE, RGB_GREEN, RGB_RED
+
+import objects.hsl
 
 
 class RGB:
@@ -13,12 +16,18 @@ class RGB:
         self.blue = blue
 
     @staticmethod
-    def validate_rgb_value(color, value: int) -> int:
-        if not isinstance(value, (int, float,)):
-            raise ValueError("{} value {} should be an int".format(color, type(value)))
+    def validate_rgb_value(color, value: int, class_name: str) -> int:
+        if not isinstance(
+            value,
+            (
+                int,
+                float,
+            ),
+        ):
+            raise ValueError(VALUE_NOT_OF_TYPE(class_name, color, value, int))
         if not (RGB.MIN <= value <= RGB.MAX):
             raise ValueError(
-                "{} value {} not in {} - {}".format(color, value, RGB.MIN, RGB.MAX)
+                VALUE_NOT_IN_RANGE(class_name, color, value, RGB.MIN, RGB.MAX)
             )
         return value
 
@@ -34,7 +43,7 @@ class RGB:
 
     @red.setter
     def red(self, value: int):
-        self._red = RGB.validate_rgb_value("Red", value)
+        self._red = RGB.validate_rgb_value(RGB_RED, value, self.__class__.__name__)
 
     @property
     def green(self) -> int:
@@ -42,7 +51,7 @@ class RGB:
 
     @green.setter
     def green(self, value: int):
-        self._green = RGB.validate_rgb_value("Green", value)
+        self._green = RGB.validate_rgb_value(RGB_GREEN, value, self.__class__.__name__)
 
     @property
     def blue(self) -> int:
@@ -50,10 +59,14 @@ class RGB:
 
     @blue.setter
     def blue(self, value: int):
-        self._blue = RGB.validate_rgb_value("Blue", value)
+        self._blue = RGB.validate_rgb_value(RGB_BLUE, value, self.__class__.__name__)
 
     def as_dict(self):
-        return {"red": self.red, "green": self.green, "blue": self.blue}
+        return {
+            RGB_RED: self.red,
+            RGB_GREEN: self.green,
+            RGB_BLUE: self.blue,
+        }
 
     def as_vector(self):
         return (self.red, self.green, self.blue)
@@ -63,7 +76,7 @@ class RGB:
         self.green = vector[1]
         self.blue = vector[2]
 
-    def as_hsl(self) -> apiserver.objects.hsl.HSL:
+    def as_hsl(self) -> objects.hsl.HSL:
         return util.rgb_to_hsl(self)
 
     def __add__(self, other: "RGB"):
@@ -72,7 +85,7 @@ class RGB:
                 self.red + other.red, self.green + other.green, self.blue + other.blue
             )
         else:
-            raise ValueError(RGB_IS_REQUIRED)
+            raise ValueError(IS_REQUIRED(self.__class__.__name__))
 
     __radd__ = __add__
 
@@ -84,7 +97,7 @@ class RGB:
                 and self.blue == other.blue
             )
         else:
-            raise ValueError(RGB_IS_REQUIRED)
+            raise ValueError(IS_REQUIRED(self.__class__.__name__))
 
     def __sub__(self, other: "RGB"):
         if isinstance(other, RGB):
@@ -92,7 +105,7 @@ class RGB:
                 self.red - other.red, self.green - other.green, self.blue - other.blue
             )
         else:
-            raise ValueError(RGB_IS_REQUIRED)
+            raise ValueError(IS_REQUIRED(self.__class__.__name__))
 
     def __rsub__(self, other: "RGB"):
         if isinstance(other, RGB):
@@ -100,7 +113,7 @@ class RGB:
                 other.red - self.red, other.green - self.green, other.blue - self.blue
             )
         else:
-            raise ValueError(RGB_IS_REQUIRED)
+            raise ValueError(IS_REQUIRED(self.__class__.__name__))
 
     def __mul__(self, other: "RGB"):
         if isinstance(other, RGB):
@@ -108,7 +121,7 @@ class RGB:
                 self.red * other.red, self.green * other.green, self.blue * other.blue
             )
         else:
-            raise ValueError(RGB_IS_REQUIRED)
+            raise ValueError(IS_REQUIRED(self.__class__.__name__))
 
     __rmul__ = __mul__
 
@@ -118,10 +131,12 @@ class RGB:
                 self.red / other.red, self.green / other.green, self.blue / other.blue
             )
         else:
-            raise ValueError(RGB_IS_REQUIRED)
+            raise ValueError(IS_REQUIRED(self.__class__.__name__))
 
     def __repr__(self):
-        return "RGB({},{},{})".format(self.red, self.green, self.blue)
+        return "{}({},{},{})".format(
+            self.__class__.__name__, self.red, self.green, self.blue
+        )
 
 
 BLACK = RGB(RGB.MIN, RGB.MIN, RGB.MIN)

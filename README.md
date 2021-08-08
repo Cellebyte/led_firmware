@@ -1,5 +1,16 @@
 # led-firmware
 
+## Installation of MicroPython
+
+How to get MicroPython on your Board?
+
+Tutorial:
+[https://docs.micropython.org/en/latest/esp8266/tutorial/intro.html](https://docs.micropython.org/en/latest/esp8266/tutorial/intro.html)
+
+Download for ESP8266:
+[http://micropython.org/download/#esp8266](http://micropython.org/download/#esp8266)
+
+
 ## General
 
 This project is built with micropython for either the ESP8266 NodeMCU or in the future
