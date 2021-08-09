@@ -1,37 +1,50 @@
 # This file is executed on every boot (including wake-boot from deepsleep)
 # uos.dupterm(None, 1) # disable REPL on UART(0)
 
-from driver.animations.manual import Manual
 import gc
 
 import esp
 import machine
+import micropython
 import uasyncio
-
-from apiserver.api import APIHandler
-from driver.animations.normal import Normal
-from driver.animations.off import Off
-from driver.animations.snake import Snake
-
+from config import REDUCED_FEATURESET
 from driver.led import LEDDriver
 from driver.store import Store
 from secure import password, wlan
 from webserver.http import HTTPServer
+from apiserver.handlers.led_handler import LEDHandler
+from apiserver.handlers.len_handler import LenHandler
+from apiserver.handlers.animation_handler import AnimationHandler
+from apiserver.api import API
+from animations.manual import Manual
+from animations.off import Off
+
+if not REDUCED_FEATURESET:
+    from animations.normal import Normal
+    from animations.snake import Snake
+    from driver.color_store import ColorStore
+    from apiserver.handlers.color_handler import ColorHandler
+
 
 esp.osdebug(None)
+micropython.alloc_emergency_exception_buf(100)
 
 store = Store()
 led_driver = LEDDriver(144, 1, store=store)
-snake = Snake(store, led_driver)
-off = Off(store, led_driver)
-normal = Normal(store, led_driver)
-manual = Manual(store, led_driver)
-led_driver.register_animation(snake)
-led_driver.register_animation(off)
-led_driver.register_animation(normal)
-led_driver.register_animation(manual)
-api_handler = APIHandler(leds=led_driver)
-http_server = HTTPServer(wlan, password, 80, handler=api_handler)
+led_driver.register_animation(Off(store, led_driver))
+led_driver.register_animation(Manual(store, led_driver))
+api = API()
+api.register_handler(LEDHandler(led_driver))
+api.register_handler(LenHandler(led_driver))
+api.register_handler(AnimationHandler(led_driver))
+
+if not REDUCED_FEATURESET:
+    color_store = ColorStore(store=store, slots=10)
+    led_driver.register_animation(Snake(store, color_store, led_driver))
+    led_driver.register_animation(Normal(store, color_store, led_driver))
+    api.register_handler(ColorHandler(color_store))
+
+http_server = HTTPServer(wlan, password, 80, handler=api)
 led_driver.reset()
 led_driver.write()
 http_server.init()

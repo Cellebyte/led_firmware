@@ -1,6 +1,7 @@
-from apiserver.constants import HSL_IS_REQUIRED
-import apiserver.util
-import apiserver.objects.rgb
+from errors import IS_REQUIRED
+
+import objects.rgb
+import objects.util
 
 
 class HSL:
@@ -9,8 +10,8 @@ class HSL:
         self.saturation = saturation
         self.luminance = luminance
 
-    def as_rgb(self) -> apiserver.objects.rgb.RGB:
-        return apiserver.util.hsl_to_rgb(self)
+    def as_rgb(self) -> objects.rgb.RGB:
+        return objects.util.hsl_to_rgb(self)
 
     def as_dict(self) -> dict:
         return {
@@ -27,7 +28,7 @@ class HSL:
                 self.luminance - other.luminance,
             )
         else:
-            raise ValueError(HSL_IS_REQUIRED)
+            raise ValueError(IS_REQUIRED(self.__class__.__name__))
 
     def __rsub__(self, other: "HSL"):
         if isinstance(other, HSL):
@@ -37,7 +38,7 @@ class HSL:
                 other.luminance - self.luminance,
             )
         else:
-            raise ValueError(HSL_IS_REQUIRED)
+            raise ValueError(IS_REQUIRED(self.__class__.__name__))
 
     def __add__(self, other: "HSL"):
         if isinstance(other, HSL):
@@ -45,9 +46,11 @@ class HSL:
                 self.red + other.red, self.green + other.green, self.blue + other.blue
             )
         else:
-            raise ValueError(HSL_IS_REQUIRED)
+            raise ValueError(IS_REQUIRED(self.__class__.__name__))
 
     __radd__ = __add__
 
     def __repr__(self) -> str:
-        return "HSL({},{},{})".format(self.hue, self.saturation, self.luminance)
+        return "{}({},{},{})".format(
+            self.__class__.__name__, self.hue, self.saturation, self.luminance
+        )

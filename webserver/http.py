@@ -13,8 +13,8 @@ class Request:
         self.body = body
 
     def __repr__(self) -> str:
-        return "Request({}, {}, {}, {})".format(
-            self.method, self.path, self.headers, self.body
+        return "{}({}, {}, {}, {})".format(
+            self.__class__.__name__, self.method, self.path, self.headers, self.body
         )
 
 
