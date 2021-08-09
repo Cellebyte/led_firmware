@@ -1,4 +1,3 @@
-from objects.constants import ANIMATION_NORMAL
 import uasyncio
 from objects.animation import Animation
 from objects.rgb import BLACK, RGB
@@ -30,7 +29,7 @@ class LEDDriver:
         return Animation(
             **self.store.load(
                 self.__class__.__name__,
-                default=Animation(animation=ANIMATION_NORMAL).as_dict(),
+                default=Animation(animation="normal").as_dict(),
             )
         )
 

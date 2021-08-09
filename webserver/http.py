@@ -2,7 +2,6 @@ import network
 import uasyncio
 import ure
 
-from webserver.constants import HTTP_METHODS
 from webserver.util import CODE_TO_MESSAGE
 
 
@@ -23,7 +22,7 @@ class HTTPServer:
     backlog = 5
     end_line = "\r\n"
     http_proto_regex = ure.compile(
-        "^({})\s(.*?)\sHTTP\/1\.1$".format("|".join(HTTP_METHODS))
+        "^(GET|HEAD|POST|PUT|DELETE|CONNECT|OPTIONS|TRACE)\s(.*?)\sHTTP\/1\.1$"
     )
 
     def __init__(self, essid, password, port, handler):

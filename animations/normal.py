@@ -3,14 +3,13 @@ import driver.led
 import driver.store
 from errors import PUT_NOT_USEFUL
 from objects.animation import Animation
-from objects.constants import ANIMATION_NORMAL, COLOR_SELECTOR, CURRENT_COLOR
 from objects.rgb import BLACK
 
 import animations.base
 
 
 class Normal(animations.base.BaseAnimation):
-    ANIMATION = Animation(ANIMATION_NORMAL)
+    ANIMATION: Animation = Animation("normal")
 
     def __init__(
         self,
@@ -31,20 +30,20 @@ class Normal(animations.base.BaseAnimation):
 
     @property
     def color_selector(self) -> int:
-        return self.store.load(self.get_key(COLOR_SELECTOR), default=1)
+        return self.store.load(self.get_key("color_selector"), default=1)
 
     @color_selector.setter
     def color_selector(self, value: int):
         assert self.color_store.validate_key(value)
-        self.store.save(self.get_key(COLOR_SELECTOR), value)
+        self.store.save(self.get_key("color_selector"), value)
 
     def update(self, data: dict):
         if (
-            COLOR_SELECTOR in data.keys()
-            and int(data[COLOR_SELECTOR]) != self.color_selector
+            "color_selector" in data.keys()
+            and int(data["color_selector"]) != self.color_selector
         ):
             self.found_key = True
-            self.color_selector = int(data[COLOR_SELECTOR])
+            self.color_selector = int(data["color_selector"])
         if not self.found_key:
             self.found_key = False
             raise ValueError(PUT_NOT_USEFUL)
@@ -52,7 +51,7 @@ class Normal(animations.base.BaseAnimation):
         return self
 
     def as_dict(self):
-        return {COLOR_SELECTOR: self.color_selector, CURRENT_COLOR: self.color}
+        return {"color_selector": self.color_selector, "current_color": self.color}
 
     def get_key(self, key):
         return "{}.{}".format(self.ANIMATION.value, key)

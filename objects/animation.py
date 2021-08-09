@@ -1,35 +1,35 @@
 from errors import IS_REQUIRED, VALUE_NOT_IN_LIST
 
-from objects.constants import (
-    ANIMATION_BREATH,
-    ANIMATION_MANUAL,
-    ANIMATION_NORMAL,
-    ANIMATION_OFF,
-    ANIMATION_SNAKE,
-)
-
 
 class Animation:
     SUPPORTED = [
-        ANIMATION_SNAKE,
-        ANIMATION_NORMAL,
-        ANIMATION_BREATH,
-        ANIMATION_OFF,
-        ANIMATION_MANUAL,
+        "snake",
+        "normal",
+        "breath",
+        "off",
+        "manual",
     ]
+    _value = "off"
 
     def __init__(self, animation):
-        if animation in self.SUPPORTED:
-            self.value = animation
-        else:
+        self.value = animation
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        if value not in self.SUPPORTED:
             raise ValueError(
                 VALUE_NOT_IN_LIST(
                     self.__class__.__name__,
                     self.__class__.__name__.lower(),
-                    animation,
+                    value,
                     self.SUPPORTED,
                 )
             )
+        self._value = value
 
     def __eq__(self, other: "Animation") -> bool:
         if isinstance(other, Animation):
@@ -39,6 +39,9 @@ class Animation:
 
     def as_dict(self):
         return {"{}".format(self.__class__.__name__.lower()): self.value}
+
+    def from_dict(self, data: dict):
+        self.value = data[self.__class__.__name__.lower()]
 
     def __repr__(self) -> str:
         return "{}('{}')".format(self.__class__.__name__, self.value)

@@ -2,14 +2,13 @@ import driver.color_store
 import driver.led
 import driver.store
 from objects.animation import Animation
-from objects.constants import ANIMATION_SNAKE, LENGTH, STEPS
 from objects.rgb import BLACK
 
 import animations.normal
 
 
 class Snake(animations.normal.Normal):
-    ANIMATION = Animation(ANIMATION_SNAKE)
+    ANIMATION: Animation = Animation("snake")
 
     def __init__(
         self,
@@ -23,36 +22,36 @@ class Snake(animations.normal.Normal):
 
     @property
     def steps(self) -> int:
-        return self.store.load(self.get_key(STEPS), default=1)
+        return self.store.load(self.get_key("steps"), default=1)
 
     @steps.setter
     def steps(self, value: int):
         assert isinstance(value, int)
-        self.store.save(self.get_key(STEPS), value)
+        self.store.save(self.get_key("steps"), value)
 
     @property
     def length(self) -> int:
-        return self.store.load(self.get_key(LENGTH), default=30)
+        return self.store.load(self.get_key("length"), default=30)
 
     @length.setter
     def length(self, value: int):
         assert isinstance(value, int)
-        self.store.save(self.get_key(LENGTH), value)
+        self.store.save(self.get_key("length"), value)
 
     def update(self, data: dict):
-        if LENGTH in data.keys() and int(data[LENGTH]) != self.length:
+        if "length" in data.keys() and int(data["length"]) != self.length:
             self.found_key = True
-            self.length = int(data[LENGTH])
-        if STEPS in data.keys() and int(data[STEPS]) != self.steps:
+            self.length = int(data["length"])
+        if "steps" in data.keys() and int(data["steps"]) != self.steps:
             self.found_key = True
-            self.steps = int(data[STEPS])
+            self.steps = int(data["steps"])
         super().update(data)
         return self
 
     def as_dict(self) -> dict:
         return {
-            LENGTH: self.length,
-            STEPS: self.steps,
+            "length": self.length,
+            "steps": self.steps,
         } | super().as_dict()
 
     def loop(self):

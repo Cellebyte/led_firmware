@@ -1,11 +1,10 @@
 from objects.animation import Animation
-from objects.constants import ANIMATION_OFF
 
 from .base import BaseAnimation
 
 
 class Off(BaseAnimation):
-    ANIMATION = Animation(ANIMATION_OFF)
+    ANIMATION: Animation = Animation("off")
 
     def loop(self):
         self.leds.reset()

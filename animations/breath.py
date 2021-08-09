@@ -1,11 +1,10 @@
 from objects.animation import Animation
-from objects.constants import ANIMATION_BREATH
 
 import animations.base
 
 
 class Breath(animations.base.BaseAnimation):
-    ANIMATION = Animation(ANIMATION_BREATH)
+    ANIMATION: Animation = Animation("breath")
 
     def loop(self):
         pass
