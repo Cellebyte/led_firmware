@@ -69,3 +69,16 @@ class Snake(animations.normal.Normal):
             self.leds.set(BLACK, self.end_position - self.length)
             self.end_position += self.steps
         self.position += self.steps
+
+    # Rotate <num_of_pixels> pixels to the left
+    def rotate_left(self, num_of_pixels):
+        if num_of_pixels == None:
+            num_of_pixels = 1
+        self.pixels = self.pixels[num_of_pixels:] + self.pixels[:num_of_pixels]
+
+    # Rotate <num_of_pixels> pixels to the right
+    def rotate_right(self, num_of_pixels):
+        if num_of_pixels == None:
+            num_of_pixels = 1
+        num_of_pixels = -1 * num_of_pixels
+        self.pixels = self.pixels[num_of_pixels:] + self.pixels[:num_of_pixels]

@@ -1,6 +1,7 @@
 import network
 import uasyncio
 import ure
+import gc
 
 from webserver.util import CODE_TO_MESSAGE
 
@@ -72,6 +73,7 @@ class HTTPServer:
         return Request(method, path, headers, body)
 
     async def handle_request(self, reader, writer):
+        self.reconnect()
         try:
             request = None
             request = await reader.read(1024)
@@ -90,6 +92,7 @@ class HTTPServer:
                 "Connection: close{}{}".format(self.end_line, self.end_line)
             )
             await writer.awrite("{}{}".format(response, self.end_line))
+            gc.collect()
             await uasyncio.sleep_ms(5)
         except OSError as e:
             print(e)

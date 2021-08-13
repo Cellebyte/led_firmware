@@ -15,15 +15,15 @@ class ColorHandler(BaseHandler):
 
     def get_colors(self, slot=None) -> Response:
         if slot is None:
-            return Response(*ALL_UNSUPPORTED)
+            return self.response.from_dict(*ALL_UNSUPPORTED)
         else:
             color = self.color_store[slot]
-            return Response(color.as_dict() if color else color, 200)
+            return self.response.from_dict(color.as_dict() if color else color, 200)
 
     def post_colors(self, body, slot=None):
         raise NotImplementedError()
 
-    def delete_colors(slot=None):
+    def delete_colors(self, slot=None):
         raise NotImplementedError()
 
     def router(self, request: Request) -> Response:
@@ -32,9 +32,8 @@ class ColorHandler(BaseHandler):
                 return self.get_colors()
             elif "DELETE" == request.method:
                 return self.delete_colors()
-        elif self.path_regex.match(request.path):
-            slot_match = self.path_regex.match(request.path)
-            slot = int(slot_match.group(1))
+        elif match := self.path_regex.match(request.path):
+            slot = int(match.group(1))
             if "GET" == request.method:
                 return self.get_colors(slot=slot)
             elif "POST" == request.method:

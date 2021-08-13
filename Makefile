@@ -15,17 +15,9 @@ build: $(mpy_files)
 	@echo "Compile $< to $@"
 	mpy-cross -march=${architecture} -v $<
 
-upload: upload_mpy upload_py
+upload: upload_py
 upload_py: 
-	for file in $(py_files); do \
-		echo $$file; \
-		pyboard.py -b ${baud_rate} --device ${device} -f mkdir $(dir "$file"); \
-		pyboard.py -b ${baud_rate} --device ${device} -f cp "$$file" ":$$file"; \
-	done
-
-upload_mpy: $(mpy_files)
-	pyboard.py -b ${baud_rate} --device ${device} -f mkdir $(dir $<) | true;
-	pyboard.py -b ${baud_rate} --device ${device} -f cp "$<" ":$<";
+	rsync -av --include="*/" --include="*.py" --exclude="*" . /run/media/$$USER/CIRCUITPY
 
 clean:
 	@echo "Cleaning up..."

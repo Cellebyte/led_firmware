@@ -43,7 +43,9 @@ class HSL:
     def __add__(self, other: "HSL"):
         if isinstance(other, HSL):
             return HSL(
-                self.red + other.red, self.green + other.green, self.blue + other.blue
+                self.hue + other.hue,
+                self.saturation + other.saturation,
+                self.luminance + other.luminance,
             )
         else:
             raise ValueError(IS_REQUIRED(self.__class__.__name__))

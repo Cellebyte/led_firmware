@@ -11,7 +11,7 @@ class LenHandler(BaseHandler):
         self.leds = leds
 
     def get_strip(self) -> Response:
-        return Response(
+        return self.response.from_dict(
             {
                 "last": self.leds.len_leds - 1,
                 "first": 0,

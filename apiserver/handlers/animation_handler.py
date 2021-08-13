@@ -16,34 +16,34 @@ class AnimationHandler(BaseHandler):
         self.leds = leds
 
     def get_animations_options(self, animation: Animation) -> Response:
-        return Response(
+        return self.response.from_dict(
             self.leds.animations[animation].as_dict(),
             200,
         )
 
     def put_animations_options(self, body, animation: Animation) -> Response:
         if not body:
-            return Response(*BODY_MISSING)
+            return self.response.from_dict(*BODY_MISSING)
         try:
-            return Response(
+            return self.response.from_dict(
                 self.leds.animations[animation].update(json.loads(body)).as_dict(),
                 200,
             )
         except (ValueError, TypeError) as e:
-            return Response(*EXCEPTION_ERROR(e))
+            return self.response.from_dict(*EXCEPTION_ERROR(e))
 
     def post_animation(self, body: dict) -> Response:
         if not body:
-            return Response(*BODY_MISSING)
+            return self.response.from_dict(*BODY_MISSING)
         try:
             animation = Animation(**(json.loads(body)))
             self.leds.animation = animation
-            return Response(animation.as_dict(), 201)
+            return self.response.from_dict(animation.as_dict(), 201)
         except (ValueError, TypeError) as e:
-            return Response(*EXCEPTION_ERROR(e))
+            return self.response.from_dict(*EXCEPTION_ERROR(e))
 
     def get_animation(self) -> Response:
-        return Response(self.leds.animation.as_dict(), 200)
+        return self.response.from_dict(self.leds.animation.as_dict(), 200)
 
     def router(self, request: Request) -> Response:
         if request.path in self.paths:
@@ -51,8 +51,7 @@ class AnimationHandler(BaseHandler):
                 return self.post_animation(request.body)
             elif "GET" == request.method:
                 return self.get_animation()
-        elif self.path_regex.match(request.path):
-            match = self.path_regex.match(request.path)
+        elif match := self.path_regex.match(request.path):
             animation = Animation(animation=str(match.group(1)))
             if "GET" == request.method:
                 return self.get_animations_options(animation=animation)

@@ -78,6 +78,7 @@ class RGB:
         self.red = data["red"]
         self.green = data["green"]
         self.blue = data["blue"]
+        return self
 
     def as_hsl(self) -> objects.hsl.HSL:
         return objects.util.rgb_to_hsl(self)

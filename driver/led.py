@@ -2,7 +2,10 @@ import uasyncio
 from objects.animation import Animation
 from objects.rgb import BLACK, RGB
 from machine import Pin
-from neopixel import NeoPixel
+try:
+    from neopixel import NeoPixel
+except ImportError:
+    from driver.neopixel import NeoPixel
 
 import animations.base
 from driver.store import Store
@@ -14,7 +17,7 @@ class LEDDriver:
     MAX_HUE = RGB.MAX
 
     def __init__(self, leds, meters, store, debug=False) -> None:
-        self._len_leds = leds * meters
+        self._len_leds = int(round(leds * meters))
         self.pixels = NeoPixel(Pin(self.LED_PIN, Pin.OUT), self.len_leds)
         self.store: Store = store
         self.debug = debug

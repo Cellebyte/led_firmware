@@ -1,35 +1,23 @@
 # led-firmware
 
-## Installation of MicroPython
-
-How to get MicroPython on your Board?
+## Installation of MicroPython for ESP8266 Boards
 
 Tutorial:
 [https://docs.micropython.org/en/latest/esp8266/tutorial/intro.html](https://docs.micropython.org/en/latest/esp8266/tutorial/intro.html)
 
 Download for ESP8266:
 [http://micropython.org/download/#esp8266](http://micropython.org/download/#esp8266)
+## Installation of CircuitPython for RPI Pico Boards.
 
+Tutorial:
+[https://learn.adafruit.com/welcome-to-circuitpython](https://learn.adafruit.com/welcome-to-circuitpython)
 
-## Installation of Tooling on your dev machine.
-
-
-[Pyboard.py](https://github.com/micropython/micropython/blob/master/tools/pyboard.py)
-
-
-```bash
-wget https://raw.githubusercontent.com/micropython/micropython/v1.16/tools/pyboard.py
-cp pyboard.py .local/bin/
-chmod +x .local/bin/pyboard.py
-pyboard.py
-
-mpy-cross
-```
-
+Download:
+[https://circuitpython.org/downloads](https://circuitpython.org/downloads)
 
 ## General
 
-This project is built with micropython for either the ESP8266 NodeMCU or in the future
+This project is built with micropython for either the ESP8266 NodeMCU or in the future with circuitpython for
 the Arduino Nano RP2040H.
 
 
