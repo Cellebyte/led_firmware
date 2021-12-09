@@ -19,7 +19,7 @@ class HSL:
             "hue": self.hue,
             "saturation": self.saturation,
             "luminance": self.luminance,
-        }
+        })
 
     def __sub__(self, other: "HSL"):
         if isinstance(other, HSL):
