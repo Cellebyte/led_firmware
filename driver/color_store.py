@@ -1,4 +1,5 @@
-from typing import Optional
+from collections import OrderedDict
+from typing import Optional, Union
 import objects.rgb
 from errors import VALUE_NOT_IN_RANGE, VALUE_NOT_OF_TYPE
 
@@ -26,6 +27,8 @@ class ColorStore:
         )
 
     def validate_value(self, value: Optional[objects.rgb.RGB]):
+        if value is None:
+            return
         assert isinstance(value, (objects.rgb.RGB)), VALUE_NOT_OF_TYPE(
             self.__class__.__name__, self.name, value, objects.rgb.RGB
         )
@@ -42,9 +45,9 @@ class ColorStore:
             return objects.rgb.RGB.from_dict(color)
         return None
 
-    def as_dict(self):
-        return {
-            key: self.__getitem__(key).as_dict()
+    def as_dict(self) -> dict[str, dict[str, Union[int, float, None]]]:
+        return OrderedDict({
+            str(key): self.__getitem__(key).as_dict()
             for key in range(1, self.slots + 1)
-            if key and self.__getitem__(key)
-        }
+            if self.__getitem__(key) is not None
+        })

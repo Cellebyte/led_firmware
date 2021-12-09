@@ -2,6 +2,7 @@ from errors import IS_REQUIRED
 
 import objects.rgb
 import objects.util
+from collections import OrderedDict
 
 
 class HSL:
@@ -14,7 +15,7 @@ class HSL:
         return objects.util.hsl_to_rgb(self)
 
     def as_dict(self) -> dict:
-        return {
+        return OrderedDict({
             "hue": self.hue,
             "saturation": self.saturation,
             "luminance": self.luminance,

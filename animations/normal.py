@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import driver.color_store
 import driver.led
 import driver.store
@@ -51,7 +52,7 @@ class Normal(animations.base.BaseAnimation):
         return self
 
     def as_dict(self):
-        return {"color_selector": self.color_selector, "current_color": self.color}
+        return OrderedDict({"color_selector": self.color_selector, "current_color": self.color})
 
     def get_key(self, key):
         return "{}.{}".format(self.ANIMATION.value, key)

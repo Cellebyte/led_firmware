@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from errors import IS_REQUIRED, VALUE_NOT_IN_LIST
 
 
@@ -38,7 +39,7 @@ class Animation:
             raise ValueError(IS_REQUIRED(self.__class__.__name__))
 
     def as_dict(self):
-        return {"{}".format(self.__class__.__name__.lower()): self.value}
+        return OrderedDict({"{}".format(self.__class__.__name__.lower()): self.value})
 
     @classmethod
     def from_dict(cls, data: dict):

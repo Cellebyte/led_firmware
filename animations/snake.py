@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import driver.color_store
 import driver.led
 import driver.store
@@ -49,10 +50,10 @@ class Snake(animations.normal.Normal):
         return self
 
     def as_dict(self) -> dict:
-        return {
+        return OrderedDict({
             "length": self.length,
             "steps": self.steps,
-        } | super().as_dict()
+        }) | super().as_dict()
 
     def loop(self):
         self.leds.reset()

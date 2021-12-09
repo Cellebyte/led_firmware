@@ -5,7 +5,7 @@ from objects.animation import Animation
 
 
 class BaseAnimation:
-    ANIMATION: Animation = None
+    ANIMATION: Animation
 
     def __init__(
         self,
