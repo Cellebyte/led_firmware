@@ -1,5 +1,7 @@
 # led-firmware
 
+Make sure you have a board with a WLAN module.
+
 ## Installation of MicroPython for ESP8266 Boards
 
 Tutorial:
@@ -7,17 +9,28 @@ Tutorial:
 
 Download for ESP8266:
 [http://micropython.org/download/#esp8266](http://micropython.org/download/#esp8266)
-## Installation of CircuitPython for RPI Pico Boards.
+
+## Installation of MicroPython for Arduino Nano RP2040 Connect.
 
 Tutorial:
-[https://learn.adafruit.com/welcome-to-circuitpython](https://learn.adafruit.com/welcome-to-circuitpython)
+[http://docs.micropython.org/en/latest/esp8266/tutorial/intro.html#intro](http://docs.micropython.org/en/latest/esp8266/tutorial/intro.html#intro)
+
+> NOTE: The device is normally called `/dev/ttyACM0` instead of `/dev/ttyUSB0`
 
 Download:
-[https://circuitpython.org/downloads](https://circuitpython.org/downloads)
+[https://micropython.org/download/?port=rp2](https://micropython.org/download/?port=rp2)
+
+## Installation of MicroPython for ESP32 Boards
+
+Tutorial:
+[http://docs.micropython.org/en/latest/esp32/tutorial/intro.html#esp32-intro](http://docs.micropython.org/en/latest/esp32/tutorial/intro.html#esp32-intro)
+
+Download:
+[https://micropython.org/download/esp32/](https://micropython.org/download/esp32/)
 
 ## General
 
-This project is built with micropython for either the ESP8266 NodeMCU or in the future with circuitpython for
+This project is built with micropython for either the ESP8266 NodeMCU, ESP32 NodeMCU or in the future with micropython for
 the Arduino Nano RP2040H.
 
 
