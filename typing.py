@@ -15,6 +15,7 @@ class Mock:
 
 
 if typings:
+    # This is needed to mock typings for execution on the micropython kernel.
     Union = typing.Union
     Optional = typing.Optional
     Any = typing.Any
