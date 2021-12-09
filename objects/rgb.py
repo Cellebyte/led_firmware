@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from typing import Optional, Union
 from errors import IS_REQUIRED, VALUE_NOT_IN_RANGE, VALUE_NOT_OF_TYPE
 
@@ -63,11 +64,11 @@ class RGB:
         self._blue = RGB.validate_rgb_value("blue", value, self.__class__.__name__)
 
     def as_dict(self) -> dict[str, Optional[Union[int, float]]]:
-        return {
+        return OrderedDict({
             "red": self.red,
             "green": self.green,
             "blue": self.blue,
-        }
+        })
 
     def as_vector(self):
         return (self.red, self.green, self.blue)

@@ -25,3 +25,4 @@ else:
 
 Union = Union
 Optional = Optional
+Any = Any
