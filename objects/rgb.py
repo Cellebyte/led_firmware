@@ -1,3 +1,4 @@
+from typing import Optional, Union
 from errors import IS_REQUIRED, VALUE_NOT_IN_RANGE, VALUE_NOT_OF_TYPE
 
 import objects.hsl
@@ -8,13 +9,15 @@ class RGB:
     MIN = 0
     MAX = 255
 
-    def __init__(self, red, green, blue):
+    def __init__(
+        self, red: Union[int, float], green: Union[int, float], blue: Union[int, float]
+    ):
         self.red = red
         self.green = green
         self.blue = blue
 
     @staticmethod
-    def validate_rgb_value(color, value: int, class_name: str) -> int:
+    def validate_rgb_value(color, value: Union[int, float], class_name: str) -> int:
         if not isinstance(
             value,
             (
@@ -36,30 +39,30 @@ class RGB:
         return self
 
     @property
-    def red(self) -> int:
+    def red(self) -> Union[int, float]:
         return self._red
 
     @red.setter
-    def red(self, value: int):
+    def red(self, value: Union[int, float]):
         self._red = RGB.validate_rgb_value("red", value, self.__class__.__name__)
 
     @property
-    def green(self) -> int:
+    def green(self) -> Union[int, float]:
         return self._green
 
     @green.setter
-    def green(self, value: int):
+    def green(self, value: Union[int, float]):
         self._green = RGB.validate_rgb_value("green", value, self.__class__.__name__)
 
     @property
-    def blue(self) -> int:
+    def blue(self) -> Union[int, float]:
         return self._blue
 
     @blue.setter
-    def blue(self, value: int):
+    def blue(self, value: Union[int, float]):
         self._blue = RGB.validate_rgb_value("blue", value, self.__class__.__name__)
 
-    def as_dict(self):
+    def as_dict(self) -> dict[str, Optional[Union[int, float]]]:
         return {
             "red": self.red,
             "green": self.green,
@@ -69,16 +72,13 @@ class RGB:
     def as_vector(self):
         return (self.red, self.green, self.blue)
 
-    def from_vector(self, vector):
-        self.red = vector[0]
-        self.green = vector[1]
-        self.blue = vector[2]
+    @classmethod
+    def from_vector(cls, vector) -> "RGB":
+        return cls(vector[0], vector[1], vector[2])
 
-    def from_dict(self, data: dict):
-        self.red = data["red"]
-        self.green = data["green"]
-        self.blue = data["blue"]
-        return self
+    @classmethod
+    def from_dict(cls, data: dict) -> "RGB":
+        return cls(data["red"], data["green"], data["blue"])
 
     def as_hsl(self) -> objects.hsl.HSL:
         return objects.util.rgb_to_hsl(self)
@@ -143,9 +143,27 @@ class RGB:
         )
 
 
-BLACK = RGB(RGB.MIN, RGB.MIN, RGB.MIN)
-WHITE = RGB(RGB.MAX, RGB.MAX, RGB.MAX)
-RED = RGB(RGB.MAX, RGB.MIN, RGB.MIN)
-GREEN = RGB(RGB.MIN, RGB.MAX, RGB.MIN)
-BLUE = RGB(RGB.MIN, RGB.MIN, RGB.MAX)
-PURPLE = RGB(RGB.MAX / 2, 0, RGB.MAX / 2).normalize()
+class COLORS:
+    # non-colors
+    BLACK = RGB(RGB.MIN, RGB.MIN, RGB.MIN)
+    GRAY = RGB(RGB.MAX / 2, RGB.MAX / 2, RGB.MAX / 2).normalize()
+    SILVER = RGB(192, 192, 192)
+    WHITE = RGB(RGB.MAX, RGB.MAX, RGB.MAX)
+    # shades with green
+    LIME = RGB(RGB.MIN, RGB.MAX, RGB.MIN)
+    GREEN = RGB(RGB.MIN, RGB.MAX / 2, RGB.MIN).normalize()
+    # shades with red
+    RED = RGB(RGB.MAX, RGB.MIN, RGB.MIN)
+    MAROON = RGB(RGB.MAX / 2, RGB.MIN, RGB.MIN).normalize()
+    # shades with blue
+    BLUE = RGB(RGB.MIN, RGB.MIN, RGB.MAX)
+    NAVY = RGB(RGB.MIN, RGB.MIN, RGB.MAX / 2).normalize()
+    # without green
+    MAGENTA = RGB(RGB.MAX, 0, RGB.MAX)
+    PURPLE = RGB(RGB.MAX / 2, 0, RGB.MAX / 2).normalize()
+    # without red
+    TEAL = RGB(RGB.MIN, RGB.MAX / 2, RGB.MAX / 2).normalize()
+    CYAN = RGB(RGB.MIN, RGB.MAX, RGB.MAX)
+    # without blue
+    OLIVE = RGB(RGB.MAX / 2, RGB.MAX / 2, RGB.MIN).normalize()
+    YELLOW = RGB(RGB.MAX, RGB.MAX, RGB.MIN)

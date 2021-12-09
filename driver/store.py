@@ -1,3 +1,4 @@
+from typing import Optional, Any
 from errors import MISSING_STATE_FILE
 import json
 
@@ -36,7 +37,7 @@ class Store:
     def save(self, key, objects):
         self.state[key] = objects
 
-    def load(self, key, default=None):
+    def load(self, key, default: Optional[Any]) -> Optional[Any]:
         return self.state.get(key, default)
 
     def store_state(self):

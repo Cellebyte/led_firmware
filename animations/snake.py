@@ -2,7 +2,7 @@ import driver.color_store
 import driver.led
 import driver.store
 from objects.animation import Animation
-from objects.rgb import BLACK
+from objects.rgb import COLORS
 
 import animations.normal
 
@@ -60,13 +60,13 @@ class Snake(animations.normal.Normal):
             self.leds.set(self.color.normalize(), self.position)
         elif self.position > self.length and self.position <= self.leds.len_leds:
             self.end_position = 0
-            self.leds.set(BLACK, self.position - self.length)
+            self.leds.set(COLORS.BLACK, self.position - self.length)
             self.leds.set(self.color.normalize(), self.position)
         elif self.position > self.leds.len_leds:
             self.end_position = self.position
             self.position = -1
         if self.end_position > self.leds.len_leds:
-            self.leds.set(BLACK, self.end_position - self.length)
+            self.leds.set(COLORS.BLACK, self.end_position - self.length)
             self.end_position += self.steps
         self.position += self.steps
 

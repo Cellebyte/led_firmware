@@ -3,6 +3,9 @@
 
 import gc
 REDUCED_FEATURESET = True
+import os
+if getattr(os.uname(), 'sysname') == 'esp32':
+    REDUCED_FEATURESET = False
 try:
     import esp
     esp.osdebug(None)
@@ -15,6 +18,7 @@ import micropython
 import uasyncio
 from driver.led import LEDDriver
 from driver.store import Store
+from driver.util import gc_info
 from secure import password, wlan
 from webserver.http import HTTPServer
 from apiserver.handlers.led_handler import LEDHandler
@@ -22,6 +26,7 @@ from apiserver.handlers.len_handler import LenHandler
 from apiserver.handlers.animation_handler import AnimationHandler
 from apiserver.api import API
 from animations.manual import Manual
+from animations.snake import Snake
 from animations.off import Off
 
 if not REDUCED_FEATURESET:
@@ -32,7 +37,6 @@ if not REDUCED_FEATURESET:
 
 
 # machine.freq(160000000)
-
 
 if __name__ == "__main__":
     micropython.alloc_emergency_exception_buf(100)
@@ -70,7 +74,6 @@ if __name__ == "__main__":
     while True:
         try:
             uasyncio.run(main(http_server, led_driver))
-            gc.collect()
         except KeyboardInterrupt:
             print("closing")
         finally:

@@ -1,3 +1,4 @@
+from typing import Optional
 from apiserver.handlers.base_handler import BaseHandler
 from driver.color_store import ColorStore
 from webserver.http import Request
@@ -26,7 +27,7 @@ class ColorHandler(BaseHandler):
     def delete_colors(self, slot=None):
         raise NotImplementedError()
 
-    def router(self, request: Request) -> Response:
+    def router(self, request: Request) -> Optional[Response]:
         if request.path in self.paths:
             if "GET" == request.method:
                 return self.get_colors()

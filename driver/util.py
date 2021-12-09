@@ -8,7 +8,7 @@ def gc_info():
     print("Memory allocated: {} bytes".format(gc.mem_alloc()))
     print("Memory free:      {} bytes".format(gc.mem_free()))
     print("--------------------------------------------------")
-    print(micropython.mem_info())
+    print(micropython.mem_info(1))
     print("--------------------------------------------------")
 
 

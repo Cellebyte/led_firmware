@@ -40,8 +40,9 @@ class Animation:
     def as_dict(self):
         return {"{}".format(self.__class__.__name__.lower()): self.value}
 
-    def from_dict(self, data: dict):
-        self.value = data[self.__class__.__name__.lower()]
+    @classmethod
+    def from_dict(cls, data: dict):
+        return cls(data[cls.__name__.lower()])
 
     def __repr__(self) -> str:
         return "{}('{}')".format(self.__class__.__name__, self.value)

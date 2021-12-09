@@ -1,6 +1,6 @@
 import uasyncio
 from objects.animation import Animation
-from objects.rgb import BLACK, RGB
+from objects.rgb import COLORS, RGB
 from machine import Pin
 try:
     from neopixel import NeoPixel
@@ -65,7 +65,7 @@ class LEDDriver:
             self.set(rgb, counter)
 
     def reset(self):
-        self.set_all(BLACK)
+        self.set_all(COLORS.BLACK)
 
     async def loop(self, count):
         try:

@@ -2,6 +2,16 @@
     "sync_folder": "",
     "open_on_start": true,
     "auto_connect": false,
-    "manual_com_device": "/dev/ttyUSB0"
-    
+    "manual_com_device": "/dev/ttyUSB0",
+    "py_ignore": [
+        "pymakr.conf",
+        "pico-go.json",
+        "Makefile",
+        ".vscode",
+        ".gitignore",
+        ".git",
+        "project.pymakr",
+        "env",
+        "venv"
+    ]
 }

@@ -3,7 +3,7 @@ import driver.led
 import driver.store
 from errors import PUT_NOT_USEFUL
 from objects.animation import Animation
-from objects.rgb import BLACK
+from objects.rgb import COLORS
 
 import animations.base
 
@@ -25,7 +25,7 @@ class Normal(animations.base.BaseAnimation):
     def color(self):
         color = self.color_store[self.color_selector]
         if color is None:
-            return BLACK
+            return COLORS.BLACK
         return color
 
     @property
