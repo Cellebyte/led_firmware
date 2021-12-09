@@ -1,10 +1,11 @@
 from typing import Optional
+
+import ure
 from apiserver.handlers.base_handler import BaseHandler
 from driver.color_store import ColorStore
-from webserver.http import Request
 from errors import ALL_UNSUPPORTED
 from objects.response import Response
-import ure
+from webserver.http import Request
 
 
 class ColorHandler(BaseHandler):

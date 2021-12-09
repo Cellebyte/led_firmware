@@ -17,7 +17,7 @@ class RGB:
         self.blue = blue
 
     @staticmethod
-    def validate_rgb_value(color, value: Union[int, float], class_name: str) -> int:
+    def validate_rgb_value(color, value: Union[int, float], class_name: str) -> Union[int, float]:
         if not isinstance(
             value,
             (

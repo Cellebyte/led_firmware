@@ -1,11 +1,13 @@
+import json
+from typing import Optional
+
+import ure
 from apiserver.handlers.base_handler import BaseHandler
 from driver.led import LEDDriver
-from webserver.http import Request
 from errors import BODY_MISSING, EXCEPTION_ERROR
-from objects.response import Response
-import ure
-import json
 from objects.animation import Animation
+from objects.response import Response
+from webserver.http import Request
 
 
 class AnimationHandler(BaseHandler):
@@ -32,11 +34,11 @@ class AnimationHandler(BaseHandler):
         except (ValueError, TypeError) as e:
             return self.response.from_dict(*EXCEPTION_ERROR(e))
 
-    def post_animation(self, body: dict) -> Response:
+    def post_animation(self, body: str) -> Response:
         if not body:
             return self.response.from_dict(*BODY_MISSING)
         try:
-            animation = Animation(**(json.loads(body)))
+            animation = Animation.from_dict(json.loads(body))
             self.leds.animation = animation
             return self.response.from_dict(animation.as_dict(), 201)
         except (ValueError, TypeError) as e:
@@ -45,7 +47,7 @@ class AnimationHandler(BaseHandler):
     def get_animation(self) -> Response:
         return self.response.from_dict(self.leds.animation.as_dict(), 200)
 
-    def router(self, request: Request) -> Response:
+    def router(self, request: Request) -> Optional[Response]:
         if request.path in self.paths:
             if "POST" == request.method:
                 return self.post_animation(request.body)

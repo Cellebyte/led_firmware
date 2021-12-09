@@ -1,12 +1,14 @@
+import json
+from typing import Optional
+
+import ure
 from apiserver.handlers.base_handler import BaseHandler
 from driver.led import LEDDriver
-from webserver.http import Request
-import ure
 from errors import ALL_UNSUPPORTED, BODY_MISSING, EXCEPTION_ERROR
 from objects.animation import Animation
 from objects.response import Response
 from objects.rgb import RGB
-import json
+from webserver.http import Request
 
 
 class LEDHandler(BaseHandler):
@@ -39,7 +41,7 @@ class LEDHandler(BaseHandler):
         self.rgb.from_vector(self.leds.pixels[unit])
         return self.response.from_dict(self.rgb.as_dict(), 200)
 
-    def router(self, request: Request) -> Response:
+    def router(self, request: Request) -> Optional[Response]:
         if request.path in self.paths:
             if "POST" == request.method:
                 return self.post_leds(request.body)

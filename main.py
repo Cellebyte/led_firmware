@@ -18,7 +18,6 @@ import micropython
 import uasyncio
 from driver.led import LEDDriver
 from driver.store import Store
-from driver.util import gc_info
 from secure import password, wlan
 from webserver.http import HTTPServer
 from apiserver.handlers.led_handler import LEDHandler

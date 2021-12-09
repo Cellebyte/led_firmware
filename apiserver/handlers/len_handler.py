@@ -1,7 +1,9 @@
+from typing import Optional
+
 from apiserver.handlers.base_handler import BaseHandler
 from driver.led import LEDDriver
-from webserver.http import Request
 from objects.response import Response
+from webserver.http import Request
 
 
 class LenHandler(BaseHandler):
@@ -19,7 +21,7 @@ class LenHandler(BaseHandler):
             200,
         )
 
-    def router(self, request: Request) -> Response:
+    def router(self, request: Request) -> Optional[Response]:
         if request.path in self.paths:
             if "GET" == request.method:
                 return self.get_strip()
