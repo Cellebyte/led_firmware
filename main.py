@@ -2,12 +2,15 @@
 # uos.dupterm(None, 1) # disable REPL on UART(0)
 
 import gc
+
 REDUCED_FEATURESET = True
 import os
-if getattr(os.uname(), 'sysname') == 'esp32':
+
+if getattr(os.uname(), "sysname") == "esp32":
     REDUCED_FEATURESET = False
 try:
     import esp
+
     esp.osdebug(None)
 except ImportError:
     REDUCED_FEATURESET = False
@@ -28,12 +31,6 @@ from animations.manual import Manual
 from animations.snake import Snake
 from animations.off import Off
 
-if not REDUCED_FEATURESET:
-    from animations.normal import Normal
-    from animations.snake import Snake
-    from driver.color_store import ColorStore
-    from apiserver.handlers.color_handler import ColorHandler
-
 
 # machine.freq(160000000)
 
@@ -50,6 +47,11 @@ if __name__ == "__main__":
     api.register_handler(AnimationHandler(led_driver))
 
     if not REDUCED_FEATURESET:
+        from animations.normal import Normal
+        from animations.snake import Snake
+        from driver.color_store import ColorStore
+        from apiserver.handlers.color_handler import ColorHandler
+
         color_store = ColorStore(store=store, slots=10)
         led_driver.register_animation(Snake(store, color_store, led_driver))
         led_driver.register_animation(Normal(store, color_store, led_driver))

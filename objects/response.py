@@ -6,7 +6,7 @@ class Response:
         self.code = code
         self.body = body
 
-    def from_dict(self, body, code) -> 'Response':
+    def from_dict(self, body, code) -> "Response":
         self.code = code
         self.body = body
         return self

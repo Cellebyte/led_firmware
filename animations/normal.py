@@ -31,7 +31,9 @@ class Normal(animations.base.BaseAnimation):
 
     @property
     def color_selector(self) -> int:
-        return self.store.load(self.get_key("color_selector"), default=1)
+        data = self.store.load(self.get_key("color_selector"), default=1)
+        assert isinstance(data, int)
+        return data
 
     @color_selector.setter
     def color_selector(self, value: int):
@@ -52,7 +54,9 @@ class Normal(animations.base.BaseAnimation):
         return self
 
     def as_dict(self):
-        return OrderedDict({"color_selector": self.color_selector, "current_color": self.color})
+        return OrderedDict(
+            [("color_selector", self.color_selector), ("current_color", self.color)]
+        )
 
     def get_key(self, key):
         return "{}.{}".format(self.ANIMATION.value, key)

@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import Optional, Union
+from typing import Union
 from errors import IS_REQUIRED, VALUE_NOT_IN_RANGE, VALUE_NOT_OF_TYPE
 
 import objects.hsl
@@ -18,7 +18,9 @@ class RGB:
         self.blue = blue
 
     @staticmethod
-    def validate_rgb_value(color, value: Union[int, float], class_name: str) -> Union[int, float]:
+    def validate_rgb_value(
+        color, value: Union[int, float], class_name: str
+    ) -> Union[int, float]:
         if not isinstance(
             value,
             (
@@ -63,12 +65,14 @@ class RGB:
     def blue(self, value: Union[int, float]):
         self._blue = RGB.validate_rgb_value("blue", value, self.__class__.__name__)
 
-    def as_dict(self) -> dict[str, Optional[Union[int, float]]]:
-        return OrderedDict({
-            "red": self.red,
-            "green": self.green,
-            "blue": self.blue,
-        })
+    def as_dict(self):
+        return OrderedDict(
+            [
+                ("red", self.red),
+                ("green", self.green),
+                ("blue", self.blue),
+            ]
+        )
 
     def as_vector(self):
         return (self.red, self.green, self.blue)

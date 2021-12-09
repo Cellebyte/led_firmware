@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import Optional, Union
+from typing import Optional
 import objects.rgb
 from errors import VALUE_NOT_IN_RANGE, VALUE_NOT_OF_TYPE
 
@@ -41,13 +41,17 @@ class ColorStore:
     def __getitem__(self, key: int) -> Optional[objects.rgb.RGB]:
         self.validate_key(key)
         color = self.store.load(self.get_key(key), default=None)
+        assert isinstance(color, dict)
         if color is not None:
             return objects.rgb.RGB.from_dict(color)
         return None
 
-    def as_dict(self) -> dict[str, dict[str, Union[int, float, None]]]:
-        return OrderedDict({
-            str(key): self.__getitem__(key).as_dict()
-            for key in range(1, self.slots + 1)
-            if self.__getitem__(key) is not None
-        })
+    def as_dict(self):
+        return OrderedDict(
+            [
+                # This type check is done in the comprehension as a filter function
+                (str(key), self.__getitem__(key).as_dict())
+                for key in range(1, self.slots + 1)
+                if isinstance(self.__getitem__(key), objects.rgb.RGB)
+            ]
+        )

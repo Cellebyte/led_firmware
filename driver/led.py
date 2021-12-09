@@ -2,6 +2,7 @@ import uasyncio
 from objects.animation import Animation
 from objects.rgb import COLORS, RGB
 from machine import Pin
+
 try:
     from neopixel import NeoPixel
 except ImportError:
@@ -29,12 +30,12 @@ class LEDDriver:
 
     @property
     def animation(self):
-        return Animation.from_dict(
-            self.store.load(
-                self.__class__.__name__,
-                default=Animation(animation="normal").as_dict(),
-            )
+        data = self.store.load(
+            self.__class__.__name__,
+            default=Animation(animation="normal").as_dict(),
         )
+        assert isinstance(data, dict)
+        return Animation.from_dict(data)
 
     def register_animation(self, animation: animations.base.BaseAnimation):
         assert isinstance(animation, animations.base.BaseAnimation)

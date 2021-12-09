@@ -39,7 +39,7 @@ class Animation:
             raise ValueError(IS_REQUIRED(self.__class__.__name__))
 
     def as_dict(self):
-        return OrderedDict({"{}".format(self.__class__.__name__.lower()): self.value})
+        return OrderedDict([("{}".format(self.__class__.__name__.lower()), self.value)])
 
     @classmethod
     def from_dict(cls, data: dict):

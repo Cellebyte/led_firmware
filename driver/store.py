@@ -1,5 +1,5 @@
 import json
-from typing import Any
+from typing import Any, Union
 
 import uasyncio
 from errors import MISSING_STATE_FILE
@@ -37,8 +37,8 @@ class Store:
     def save(self, key, objects):
         self.state[key] = objects
 
-    def load(self, key: str, default: Any) -> dict:
-        return self.state.get(key, default)
+    def load(self, key: str, default: Any) -> Union[dict, int]:
+        return self.state.get(key) or default
 
     def store_state(self):
         with open(self.state_file, "w") as file:

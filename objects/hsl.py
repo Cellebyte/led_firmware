@@ -15,11 +15,13 @@ class HSL:
         return objects.util.hsl_to_rgb(self)
 
     def as_dict(self) -> dict:
-        return OrderedDict({
-            "hue": self.hue,
-            "saturation": self.saturation,
-            "luminance": self.luminance,
-        })
+        return OrderedDict(
+            [
+                ("hue", self.hue),
+                ("saturation", self.saturation),
+                ("luminance", self.luminance),
+            ]
+        )
 
     def __sub__(self, other: "HSL"):
         if isinstance(other, HSL):

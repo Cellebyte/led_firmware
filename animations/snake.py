@@ -23,7 +23,9 @@ class Snake(animations.normal.Normal):
 
     @property
     def steps(self) -> int:
-        return self.store.load(self.get_key("steps"), default=1)
+        data = self.store.load(self.get_key("steps"), default=1)
+        assert isinstance(data, int)
+        return data
 
     @steps.setter
     def steps(self, value: int):
@@ -32,7 +34,9 @@ class Snake(animations.normal.Normal):
 
     @property
     def length(self) -> int:
-        return self.store.load(self.get_key("length"), default=30)
+        data = self.store.load(self.get_key("length"), default=30)
+        assert isinstance(data, int)
+        return data
 
     @length.setter
     def length(self, value: int):
@@ -50,10 +54,10 @@ class Snake(animations.normal.Normal):
         return self
 
     def as_dict(self) -> dict:
-        return OrderedDict({
-            "length": self.length,
-            "steps": self.steps,
-        }) | super().as_dict()
+        return OrderedDict(
+            [("length", self.length), ("steps", self.steps)]
+            + [(key, value) for key, value in super().as_dict().items()]
+        )
 
     def loop(self):
         self.leds.reset()
@@ -73,13 +77,13 @@ class Snake(animations.normal.Normal):
 
     # Rotate <num_of_pixels> pixels to the left
     def rotate_left(self, num_of_pixels):
-        if num_of_pixels == None:
+        if num_of_pixels is None:
             num_of_pixels = 1
         self.pixels = self.pixels[num_of_pixels:] + self.pixels[:num_of_pixels]
 
     # Rotate <num_of_pixels> pixels to the right
     def rotate_right(self, num_of_pixels):
-        if num_of_pixels == None:
+        if num_of_pixels is None:
             num_of_pixels = 1
         num_of_pixels = -1 * num_of_pixels
         self.pixels = self.pixels[num_of_pixels:] + self.pixels[:num_of_pixels]
