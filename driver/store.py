@@ -1,5 +1,5 @@
 import json
-from typing import Any, Union
+from typing import Any
 
 import uasyncio
 from errors import MISSING_STATE_FILE
