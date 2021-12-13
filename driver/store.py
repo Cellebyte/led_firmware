@@ -34,11 +34,14 @@ class Store:
             await self.loop(count)
             await uasyncio.sleep_ms(100)
 
-    def save(self, key, objects):
+    def save(self, key: str, objects: Any):
         self.state[key] = objects
 
-    def load(self, key: str, default: Any) -> Union[dict, int]:
-        return self.state.get(key) or default
+    def delete(self, key: str) -> Any:
+        return self.state.pop(key, None)
+
+    def load(self, key: str, default: Any) -> Any:
+        return self.state.get(key, default)
 
     def store_state(self):
         with open(self.state_file, "w") as file:

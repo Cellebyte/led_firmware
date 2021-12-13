@@ -15,7 +15,7 @@ class ColorStore:
         if self.__getitem__(1) is None:
             self.__setitem__(1, objects.rgb.COLORS.PURPLE)
 
-    def get_key(self, key):
+    def get_key(self, key) -> str:
         return "{}.{}".format(self.name, key)
 
     def validate_key(self, key):
@@ -46,12 +46,23 @@ class ColorStore:
         assert isinstance(color, dict)
         return objects.rgb.RGB.from_dict(color)
 
+    def __iter__(self):
+        for key in range(1, self.slots + 1):
+            yield key
+
+    def delete(self, key: int) -> Optional[objects.rgb.RGB]:
+        self.validate_key(key)
+        color = self.store.delete(self.get_key(key))
+        if color is None:
+            return None
+        return objects.rgb.RGB.from_dict(color)
+
     def as_dict(self):
         return OrderedDict(
             [
                 # This type check is done in the comprehension as a filter function
                 (str(key), self.__getitem__(key).as_dict())
-                for key in range(1, self.slots + 1)
+                for key in self
                 if isinstance(self.__getitem__(key), objects.rgb.RGB)
             ]
         )

@@ -1,3 +1,4 @@
 secure.py
 .vscode/
 *.mpy
+__pycache__
