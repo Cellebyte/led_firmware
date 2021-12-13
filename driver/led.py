@@ -2,11 +2,7 @@ import uasyncio
 from objects.animation import Animation
 from objects.rgb import COLORS, RGB
 from machine import Pin
-
-try:
-    from neopixel import NeoPixel
-except ImportError:
-    from driver.neopixel import NeoPixel
+from neopixel import NeoPixel
 
 import animations.base
 from driver.store import Store
@@ -62,8 +58,7 @@ class LEDDriver:
         self.pixels[unit] = rgb.as_vector()
 
     def set_all(self, rgb: RGB):
-        for counter in range(self.len_leds):
-            self.set(rgb, counter)
+        self.pixels.fill(rgb.as_vector())
 
     def reset(self):
         self.set_all(COLORS.BLACK)

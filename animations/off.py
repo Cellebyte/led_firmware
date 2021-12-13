@@ -8,3 +8,6 @@ class Off(BaseAnimation):
 
     def loop(self):
         self.leds.reset()
+
+    def as_dict(self):
+        return {}

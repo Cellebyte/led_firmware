@@ -1,8 +1,6 @@
 # This file is executed on every boot (including wake-boot from deepsleep)
 # uos.dupterm(None, 1) # disable REPL on UART(0)
 
-import gc
-
 REDUCED_FEATURESET = True
 import os
 
@@ -28,7 +26,6 @@ from apiserver.handlers.len_handler import LenHandler
 from apiserver.handlers.animation_handler import AnimationHandler
 from apiserver.api import API
 from animations.manual import Manual
-from animations.snake import Snake
 from animations.off import Off
 
 
@@ -72,13 +69,11 @@ if __name__ == "__main__":
         await server.wait_closed()
         await uasyncio.sleep_ms(10_000)
 
-    while True:
-        try:
-            uasyncio.run(main(http_server, led_driver))
-        except KeyboardInterrupt:
-            print("closing")
-        finally:
-            loop = uasyncio.get_event_loop()
-            loop.stop()
-            loop.close()
-            break
+    try:
+        uasyncio.run(main(http_server, led_driver))
+    except KeyboardInterrupt:
+        print("closing")
+    finally:
+        loop = uasyncio.get_event_loop()
+        loop.stop()
+        loop.close()

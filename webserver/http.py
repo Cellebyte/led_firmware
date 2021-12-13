@@ -1,4 +1,4 @@
-from driver.util import gc_info
+# from driver.util import gc_info
 import network
 import uasyncio
 import ure
@@ -104,4 +104,4 @@ class HTTPServer:
             await writer.drain()
             writer.close()
             await writer.wait_closed()
-            gc_info()
+            # gc_info()
