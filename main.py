@@ -54,26 +54,25 @@ if __name__ == "__main__":
         led_driver.register_animation(Normal(store, color_store, led_driver))
         api.register_handler(ColorHandler(color_store))
 
-    http_server = HTTPServer(wlan, password, 80, handler=api)
-    led_driver.reset()
-    led_driver.write()
-    http_server.init()
+    with HTTPServer(wlan, password, 80, handler=api) as http_server:
+        led_driver.reset()
+        led_driver.write()
 
-    async def main(http_server: HTTPServer, led_driver: LEDDriver):
-        loop = uasyncio.get_event_loop()
-        server = http_server.start()
-        loop.create_task(server)
-        loop.create_task(led_driver.start())
-        loop.create_task(store.start())
-        server = await server
-        await server.wait_closed()
-        await uasyncio.sleep_ms(10_000)
+        async def main(http_server: HTTPServer, led_driver: LEDDriver):
+            loop = uasyncio.get_event_loop()
+            server = http_server.start()
+            loop.create_task(server)
+            loop.create_task(led_driver.start())
+            loop.create_task(store.start())
+            server = await server
+            await server.wait_closed()
+            await uasyncio.sleep_ms(10_000)
 
-    try:
-        uasyncio.run(main(http_server, led_driver))
-    except KeyboardInterrupt:
-        print("closing")
-    finally:
-        loop = uasyncio.get_event_loop()
-        loop.stop()
-        loop.close()
+        try:
+            uasyncio.run(main(http_server, led_driver))
+        except KeyboardInterrupt:
+            print("closing")
+        finally:
+            loop = uasyncio.get_event_loop()
+            loop.stop()
+            loop.close()

@@ -1,5 +1,7 @@
 # from driver.util import gc_info
+from typing import Optional
 import network
+import time
 import uasyncio
 import ure
 import gc
@@ -29,7 +31,7 @@ class HTTPServer:
 
     def __init__(self, essid, password, port, handler):
         self.essid = essid
-        self.wlan = None
+        self.wlan: Optional[network.WLAN] = None
         self.socket = None
         self.password = password
         self.port = port
@@ -40,23 +42,26 @@ class HTTPServer:
             self.handle_request, "0.0.0.0", self.port, backlog=self.backlog
         )
 
-    def reconnect(self):
-        while not self.wlan.isconnected():
-            pass
-        return
-
-    def start_internet_connection(self):
+    def __enter__(self):
         self.wlan = network.WLAN(network.STA_IF)
         self.wlan.active(True)
-        if not self.wlan.isconnected():
-            print("connecting to network...")
-        self.wlan.connect(self.essid, self.password)
-        while not self.wlan.isconnected():
-            pass
+        print("connecting to network...")
+        self.reconnect()
         print("network config:", self.wlan.ifconfig())
+        return self
 
-    def init(self):
-        self.start_internet_connection()
+    def __exit__(self, *_):
+        if self.wlan and self.wlan.isconnected():
+            self.wlan.disconnect()
+
+        return False
+
+    def reconnect(self):
+        if self.wlan is not None:
+            while not self.wlan.isconnected():
+                self.wlan.connect(self.essid, self.password)
+                time.sleep(10)
+        return
 
     def parse_request(self, request):
         splitted = request.split("{}{}".format(self.end_line, self.end_line), 1)

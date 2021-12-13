@@ -55,8 +55,13 @@ class AnimationHandler(BaseHandler):
                 return self.get_animation()
         elif match := self.path_regex.match(request.path):
             animation = Animation(animation=str(match.group(1)))
-            if "GET" == request.method:
-                return self.get_animations_options(animation=animation)
-            elif "PUT" == request.method:
-                return self.put_animations_options(request.body, animation=animation)
+            try:
+                if "GET" == request.method:
+                    return self.get_animations_options(animation=animation)
+                elif "PUT" == request.method:
+                    return self.put_animations_options(
+                        request.body, animation=animation
+                    )
+            except KeyError as e:
+                self.response.from_dict(*EXCEPTION_ERROR(e))
         return None

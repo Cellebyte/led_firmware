@@ -41,10 +41,10 @@ class ColorStore:
     def __getitem__(self, key: int) -> Optional[objects.rgb.RGB]:
         self.validate_key(key)
         color = self.store.load(self.get_key(key), default=None)
+        if color is None:
+            return None
         assert isinstance(color, dict)
-        if color is not None:
-            return objects.rgb.RGB.from_dict(color)
-        return None
+        return objects.rgb.RGB.from_dict(color)
 
     def as_dict(self):
         return OrderedDict(

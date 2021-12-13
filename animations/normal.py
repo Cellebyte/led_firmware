@@ -55,7 +55,10 @@ class Normal(animations.base.BaseAnimation):
 
     def as_dict(self):
         return OrderedDict(
-            [("color_selector", self.color_selector), ("current_color", self.color.as_dict())]
+            [
+                ("color_selector", self.color_selector),
+                ("current_color", self.color.as_dict()),
+            ]
         )
 
     def get_key(self, key):
