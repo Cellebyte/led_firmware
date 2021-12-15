@@ -37,7 +37,7 @@ class Normal(animations.base.BaseAnimation):
 
     @color_selector.setter
     def color_selector(self, value: int):
-        assert self.color_store.validate_key(value)
+        self.color_store.validate_key(value)
         self.store.save(self.get_key("color_selector"), value)
 
     def update(self, data: dict):

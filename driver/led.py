@@ -1,28 +1,29 @@
+from utime import time
 import uasyncio
 from objects.animation import Animation
 from objects.rgb import COLORS, RGB
 from machine import Pin
 from neopixel import NeoPixel
-
+import time
 import animations.base
 from driver.store import Store
 
 
 class LEDDriver:
 
-    LED_PIN = 4
+    LED_PIN = 27
     MAX_HUE = RGB.MAX
 
     def __init__(self, leds, meters, store, debug=False) -> None:
-        self._len_leds = int(round(leds * meters))
-        self.pixels = NeoPixel(Pin(self.LED_PIN, Pin.OUT), self.len_leds)
+        self.pin = Pin(self.LED_PIN, Pin.OUT)
+        self.pixels = NeoPixel(self.pin, int(round(leds * meters)), timing=(300,1090,1090,320))
         self.store: Store = store
         self.debug = debug
         self.animations = {}
 
     @property
     def len_leds(self) -> int:
-        return self._len_leds
+        return len(self.pixels)
 
     @property
     def animation(self):
@@ -44,6 +45,9 @@ class LEDDriver:
 
     def write(self):
         self.pixels.write()
+        # Needed due to datasheet of WS2815
+        self.pin.off()
+        time.sleep_us(300)
 
     async def start(self):
         count = 0
@@ -55,13 +59,14 @@ class LEDDriver:
             await uasyncio.sleep_ms(5)
 
     def set(self, rgb: RGB, unit):
-        self.pixels[unit] = rgb.as_vector()
+        self.pixels[unit] = rgb.normalize().as_vector()
 
     def set_all(self, rgb: RGB):
-        self.pixels.fill(rgb.as_vector())
+        self.pixels.fill(rgb.normalize().as_vector())
 
     def reset(self):
         self.set_all(COLORS.BLACK)
+        self.write()
 
     async def loop(self, count):
         try:

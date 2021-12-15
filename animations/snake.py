@@ -6,7 +6,7 @@ from objects.animation import Animation
 from objects.rgb import COLORS
 
 import animations.normal
-
+import time
 
 class Snake(animations.normal.Normal):
     ANIMATION: Animation = Animation("snake")
@@ -60,30 +60,16 @@ class Snake(animations.normal.Normal):
         )
 
     def loop(self):
-        self.leds.reset()
         if self.position <= self.length:
             self.leds.set(self.color.normalize(), self.position)
-        elif self.position > self.length and self.position <= self.leds.len_leds:
+        elif self.position > self.length and self.position < self.leds.len_leds:
             self.end_position = 0
             self.leds.set(COLORS.BLACK, self.position - self.length)
             self.leds.set(self.color.normalize(), self.position)
-        elif self.position > self.leds.len_leds:
-            self.end_position = self.position
-            self.position = -1
-        if self.end_position > self.leds.len_leds:
-            self.leds.set(COLORS.BLACK, self.end_position - self.length)
+        elif self.position >= self.leds.len_leds:
+            self.end_position = self.position - self.length
+            self.position = -self.steps
+        if self.end_position  < self.leds.len_leds:
+            self.leds.set(COLORS.BLACK, self.end_position)
             self.end_position += self.steps
         self.position += self.steps
-
-    # Rotate <num_of_pixels> pixels to the left
-    def rotate_left(self, num_of_pixels):
-        if num_of_pixels is None:
-            num_of_pixels = 1
-        self.pixels = self.pixels[num_of_pixels:] + self.pixels[:num_of_pixels]
-
-    # Rotate <num_of_pixels> pixels to the right
-    def rotate_right(self, num_of_pixels):
-        if num_of_pixels is None:
-            num_of_pixels = 1
-        num_of_pixels = -1 * num_of_pixels
-        self.pixels = self.pixels[num_of_pixels:] + self.pixels[:num_of_pixels]
