@@ -8,6 +8,7 @@ from objects.rgb import COLORS
 import animations.normal
 import time
 
+
 class Snake(animations.normal.Normal):
     ANIMATION: Animation = Animation("snake")
 
@@ -69,7 +70,7 @@ class Snake(animations.normal.Normal):
         elif self.position >= self.leds.len_leds:
             self.end_position = self.position - self.length
             self.position = -self.steps
-        if self.end_position  < self.leds.len_leds:
+        if self.end_position < self.leds.len_leds:
             self.leds.set(COLORS.BLACK, self.end_position)
             self.end_position += self.steps
         self.position += self.steps

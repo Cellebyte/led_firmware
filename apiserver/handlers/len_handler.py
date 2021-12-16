@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from typing import Optional
 
 from apiserver.handlers.base_handler import BaseHandler
@@ -14,10 +15,12 @@ class LenHandler(BaseHandler):
 
     def get_strip(self) -> Response:
         return self.response.from_dict(
-            {
-                "last": self.leds.len_leds - 1,
-                "first": 0,
-            },
+            OrderedDict(
+                [
+                    ("first", 0),
+                    ("last", self.leds.len_leds - 1),
+                ]
+            ),
             200,
         )
 

@@ -16,7 +16,9 @@ class LEDDriver:
 
     def __init__(self, leds, meters, store, debug=False) -> None:
         self.pin = Pin(self.LED_PIN, Pin.OUT)
-        self.pixels = NeoPixel(self.pin, int(round(leds * meters)), timing=(300,1090,1090,320))
+        self.pixels = NeoPixel(
+            self.pin, int(round(leds * meters)), timing=(300, 1090, 1090, 320)
+        )
         self.store: Store = store
         self.debug = debug
         self.animations = {}
