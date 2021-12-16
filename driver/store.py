@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import json
 from typing import Any
 
@@ -35,6 +36,8 @@ class Store:
             await uasyncio.sleep_ms(100)
 
     def save(self, key: str, objects: Any):
+        if isinstance(objects, OrderedDict):
+            objects = dict(objects)
         self.state[key] = objects
 
     def delete(self, key: str) -> Any:
