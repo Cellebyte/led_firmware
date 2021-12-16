@@ -69,7 +69,7 @@ class Snake(animations.normal.Normal):
             self.leds.set(self.color.normalize(), self.position)
         elif self.position >= self.leds.len_leds:
             self.end_position = self.position - self.length
-            self.position = -self.steps
+            self.position = -1
         if self.end_position < self.leds.len_leds:
             self.leds.set(COLORS.BLACK, self.end_position)
             self.end_position += self.steps
