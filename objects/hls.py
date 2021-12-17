@@ -5,34 +5,29 @@ import objects.rgb
 import objects.vector
 
 
-class HSV(objects.vector.Vector):
+class HLS(objects.vector.Vector):
 
     MAPPING = {
         "x": "hue",
-        "y": "saturation",
-        "z": "value",
+        "y": "luminance",
+        "z": "saturation",
     }
 
-    def __init__(
-        self,
-        hue: Union[int, float],
-        saturation: Union[int, float],
-        value: Union[int, float],
-    ):
+    def __init__(self, hue, luminance, saturation):
         self.hue = hue
+        self.luminance = luminance
         self.saturation = saturation
-        self.value = value
 
     @property
     def hue(self) -> Union[int, float]:
         return self.x
 
     @property
-    def saturation(self) -> Union[int, float]:
+    def luminance(self) -> Union[int, float]:
         return self.y
 
     @property
-    def value(self) -> Union[int, float]:
+    def saturation(self) -> Union[int, float]:
         return self.z
 
     @hue.setter
@@ -43,34 +38,28 @@ class HSV(objects.vector.Vector):
             )
         self.x = value
 
+    @luminance.setter
+    def luminance(self, value: Union[int, float]):
+        if not (0 <= value <= 1):
+            raise ValueError(
+                VALUE_NOT_IN_RANGE(self.__class__.__name__, "luminance", value, 0, 1)
+            )
+        self.y = value
+
     @saturation.setter
     def saturation(self, value: Union[int, float]):
         if not (0 <= value <= 1):
             raise ValueError(
                 VALUE_NOT_IN_RANGE(self.__class__.__name__, "saturation", value, 0, 1)
             )
-        self.y = value
-
-    @value.setter
-    def value(self, value: Union[int, float]):
-        if not (0 <= value <= 1):
-            raise ValueError(
-                VALUE_NOT_IN_RANGE(self.__class__.__name__, "value", value, 0, 1)
-            )
         self.z = value
 
     def as_rgb(self) -> objects.rgb.RGB:
-        value = colorsys.hsv_to_rgb(*self.as_tuple())
-        if value:
-            return objects.rgb.RGB.from_tuple(value)
-        else:
-            raise NotImplementedError(
-                "colorsys.hsv_to_rgb(h,s,v) returned None but it should not"
-            )
+        return objects.rgb.RGB.from_tuple(colorsys.hls_to_rgb(*self.as_tuple()))
 
     @classmethod
-    def from_rgb(cls, rgb: objects.rgb.RGB) -> "HSV":
+    def from_rgb(cls, rgb: objects.rgb.RGB) -> "HLS":
         if isinstance(rgb, objects.rgb.RGB):
-            return rgb.as_hsv()
+            return rgb.as_hls()
         else:
             raise ValueError(IS_REQUIRED("RGB"))

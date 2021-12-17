@@ -1,14 +1,16 @@
-from collections import OrderedDict
 from typing import Union
-from errors import IS_REQUIRED, VALUE_NOT_IN_RANGE, VALUE_NOT_OF_TYPE
+from errors import VALUE_NOT_IN_RANGE
+import colorsys
+import objects.hls
+import objects.hsv
+import objects.vector
 
-import objects.hsl
-import objects.util
 
-
-class RGB:
+class RGB(objects.vector.Vector):
     MIN = 0
     MAX = 255
+
+    MAPPING = {"x": "red", "y": "green", "z": "blue"}
 
     def __init__(
         self, red: Union[int, float], green: Union[int, float], blue: Union[int, float]
@@ -17,135 +19,45 @@ class RGB:
         self.green = green
         self.blue = blue
 
-    @staticmethod
-    def validate_rgb_value(
-        color, value: Union[int, float], class_name: str
-    ) -> Union[int, float]:
-        if not isinstance(
-            value,
-            (
-                int,
-                float,
-            ),
-        ):
-            raise ValueError(VALUE_NOT_OF_TYPE(class_name, color, value, int))
+    def validate(self, value, hint=""):
+        value = super().validate(value, hint=hint)
         if not (RGB.MIN <= value <= RGB.MAX):
             raise ValueError(
-                VALUE_NOT_IN_RANGE(class_name, color, value, RGB.MIN, RGB.MAX)
+                VALUE_NOT_IN_RANGE(
+                    self.__class__.__name__, hint, value, RGB.MIN, RGB.MAX
+                )
             )
         return value
 
-    def normalize(self):
-        self.red = round(self.red)
-        self.green = round(self.green)
-        self.blue = round(self.blue)
-        return self
-
     @property
     def red(self) -> Union[int, float]:
-        return self._red
+        return self.x
 
     @red.setter
     def red(self, value: Union[int, float]):
-        self._red = RGB.validate_rgb_value("red", value, self.__class__.__name__)
+        self.x = self.validate(value, hint="red")
 
     @property
     def green(self) -> Union[int, float]:
-        return self._green
+        return self.y
 
     @green.setter
     def green(self, value: Union[int, float]):
-        self._green = RGB.validate_rgb_value("green", value, self.__class__.__name__)
+        self.y = self.validate(value, hint="green")
 
     @property
     def blue(self) -> Union[int, float]:
-        return self._blue
+        return self.z
 
     @blue.setter
     def blue(self, value: Union[int, float]):
-        self._blue = RGB.validate_rgb_value("blue", value, self.__class__.__name__)
+        self.z = self.validate(value, hint="blue")
 
-    def as_dict(self):
-        return OrderedDict(
-            [
-                ("red", self.red),
-                ("green", self.green),
-                ("blue", self.blue),
-            ]
-        )
+    def as_hls(self) -> objects.hls.HLS:
+        return objects.hls.HLS.from_tuple(colorsys.rgb_to_hls(*self.as_tuple()))
 
-    def as_vector(self):
-        return (self.red, self.green, self.blue)
-
-    @classmethod
-    def from_vector(cls, vector) -> "RGB":
-        return cls(vector[0], vector[1], vector[2])
-
-    @classmethod
-    def from_dict(cls, data: dict) -> "RGB":
-        return cls(data["red"], data["green"], data["blue"])
-
-    def as_hsl(self) -> objects.hsl.HSL:
-        return objects.util.rgb_to_hsl(self)
-
-    def __add__(self, other: "RGB"):
-        if isinstance(other, RGB):
-            return RGB(
-                self.red + other.red, self.green + other.green, self.blue + other.blue
-            )
-        else:
-            raise ValueError(IS_REQUIRED(self.__class__.__name__))
-
-    __radd__ = __add__
-
-    def __eq__(self, other: "RGB") -> bool:
-        if isinstance(other, RGB):
-            return (
-                self.red == other.red
-                and self.green == other.green
-                and self.blue == other.blue
-            )
-        else:
-            raise ValueError(IS_REQUIRED(self.__class__.__name__))
-
-    def __sub__(self, other: "RGB"):
-        if isinstance(other, RGB):
-            return RGB(
-                self.red - other.red, self.green - other.green, self.blue - other.blue
-            )
-        else:
-            raise ValueError(IS_REQUIRED(self.__class__.__name__))
-
-    def __rsub__(self, other: "RGB"):
-        if isinstance(other, RGB):
-            return RGB(
-                other.red - self.red, other.green - self.green, other.blue - self.blue
-            )
-        else:
-            raise ValueError(IS_REQUIRED(self.__class__.__name__))
-
-    def __mul__(self, other: "RGB"):
-        if isinstance(other, RGB):
-            return RGB(
-                self.red * other.red, self.green * other.green, self.blue * other.blue
-            )
-        else:
-            raise ValueError(IS_REQUIRED(self.__class__.__name__))
-
-    __rmul__ = __mul__
-
-    def __truediv__(self, other: "RGB"):
-        if isinstance(other, RGB):
-            return RGB(
-                self.red / other.red, self.green / other.green, self.blue / other.blue
-            )
-        else:
-            raise ValueError(IS_REQUIRED(self.__class__.__name__))
-
-    def __repr__(self):
-        return "{}({},{},{})".format(
-            self.__class__.__name__, self.red, self.green, self.blue
-        )
+    def as_hsv(self) -> objects.hsv.HSV:
+        return objects.hsv.HSV.from_tuple(colorsys.rgb_to_hsv(*self.as_tuple()))
 
 
 class COLORS:

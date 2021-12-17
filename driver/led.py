@@ -61,10 +61,10 @@ class LEDDriver:
             await uasyncio.sleep_ms(5)
 
     def set(self, rgb: RGB, unit):
-        self.pixels[unit] = rgb.normalize().as_vector()
+        self.pixels[unit] = rgb.normalize().as_tuple()
 
     def set_all(self, rgb: RGB):
-        self.pixels.fill(rgb.normalize().as_vector())
+        self.pixels.fill(rgb.normalize().as_tuple())
 
     def reset(self):
         self.set_all(COLORS.BLACK)
