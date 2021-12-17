@@ -11,7 +11,7 @@ class Response:
     @property
     def body(self) -> dict:
         return self._body
-    
+
     @body.setter
     def body(self, value: dict):
         if not isinstance(value, dict):
@@ -23,7 +23,7 @@ class Response:
     @property
     def code(self) -> int:
         return self._code
-    
+
     @code.setter
     def code(self, value: int):
         if not isinstance(value, int):
