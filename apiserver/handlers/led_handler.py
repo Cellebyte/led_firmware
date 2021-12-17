@@ -17,14 +17,13 @@ class LEDHandler(BaseHandler):
 
     def __init__(self, leds: LEDDriver) -> None:
         self.leds = leds
-        self.rgb = RGB(0, 0, 0)
         self.animation = Animation("manual")
 
     def post_leds(self, body, unit=None) -> Response:
         if not body:
             return self.response.from_dict(*BODY_MISSING)
         try:
-            rgb = self.rgb.from_dict(json.loads(body))
+            rgb = RGB.from_dict(json.loads(body))
         except (ValueError, TypeError, KeyError) as e:
             return self.response.from_dict(*EXCEPTION_ERROR(e))
         # If the led endpoint is used controller gets forced to manual mode
@@ -38,8 +37,8 @@ class LEDHandler(BaseHandler):
     def get_leds(self, unit=None) -> Response:
         if unit is None:
             return self.response.from_dict(*ALL_UNSUPPORTED)
-        self.rgb.from_vector(self.leds.pixels[unit])
-        return self.response.from_dict(self.rgb.as_dict(), 200)
+        color = RGB.from_tuple(self.leds.pixels[unit])
+        return self.response.from_dict(color.as_dict(), 200)
 
     def router(self, request: Request) -> Optional[Response]:
         if request.path in self.paths:

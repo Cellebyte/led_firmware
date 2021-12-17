@@ -24,6 +24,7 @@ from webserver.http import HTTPServer
 from apiserver.handlers.led_handler import LEDHandler
 from apiserver.handlers.len_handler import LenHandler
 from apiserver.handlers.animation_handler import AnimationHandler
+from apiserver.handlers.gc_handler import GCHandler
 from apiserver.api import API
 from animations.manual import Manual
 from animations.off import Off
@@ -42,6 +43,7 @@ if __name__ == "__main__":
     api.register_handler(LEDHandler(led_driver))
     api.register_handler(LenHandler(led_driver))
     api.register_handler(AnimationHandler(led_driver))
+    api.register_handler(GCHandler())
 
     if not REDUCED_FEATURESET:
         from animations.normal import Normal

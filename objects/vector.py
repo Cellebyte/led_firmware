@@ -56,7 +56,7 @@ class Vector:
     def from_tuple(
         cls, obj: Tuple[Union[int, float], Union[int, float], Union[int, float]]
     ):
-        if isinstance(obj, Tuple) and len(obj) == 3:
+        if isinstance(obj, tuple) and len(obj) == 3:
             return cls(obj[0], obj[1], obj[2])
         else:
             raise ValueError(IS_REQUIRED("Tuple with 3 elements."))
