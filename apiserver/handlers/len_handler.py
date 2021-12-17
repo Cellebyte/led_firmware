@@ -3,7 +3,7 @@ from typing import Optional
 
 from apiserver.handlers.base_handler import BaseHandler
 from driver.led import LEDDriver
-from objects.response import Response
+from apiserver.response import Response
 from webserver.http import Request
 
 
@@ -14,7 +14,7 @@ class LenHandler(BaseHandler):
         self.leds = leds
 
     def get_strip(self) -> Response:
-        return self.response.from_dict(
+        return Response.from_dict(
             OrderedDict(
                 [
                     ("first", 0),

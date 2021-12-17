@@ -1,4 +1,4 @@
-from objects.response import Response
+from apiserver.response import Response
 from webserver.http import Request
 
 from apiserver.handlers.base_handler import BaseHandler

@@ -6,7 +6,7 @@ from apiserver.handlers.base_handler import BaseHandler
 from driver.led import LEDDriver
 from errors import BODY_MISSING, EXCEPTION_ERROR
 from objects.animation import Animation
-from objects.response import Response
+from apiserver.response import Response
 from webserver.http import Request
 
 
@@ -18,34 +18,34 @@ class AnimationHandler(BaseHandler):
         self.leds = leds
 
     def get_animations_options(self, animation: Animation) -> Response:
-        return self.response.from_dict(
+        return Response.from_dict(
             self.leds.animations[animation].as_dict(),
             200,
         )
 
     def put_animations_options(self, body, animation: Animation) -> Response:
         if not body:
-            return self.response.from_dict(*BODY_MISSING)
+            return Response.from_dict(*BODY_MISSING)
         try:
-            return self.response.from_dict(
+            return Response.from_dict(
                 self.leds.animations[animation].update(json.loads(body)).as_dict(),
                 200,
             )
         except (ValueError, TypeError) as e:
-            return self.response.from_dict(*EXCEPTION_ERROR(e))
+            return Response.from_dict(*EXCEPTION_ERROR(e))
 
     def post_animation(self, body: str) -> Response:
         if not body:
-            return self.response.from_dict(*BODY_MISSING)
+            return Response.from_dict(*BODY_MISSING)
         try:
             animation = Animation.from_dict(json.loads(body))
             self.leds.animation = animation
-            return self.response.from_dict(animation.as_dict(), 201)
+            return Response.from_dict(animation.as_dict(), 201)
         except (ValueError, TypeError) as e:
-            return self.response.from_dict(*EXCEPTION_ERROR(e))
+            return Response.from_dict(*EXCEPTION_ERROR(e))
 
     def get_animation(self) -> Response:
-        return self.response.from_dict(self.leds.animation.as_dict(), 200)
+        return Response.from_dict(self.leds.animation.as_dict(), 200)
 
     def router(self, request: Request) -> Optional[Response]:
         if request.path in self.paths:
@@ -63,5 +63,5 @@ class AnimationHandler(BaseHandler):
                         request.body, animation=animation
                     )
             except KeyError as e:
-                self.response.from_dict(*EXCEPTION_ERROR(e))
+                Response.from_dict(*EXCEPTION_ERROR(e))
         return None

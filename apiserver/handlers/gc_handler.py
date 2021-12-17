@@ -3,7 +3,7 @@ from typing import Optional
 
 from apiserver.handlers.base_handler import BaseHandler
 from driver.util import gc_info
-from objects.response import Response
+from apiserver.response import Response
 from webserver.http import Request
 
 
@@ -14,5 +14,5 @@ class GCHandler(BaseHandler):
         if request.path in self.paths:
             if "GET" == request.method:
                 gc_info()
-                return self.response.from_dict({}, 200)
+                return Response.from_dict({}, 200)
         return None

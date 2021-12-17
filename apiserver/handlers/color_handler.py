@@ -3,10 +3,9 @@ from typing import Optional
 import ure
 import json
 from apiserver.handlers.base_handler import BaseHandler
-from driver import color_store
 from driver.color_store import ColorStore
-from errors import ALL_UNSUPPORTED, EXCEPTION_ERROR
-from objects.response import Response
+from errors import EXCEPTION_ERROR
+from apiserver.response import Response
 from objects.rgb import RGB
 from webserver.http import Request
 
@@ -20,10 +19,10 @@ class ColorHandler(BaseHandler):
 
     def get_colors(self, slot=None) -> Response:
         if slot is None:
-            return self.response.from_dict(self.color_store.as_dict(), 200)
+            return Response.from_dict(self.color_store.as_dict(), 200)
         else:
             color = self.color_store[slot]
-            return self.response.from_dict(color.as_dict() if color else color, 200)
+            return Response.from_dict(color.as_dict() if color else color, 200)
 
     def post_colors(self, body, slot=None):
         color = RGB.from_dict(json.loads(body))
@@ -39,13 +38,13 @@ class ColorHandler(BaseHandler):
             self.color_store[free_slot] = color
         else:
             self.color_store[slot] = color
-        return self.response.from_dict(color.as_dict(), 201)
+        return Response.from_dict(color.as_dict(), 201)
 
     def delete_colors(self, slot=None):
         if slot is not None:
             color = self.color_store.delete(slot)
             if color is not None:
-                return self.response.from_dict(color.as_dict(), 200)
+                return Response.from_dict(color.as_dict(), 200)
             return None
 
     def router(self, request: Request) -> Optional[Response]:
@@ -66,5 +65,5 @@ class ColorHandler(BaseHandler):
                 elif "DELETE" == request.method:
                     return self.delete_colors(slot=slot)
             except AssertionError as e:
-                return self.response.from_dict(*EXCEPTION_ERROR(e))
+                return Response.from_dict(*EXCEPTION_ERROR(e))
         return None
