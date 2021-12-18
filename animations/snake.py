@@ -20,7 +20,7 @@ class Snake(animations.normal.Normal):
     ):
         super().__init__(store, color_store, leds)
         self.position = 0
-        self.end_position = 0
+        self.end_position = self.leds.len_leds
 
     @property
     def steps(self) -> int:
