@@ -12,6 +12,7 @@ class HLS(objects.vector.Vector):
         "y": "luminance",
         "z": "saturation",
     }
+    normalization_vector = objects.vector.Vector(360, 1, 1)
 
     def __init__(self, hue, luminance, saturation):
         self.hue = hue
@@ -55,7 +56,14 @@ class HLS(objects.vector.Vector):
         self.z = value
 
     def as_rgb(self) -> objects.rgb.RGB:
-        return objects.rgb.RGB.from_tuple(colorsys.hls_to_rgb(*self.as_tuple()))
+        return objects.rgb.RGB.from_tuple(
+            (
+                objects.rgb.RGB.normalization_vector
+                * objects.vector.Vector.from_tuple(
+                    colorsys.hls_to_rgb(*(self / self.normalization_vector).as_tuple())
+                )
+            ).as_tuple()
+        ).normalize()
 
     @classmethod
     def from_rgb(cls, rgb: objects.rgb.RGB) -> "HLS":

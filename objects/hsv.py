@@ -13,6 +13,8 @@ class HSV(objects.vector.Vector):
         "z": "value",
     }
 
+    normalization_vector = objects.vector.Vector(360, 1, 1)
+
     def __init__(
         self,
         hue: Union[int, float],
@@ -60,9 +62,14 @@ class HSV(objects.vector.Vector):
         self.z = value
 
     def as_rgb(self) -> objects.rgb.RGB:
-        value = colorsys.hsv_to_rgb(*self.as_tuple())
+        value = colorsys.hsv_to_rgb(*(self / self.normalization_vector).as_tuple())
         if value:
-            return objects.rgb.RGB.from_tuple(value)
+            return objects.rgb.RGB.from_tuple(
+                (
+                    objects.rgb.RGB.normalization_vector
+                    * objects.vector.Vector.from_tuple(value)
+                ).as_tuple()
+            ).normalize()
         else:
             raise NotImplementedError(
                 "colorsys.hsv_to_rgb(h,s,v) returned None but it should not"

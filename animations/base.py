@@ -17,6 +17,9 @@ class BaseAnimation:
         self.store: driver.store.Store = store
         self.leds: driver.led.LEDDriver = leds
 
+    def get_key(self, key):
+        return "{}.{}".format(self.ANIMATION.value, key)
+
     def update(self, data: dict):
         raise NotImplementedError(IMPLEMENTATION_NEEDED)
 

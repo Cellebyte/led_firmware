@@ -61,8 +61,5 @@ class Normal(animations.base.BaseAnimation):
             ]
         )
 
-    def get_key(self, key):
-        return "{}.{}".format(self.ANIMATION.value, key)
-
     def loop(self):
         self.leds.set_all(self.color.normalize())

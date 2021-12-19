@@ -16,7 +16,7 @@ class Response:
     def body(self, value: dict):
         if not isinstance(value, dict):
             raise ValueError(
-                *VALUE_NOT_OF_TYPE(self.__class__.__name__, "body", value, dict)
+                VALUE_NOT_OF_TYPE(self.__class__.__name__, "body", value, dict)
             )
         self._body = value
 
@@ -28,7 +28,7 @@ class Response:
     def code(self, value: int):
         if not isinstance(value, int):
             raise ValueError(
-                *VALUE_NOT_OF_TYPE(self.__class__.__name__, "code", value, int)
+                VALUE_NOT_OF_TYPE(self.__class__.__name__, "code", value, int)
             )
         self._code = value
 

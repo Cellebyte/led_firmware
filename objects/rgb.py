@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Tuple, Union
 from errors import VALUE_NOT_IN_RANGE
 import colorsys
 import objects.hls
@@ -11,6 +11,8 @@ class RGB(objects.vector.Vector):
     MAX = 255
 
     MAPPING = {"x": "red", "y": "green", "z": "blue"}
+
+    normalization_vector = objects.vector.Vector(MAX, MAX, MAX)
 
     def __init__(
         self, red: Union[int, float], green: Union[int, float], blue: Union[int, float]
@@ -53,11 +55,28 @@ class RGB(objects.vector.Vector):
     def blue(self, value: Union[int, float]):
         self.z = self.validate(value, hint="blue")
 
-    def as_hls(self) -> objects.hls.HLS:
-        return objects.hls.HLS.from_tuple(colorsys.rgb_to_hls(*self.as_tuple()))
+    def as_colorsys_tuple(self) -> Tuple[float, float, float]:
+        return (self / self.normalization_vector).as_tuple()
 
-    def as_hsv(self) -> objects.hsv.HSV:
-        return objects.hsv.HSV.from_tuple(colorsys.rgb_to_hsv(*self.as_tuple()))
+    def as_hls(self) -> objects.hls.HLS:
+        return objects.hls.HLS.from_tuple(
+            (
+                objects.vector.Vector.from_tuple(
+                    colorsys.rgb_to_hls(*self.as_colorsys_tuple())
+                )
+                * objects.hls.HLS.normalization_vector
+            ).as_tuple()
+        )
+
+    def as_hsv(self) -> objects.hsv.HSV:  #
+        return objects.hsv.HSV.from_tuple(
+            (
+                objects.vector.Vector.from_tuple(
+                    colorsys.rgb_to_hsv(*self.as_colorsys_tuple())
+                )
+                * objects.hsv.HSV.normalization_vector
+            ).as_tuple()
+        )
 
 
 class COLORS:

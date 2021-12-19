@@ -48,12 +48,14 @@ if __name__ == "__main__":
     if not REDUCED_FEATURESET:
         from animations.normal import Normal
         from animations.snake import Snake
+        from animations.breath import Breath
         from driver.color_store import ColorStore
         from apiserver.handlers.color_handler import ColorHandler
 
         color_store = ColorStore(store=store, slots=10)
         led_driver.register_animation(Snake(store, color_store, led_driver))
         led_driver.register_animation(Normal(store, color_store, led_driver))
+        led_driver.register_animation(Breath(store, color_store, led_driver))
         api.register_handler(ColorHandler(color_store))
 
     with HTTPServer(wlan, password, 80, handler=api) as http_server:
