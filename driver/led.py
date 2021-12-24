@@ -28,7 +28,7 @@ class LEDDriver:
         return len(self.pixels)
 
     @property
-    def animation(self):
+    def animation(self) -> Animation:
         data = self.store.load(
             self.__class__.__name__,
             default=Animation(animation="normal").as_dict(),

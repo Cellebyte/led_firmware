@@ -3,19 +3,14 @@ from errors import IS_REQUIRED, VALUE_NOT_IN_LIST
 
 
 class Direction:
-    SUPPORTED = [
-        "up",
-        "down",
-        "left",
-        "right",
-    ]
+    SUPPORTED = ["up", "down"]
     _value = "up"
 
-    def __init__(self, direction):
+    def __init__(self, direction: str):
         self.value = direction
 
     @property
-    def value(self):
+    def value(self) -> str:
         return self._value
 
     @value.setter
