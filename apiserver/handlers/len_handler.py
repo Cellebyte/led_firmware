@@ -2,8 +2,8 @@ from collections import OrderedDict
 from typing import Optional
 
 from apiserver.handlers.base_handler import BaseHandler
-from driver.led import LEDDriver
 from apiserver.response import Response
+from driver.led import LEDDriver
 from webserver.http import Request
 
 

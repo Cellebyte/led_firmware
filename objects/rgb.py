@@ -1,6 +1,8 @@
-from typing import Tuple, Union
-from errors import VALUE_NOT_IN_RANGE
 import colorsys
+from typing import Tuple, Union
+
+from errors import VALUE_NOT_IN_RANGE
+
 import objects.hls
 import objects.hsv
 import objects.vector

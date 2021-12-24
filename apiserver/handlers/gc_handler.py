@@ -2,8 +2,8 @@ from collections import OrderedDict
 from typing import Optional
 
 from apiserver.handlers.base_handler import BaseHandler
-from driver.util import gc_info
 from apiserver.response import Response
+from driver.util import gc_info
 from webserver.http import Request
 
 

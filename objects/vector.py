@@ -1,5 +1,6 @@
 from collections import OrderedDict
-from typing import Union, Tuple
+from typing import Tuple, Union
+
 from errors import IS_REQUIRED, VALUE_NOT_OF_TYPE
 
 

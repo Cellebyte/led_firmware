@@ -1,11 +1,11 @@
+import json
 from typing import Optional
 
 import ure
-import json
 from apiserver.handlers.base_handler import BaseHandler
+from apiserver.response import Response
 from driver.color_store import ColorStore
 from errors import EXCEPTION_ERROR
-from apiserver.response import Response
 from objects.rgb import RGB
 from webserver.http import Request
 

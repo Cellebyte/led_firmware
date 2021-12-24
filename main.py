@@ -17,18 +17,18 @@ except ImportError:
 # import machine
 import micropython
 import uasyncio
+
+from animations.manual import Manual
+from animations.off import Off
+from apiserver.api import API
+from apiserver.handlers.animation_handler import AnimationHandler
+from apiserver.handlers.gc_handler import GCHandler
+from apiserver.handlers.led_handler import LEDHandler
+from apiserver.handlers.len_handler import LenHandler
 from driver.led import LEDDriver
 from driver.store import Store
 from secure import password, wlan
 from webserver.http import HTTPServer
-from apiserver.handlers.led_handler import LEDHandler
-from apiserver.handlers.len_handler import LenHandler
-from apiserver.handlers.animation_handler import AnimationHandler
-from apiserver.handlers.gc_handler import GCHandler
-from apiserver.api import API
-from animations.manual import Manual
-from animations.off import Off
-
 
 # machine.freq(160000000)
 
@@ -46,11 +46,11 @@ if __name__ == "__main__":
     api.register_handler(GCHandler())
 
     if not REDUCED_FEATURESET:
+        from animations.breath import Breath
         from animations.normal import Normal
         from animations.snake import Snake
-        from animations.breath import Breath
-        from driver.color_store import ColorStore
         from apiserver.handlers.color_handler import ColorHandler
+        from driver.color_store import ColorStore
 
         color_store = ColorStore(store=store, slots=10)
         led_driver.register_animation(Snake(store, color_store, led_driver))

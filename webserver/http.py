@@ -1,10 +1,11 @@
 # from driver.util import gc_info
-from typing import Optional
-import network
+import gc
 import time
+from typing import Optional
+
+import network
 import uasyncio
 import ure
-import gc
 
 from webserver.util import CODE_TO_MESSAGE
 

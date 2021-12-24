@@ -1,6 +1,8 @@
-from typing import Union
-from errors import IS_REQUIRED, VALUE_NOT_IN_RANGE
 import colorsys
+from typing import Union
+
+from errors import IS_REQUIRED, VALUE_NOT_IN_RANGE
+
 import objects.rgb
 import objects.vector
 

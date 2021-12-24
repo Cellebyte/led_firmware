@@ -3,10 +3,10 @@ from typing import Optional
 
 import ure
 from apiserver.handlers.base_handler import BaseHandler
+from apiserver.response import Response
 from driver.led import LEDDriver
 from errors import ALL_UNSUPPORTED, BODY_MISSING, EXCEPTION_ERROR
 from objects.animation import Animation
-from apiserver.response import Response
 from objects.rgb import RGB
 from webserver.http import Request
 

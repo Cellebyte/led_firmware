@@ -1,11 +1,13 @@
-from utime import time
+import time
+
+import animations.base
 import uasyncio
-from objects.animation import Animation
-from objects.rgb import COLORS, RGB
 from machine import Pin
 from neopixel import NeoPixel
-import time
-import animations.base
+from objects.animation import Animation
+from objects.rgb import COLORS, RGB
+from utime import time
+
 from driver.store import Store
 
 
