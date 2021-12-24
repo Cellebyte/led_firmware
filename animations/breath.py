@@ -49,10 +49,9 @@ class Breath(animations.normal.Normal):
         color = self.color.as_hsv()
         if self.value is None:
             self.value = color.value
-        else:
-            if self.value <= 0:
-                self.value = None
-                return
         self.value = self.value - self.dim_percentage
+        if self.value <= 0:
+            self.value = None
+            return
         color.value = self.value
         self.leds.set_all(color.as_rgb())
