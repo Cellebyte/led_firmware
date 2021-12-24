@@ -1,20 +1,22 @@
-from typing import Optional
 from collections import OrderedDict
-from errors import VALUE_NOT_OF_TYPE
-from objects.animation import Animation
+from typing import Optional
 
-import animations.base
-import driver.store
 import driver.color_store
 import driver.led
+import driver.store
+from errors import VALUE_NOT_OF_TYPE
+from objects.animation import Animation
 from objects.direction import Direction
-from objects.rgb import COLORS, RGB
+from objects.rgb import RGB
+
+import animations.base
 
 
 class Breath(animations.base.BaseAnimation):
     ANIMATION: Animation = Animation("breath")
     _value = None
     _color_selector_index = 0
+    _direction = Direction("up")
     _default_color_selectors = [1, 2, 3, 4, 0, 0, 0, 0, 0, 0]
 
     def __init__(
@@ -38,14 +40,18 @@ class Breath(animations.base.BaseAnimation):
     @color_selectors.setter
     def color_selectors(self, value: list[int]):
         if isinstance(value, list):
-            assert len(value) <= 10, "Only 10 elements allowed value {} > 10".format(
-                len(value)
-            )
+            if not len(value) <= 10:
+                raise ValueError(
+                    "Only 10 elements allowed value {} > 10".format(len(value))
+                )
             self.store.save(self.get_key("color_selectors"), value)
         else:
             raise ValueError(
                 VALUE_NOT_OF_TYPE(
-                    "list", "color_selectors", value=value, allowed_type=list[int]
+                    self.__class__.__name__,
+                    "color_selectors",
+                    value=value,
+                    allowed_type=list[int],
                 )
             )
 
@@ -93,20 +99,19 @@ class Breath(animations.base.BaseAnimation):
 
     @property
     def direction(self) -> Direction:
-        return Direction.from_dict(
-            self.store.load(
-                self.get_key("direction"), default=Direction("up").as_dict()
-            )
-        )
+        return self._direction
 
     @direction.setter
     def direction(self, value: Direction):
         assert isinstance(value, Direction)
-        self.store.save(self.get_key("direction"), value.as_dict())
+        self._direction = value
 
     def as_dict(self) -> dict:
         return OrderedDict(
-            [("dim_percentage", self.dim_percentage), ("direction", self.direction)]
+            [
+                ("dim_percentage", self.dim_percentage),
+                ("color_selectors", self.color_selectors),
+            ]
             + [(key, value) for key, value in super().as_dict().items()]
         )
 
@@ -115,23 +120,23 @@ class Breath(animations.base.BaseAnimation):
             self._color_selector_index = 0
             return
         color = self.color.as_hsv()
-        if self.direction == Direction("down"):
+        if self.direction.value == "down":
             if self.value is None:
                 self.value = color.value
             self.value = self.value - self.dim_percentage
             color.value = self.value
             if self.value <= 0:
                 self.value = None
-                self.direction = Direction("up")
+                self.direction.value = "up"
                 self._color_selector_index = self._color_selector_index + 1
                 return
-        elif self.direction == Direction("up"):
+        elif self.direction.value == "up":
             if self.value is None:
                 self.value = 0
             self.value = self.value + self.dim_percentage
             if self.value >= color.value:
                 self.value = None
-                self.direction = Direction("down")
+                self.direction.value = "down"
                 self._color_selector_index = self._color_selector_index + 1
                 return
             else:
