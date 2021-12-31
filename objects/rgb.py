@@ -74,7 +74,7 @@ class RGB(objects.vector.Vector):
         return objects.hsv.HSV.from_tuple(
             (
                 objects.vector.Vector.from_tuple(
-                    coloursys.rgb_to_hsv(*self.as_coloursys_tuple())
+                    colorsys.rgb_to_hsv(*self.as_colorsys_tuple())
                 )
                 * objects.hsv.HSV.normalization_vector
             ).as_tuple()
