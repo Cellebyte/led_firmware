@@ -49,14 +49,14 @@ if __name__ == "__main__":
         from animations.breath import Breath
         from animations.normal import Normal
         from animations.snake import Snake
-        from apiserver.handlers.color_handler import ColorHandler
-        from driver.color_store import ColorStore
+        from apiserver.handlers.colour_palettes_handler import ColourPalettesHandler
+        from driver.colour_palettes import ColourPalettes
 
-        color_store = ColorStore(store=store, slots=10)
-        led_driver.register_animation(Snake(store, color_store, led_driver))
-        led_driver.register_animation(Normal(store, color_store, led_driver))
-        led_driver.register_animation(Breath(store, color_store, led_driver))
-        api.register_handler(ColorHandler(color_store))
+        colour_palettes = ColourPalettes(store=store, slots=16, amount=4)
+        led_driver.register_animation(Snake(store, led_driver, colour_palettes))
+        led_driver.register_animation(Normal(store, led_driver, colour_palettes))
+        led_driver.register_animation(Breath(store, led_driver, colour_palettes))
+        api.register_handler(ColourPalettesHandler(colour_palettes))
 
     with HTTPServer(wlan, password, 80, handler=api) as http_server:
         led_driver.reset()

@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import driver.led
 import driver.store
 from errors import IMPLEMENTATION_NEEDED
@@ -14,6 +15,7 @@ class BaseAnimation:
     ):
         assert isinstance(store, driver.store.Store)
         assert isinstance(leds, driver.led.LEDDriver)
+        assert isinstance(self.ANIMATION, Animation)
         self.store: driver.store.Store = store
         self.leds: driver.led.LEDDriver = leds
 
@@ -24,7 +26,7 @@ class BaseAnimation:
         raise NotImplementedError(IMPLEMENTATION_NEEDED)
 
     def as_dict(self):
-        raise NotImplementedError(IMPLEMENTATION_NEEDED)
+        return OrderedDict([])
 
     def loop(self):
         raise NotImplementedError(IMPLEMENTATION_NEEDED)

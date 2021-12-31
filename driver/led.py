@@ -5,8 +5,7 @@ import uasyncio
 from machine import Pin
 from neopixel import NeoPixel
 from objects.animation import Animation
-from objects.rgb import COLORS, RGB
-from utime import time
+from objects.rgb import COLOURS, RGB
 
 from driver.store import Store
 
@@ -69,7 +68,7 @@ class LEDDriver:
         self.pixels.fill(rgb.normalize().as_tuple())
 
     def reset(self):
-        self.set_all(COLORS.BLACK)
+        self.set_all(COLOURS.BLACK)
         self.write()
 
     async def loop(self, count):
@@ -79,7 +78,7 @@ class LEDDriver:
         except KeyError:
             if count % 30 == 0:
                 print(
-                    "{}('{}') is not implementd".format(
+                    "{}('{}') is not implemented".format(
                         self.animation.__class__.__name__, self.animation.value
                     )
                 )

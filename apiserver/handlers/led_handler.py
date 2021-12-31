@@ -27,7 +27,9 @@ class LEDHandler(BaseHandler):
         except (ValueError, TypeError, KeyError) as e:
             return Response.from_dict(*EXCEPTION_ERROR(e))
         # If the led endpoint is used controller gets forced to manual mode
-        self.leds.animation = self.animation
+        if self.leds.animation != self.animation:
+            self.leds.reset()
+            self.leds.animation = self.animation
         if unit is None:
             self.leds.set_all(rgb)
         else:
@@ -37,8 +39,8 @@ class LEDHandler(BaseHandler):
     def get_leds(self, unit=None) -> Response:
         if unit is None:
             return Response.from_dict(*ALL_UNSUPPORTED)
-        color = RGB.from_tuple(self.leds.pixels[unit])
-        return Response.from_dict(color.as_dict(), 200)
+        colour = RGB.from_tuple(self.leds.pixels[unit])
+        return Response.from_dict(colour.as_dict(), 200)
 
     def router(self, request: Request) -> Optional[Response]:
         if request.path in self.paths:

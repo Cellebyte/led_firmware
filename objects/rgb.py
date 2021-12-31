@@ -74,15 +74,15 @@ class RGB(objects.vector.Vector):
         return objects.hsv.HSV.from_tuple(
             (
                 objects.vector.Vector.from_tuple(
-                    colorsys.rgb_to_hsv(*self.as_colorsys_tuple())
+                    coloursys.rgb_to_hsv(*self.as_coloursys_tuple())
                 )
                 * objects.hsv.HSV.normalization_vector
             ).as_tuple()
         )
 
 
-class COLORS:
-    # non-colors
+class COLOURS:
+    # non-colours
     BLACK = RGB(RGB.MIN, RGB.MIN, RGB.MIN)
     GRAY = RGB(RGB.MAX / 2, RGB.MAX / 2, RGB.MAX / 2).normalize()
     SILVER = RGB(192, 192, 192)
@@ -95,6 +95,9 @@ class COLORS:
     MAROON = RGB(RGB.MAX / 2, RGB.MIN, RGB.MIN).normalize()
     # shades with blue
     BLUE = RGB(RGB.MIN, RGB.MIN, RGB.MAX)
+    SKYBLUE = RGB(135, 206, 235)
+    LIGHTBLUE = RGB(173, 216, 230)
+    DARKBLUE = RGB(RGB.MIN, RGB.MIN, 139)
     NAVY = RGB(RGB.MIN, RGB.MIN, RGB.MAX / 2).normalize()
     # without green
     MAGENTA = RGB(RGB.MAX, 0, RGB.MAX)

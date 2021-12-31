@@ -40,7 +40,7 @@ the Arduino Nano RP2040H.
 1. Implement `Content-Type: application/json` for Requests.
 1. Implement `Accept: ` for Requests.
 1. Moar Animations
-1. Implement a way of streaming the current color of each LED of the connected stripe.
+1. Implement a way of streaming the current colour of each LED of the connected stripe.
 
 ## How-To Start
 
@@ -87,7 +87,7 @@ the http server and the led driver as well as the store module.
 ## The Store Module
 
 `driver.store.Store` is handling all the state keeping between reboots.
-This keeps the colors and necessary data from the animations persisted onto the Microcontroller.
+This keeps the colours and necessary data from the animations persisted onto the Microcontroller.
 It does that by reading every 240 ticks the json file and comparing it with the current state.
 If the state changed it dumps it back to disk. This is working as redisdump.
 
@@ -101,12 +101,12 @@ also what animations are registered and available to the driver.
 ### snake
 
 This is an animation which runs a connected length of leds through the led strip.
-It stores the `steps` between each tick the `length` of the snake and the `color`.
+It stores the `steps` between each tick the `length` of the snake and the `colour`.
 
 ### breath
 
-This is an animation which pulses between different colors.
-It stores up to 6 `colors` and transitions between them.
+This is an animation which pulses between different colours.
+It stores up to 6 `colours` and transitions between them.
 
 ### off
 
@@ -114,7 +114,7 @@ This shows always `RGB(0,0,0)`. The off state.
 
 ### normal
 
-This is a normal color selector which sets the color of all LEDs at once and is persisted between reboots.
+This is a normal colour selector which sets the colour of all LEDs at once and is persisted between reboots.
 
 ### manual
 
@@ -204,13 +204,13 @@ curl -d '{"animation": "snake"}' -X POST "$ENDPOINT/animation"
 ```bash
 export ENDPOINT=127.0.2.1
 curl -X GET "$ENDPOINT/animation/snake"
-{"color": {"green": 0, "blue": 128, "red": 135}, "steps": 1, "length": 53}
+{"colour": {"green": 0, "blue": 128, "red": 135}, "steps": 1, "length": 53}
 ```
 
 ```bash
 export ENDPOINT=127.0.2.1
 curl -d {"steps": 2} -X PUT "$ENDPOINT/animation/snake"
-{"color": {"green": 0, "blue": 128, "red": 135}, "steps": 2, "length": 53}
+{"colour": {"green": 0, "blue": 128, "red": 135}, "steps": 2, "length": 53}
 curl -d {"steps": 2} -X PUT "$ENDPOINT/animation/snake"
 {"error": "Nothing useful provided for update!"}
 ```

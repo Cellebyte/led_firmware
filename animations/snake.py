@@ -1,25 +1,27 @@
 from collections import OrderedDict
 
-import driver.color_store
+import driver.colour_palettes
 import driver.led
 import driver.store
 from objects.animation import Animation
 from objects.direction import Direction
-from objects.rgb import COLORS
+from objects.rgb import COLOURS
 
 import animations.normal
 
 
 class Snake(animations.normal.Normal):
     ANIMATION: Animation = Animation("snake")
+    _colour_selectors_max_len = 6
+    direction = Direction("up")
 
     def __init__(
         self,
         store: driver.store.Store,
-        color_store: driver.color_store.ColorStore,
         leds: driver.led.LEDDriver,
+        colour_palettes: driver.colour_palettes.ColourPalettes,
     ):
-        super().__init__(store, color_store, leds)
+        super().__init__(store, leds, colour_palettes)
         self.position = 0
         self.end_position = self.leds.len_leds
 
@@ -33,19 +35,6 @@ class Snake(animations.normal.Normal):
     def steps(self, value: int):
         assert isinstance(value, int)
         self.store.save(self.get_key("steps"), value)
-
-    @property
-    def direction(self) -> Direction:
-        return Direction.from_dict(
-            self.store.load(
-                self.get_key("direction"), default=Direction("up").as_dict()
-            )
-        )
-
-    @direction.setter
-    def direction(self, value: Direction):
-        assert isinstance(value, Direction)
-        self.store.save(self.get_key("direction"), value.as_dict())
 
     @property
     def length(self) -> int:
@@ -73,27 +62,31 @@ class Snake(animations.normal.Normal):
             [
                 ("length", self.length),
                 ("steps", self.steps),
-                ("direction", self.direction),
             ]
             + [(key, value) for key, value in super().as_dict().items()]
         )
 
     def loop(self):
-        if self.direction == Direction("up"):
+        if self.direction.value == "up":
+            if self.change_colour and self.position == 0:
+                self._colour_selector_index = self._colour_selector_index + 1
+            if not self._colour_selector_index < len(self.colour_selectors):
+                self._colour_selector_index = 0
+                return
             if self.position <= self.length:
-                self.leds.set(self.color.normalize(), self.position)
+                self.leds.set(self.colour.normalize(), self.position)
             elif self.position > self.length and self.position < self.leds.len_leds:
                 self.end_position = 0
-                self.leds.set(COLORS.BLACK, self.position - self.length)
-                self.leds.set(self.color.normalize(), self.position)
+                self.leds.set(COLOURS.BLACK, self.position - self.length)
+                self.leds.set(self.colour.normalize(), self.position)
             elif self.position >= self.leds.len_leds:
                 self.end_position = self.position - self.length
                 self.position = -1
             if self.end_position < self.leds.len_leds:
-                self.leds.set(COLORS.BLACK, self.end_position)
+                self.leds.set(COLOURS.BLACK, self.end_position)
                 self.end_position += self.steps
             self.position += self.steps
-        elif self.direction == Direction("down"):
+        elif self.direction.value == "down":
             raise NotImplementedError(
                 "This direction {} is not implemented for Snake".format(self.direction)
             )

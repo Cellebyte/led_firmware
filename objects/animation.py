@@ -8,6 +8,7 @@ class Animation:
         "snake",
         "normal",
         "breath",
+        "cycle",
         "off",
         "manual",
     ]
