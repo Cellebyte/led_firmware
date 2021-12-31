@@ -24,7 +24,9 @@ class ColourPalettesHandler(BaseHandler):
         elif match := self.path_regex.match(request.path):
             palette = int(match.group(1))
             if match.group(2):
-                self.colour_palette_handler.colour_palette = self.colour_palettes[palette]
+                self.colour_palette_handler.colour_palette = self.colour_palettes[
+                    palette
+                ]
                 request.path = match.group(2)
                 return self.colour_palette_handler.router(request)
         return None

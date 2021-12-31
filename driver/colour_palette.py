@@ -8,8 +8,14 @@ from .store import Store
 
 class colourPalette:
     default_name = "colours"
-    
-    def __init__(self, store: Store, slots: int = 10, palette: Optional[int] = None, default_colours: Optional[tuple] = None):
+
+    def __init__(
+        self,
+        store: Store,
+        slots: int = 10,
+        palette: Optional[int] = None,
+        default_colours: Optional[tuple] = None,
+    ):
         self.slots = slots
         self.store = store
         self.palette = palette
@@ -26,14 +32,18 @@ class colourPalette:
     @property
     def default_colours(self) -> tuple:
         return self._default_colours
-    
+
     @default_colours.setter
     def default_colours(self, value: Optional[tuple]):
         if value is None:
             self._default_colours = tuple([None for _ in range(self.slots)])
             return
         assert isinstance(value, tuple)
-        assert self.slots == len(value), "len(default_colours) [{}] does not match provided slots={}".format(len(value), self.slots)
+        assert self.slots == len(
+            value
+        ), "len(default_colours) [{}] does not match provided slots={}".format(
+            len(value), self.slots
+        )
         self._default_colours = value
 
     def get_key(self, key) -> str:
@@ -94,5 +104,3 @@ class colourPalette:
                 if isinstance(self.__getitem__(key), objects.rgb.RGB)
             ]
         )
-
-

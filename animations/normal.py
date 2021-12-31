@@ -60,7 +60,15 @@ class Normal(animations.base.BaseAnimation):
     def colour_selectors(self, value: list[int]):
         if isinstance(value, list):
             if not len(value) <= self._colour_selectors_max_len:
-                raise ValueError(VALUE_NOT_IN_RANGE(self.__class__.__name__, "colour_selectors", len(value), 0, self._colour_selectors_max_len))
+                raise ValueError(
+                    VALUE_NOT_IN_RANGE(
+                        self.__class__.__name__,
+                        "colour_selectors",
+                        len(value),
+                        0,
+                        self._colour_selectors_max_len,
+                    )
+                )
             for item in value:
                 self.colour_palettes[self.palette_selector].validate_key(item)
             self.store.save(self.get_key("colour_selectors"), list(value))
