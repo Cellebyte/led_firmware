@@ -85,6 +85,8 @@ class Normal(animations.base.BaseAnimation):
     @change_colour.setter
     def change_colour(self, value: bool):
         assert isinstance(value, bool)
+        if value == False:
+            self._colour_selector_index = 0
         self.store.save(self.get_key("change_colour"), value)
 
     def update(self, data: dict):
