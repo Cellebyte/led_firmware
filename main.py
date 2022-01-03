@@ -49,7 +49,8 @@ if __name__ == "__main__":
         from animations.breath import Breath
         from animations.normal import Normal
         from animations.snake import Snake
-        from apiserver.handlers.colour_palettes_handler import ColourPalettesHandler
+        from apiserver.handlers.colour_palettes_handler import \
+            ColourPalettesHandler
         from driver.colour_palettes import ColourPalettes
 
         colour_palettes = ColourPalettes(store=store, slots=16, amount=4)

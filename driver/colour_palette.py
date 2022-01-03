@@ -1,12 +1,13 @@
 from collections import OrderedDict
-from typing import Optional, Any
+from typing import Optional
+
 import objects.rgb
 from errors import VALUE_NOT_IN_RANGE, VALUE_NOT_OF_TYPE
 
 from .store import Store
 
 
-class colourPalette:
+class ColourPalette:
     default_name = "colours"
 
     def __init__(

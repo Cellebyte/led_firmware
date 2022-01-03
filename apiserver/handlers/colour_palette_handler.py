@@ -4,7 +4,7 @@ from typing import Optional
 import ure
 from apiserver.handlers.base_handler import BaseHandler
 from apiserver.response import Response
-from driver.colour_palette import colourPalette
+from driver.colour_palette import ColourPalette
 from errors import EXCEPTION_ERROR
 from objects.rgb import RGB
 from webserver.http import Request
@@ -15,12 +15,12 @@ class ColourPaletteHandler(BaseHandler):
     path_regex = ure.compile("/colours/(\d+)/?")
 
     @property
-    def colour_palette(self) -> colourPalette:
+    def colour_palette(self) -> ColourPalette:
         return self._colour_palette
 
     @colour_palette.setter
-    def colour_palette(self, value: colourPalette):
-        assert isinstance(value, colourPalette)
+    def colour_palette(self, value: ColourPalette):
+        assert isinstance(value, ColourPalette)
         self._colour_palette = value
 
     def get_colours(self, slot=None) -> Optional[Response]:
@@ -54,6 +54,15 @@ class ColourPaletteHandler(BaseHandler):
             if colour is not None:
                 return Response.from_dict(colour.as_dict(), 200)
             return None
+        else:
+            return Response.from_dict(
+                {
+                    slot: self.colour_palette.delete(slot)
+                    for slot in self.colour_palette
+                    if self.colour_palette[slot]
+                },
+                200,
+            )
 
     def router(self, request: Request) -> Optional[Response]:
         if request.path in self.paths:

@@ -1,7 +1,9 @@
 from collections import OrderedDict
-import driver.colour_palette
+
 import constants.colour_palettes
 from errors import VALUE_NOT_IN_LIST, VALUE_NOT_IN_RANGE, VALUE_NOT_OF_TYPE
+
+import driver.colour_palette
 
 from .store import Store
 
@@ -12,7 +14,7 @@ class ColourPalettes:
         self.slots = slots
         # The last item gets default values for a rainbow
         self.palettes = {
-            str(index): driver.colour_palette.colourPalette(
+            str(index): driver.colour_palette.ColourPalette(
                 store=store,
                 slots=slots,
                 palette=index,
@@ -39,11 +41,19 @@ class ColourPalettes:
         )
         self._amount = value
 
+    def validate_key(self, value):
+        assert isinstance(value, int), VALUE_NOT_OF_TYPE(
+            self.__class__.__name__, "Key", value, int
+        )
+        assert 1 <= value <= self.amount, VALUE_NOT_IN_RANGE(
+            self.__class__.__name__, "Key", value, 1, self.amount
+        )
+
     def __iter__(self):
         for key in range(1, self.amount + 1):
             yield key
 
-    def __getitem__(self, key: int) -> driver.colour_palette.colourPalette:
+    def __getitem__(self, key: int) -> driver.colour_palette.ColourPalette:
         assert str(key) in self.palettes.keys(), VALUE_NOT_IN_LIST(
             self.__class__.__name__, "Key", key, list(self.palettes.keys())
         )
@@ -51,5 +61,9 @@ class ColourPalettes:
 
     def as_dict(self):
         return OrderedDict(
-            [(str(key), self.__getitem__(key).as_dict()) for key in self]
+            [
+                ("colour_palettes", [key for key in self]),
+                ("amount", self.amount),
+                ("slots", self.slots),
+            ]
         )

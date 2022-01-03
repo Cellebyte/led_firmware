@@ -12,7 +12,7 @@ import animations.normal
 
 class Snake(animations.normal.Normal):
     ANIMATION: Animation = Animation("snake")
-    _colour_selectors_max_len = 6
+    _colour_selectors_max_len = 16
     direction = Direction("up")
 
     def __init__(
@@ -54,8 +54,7 @@ class Snake(animations.normal.Normal):
         if "steps" in data.keys() and int(data["steps"]) != self.steps:
             self.found_key = True
             self.steps = int(data["steps"])
-        super().update(data)
-        return self
+        return super().update(data)
 
     def as_dict(self) -> dict:
         return OrderedDict(

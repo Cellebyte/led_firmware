@@ -26,7 +26,6 @@ class Normal(animations.base.BaseAnimation):
 
     @property
     def colour(self) -> RGB:
-        print(self._colour_selector_index)
         colour = self.colour_palettes[self.palette_selector][
             self.colour_selectors[self._colour_selector_index]
         ]
@@ -42,13 +41,8 @@ class Normal(animations.base.BaseAnimation):
 
     @palette_selector.setter
     def palette_selector(self, value: int):
-        assert isinstance(value, int), VALUE_NOT_OF_TYPE(
-            self.__class__.__name__, "Key", value, int
-        )
-        assert 1 <= value <= self.colour_palettes.amount, VALUE_NOT_IN_RANGE(
-            self.__class__.__name__, "Key", value, 1, self.colour_palettes.amount
-        )
-        self.store.save(self.get_key("palettte_selector"), value)
+        self.colour_palettes.validate_key(value)
+        self.store.save(self.get_key("palette_selector"), value)
 
     @property
     def colour_selectors(self) -> list[int]:
@@ -65,7 +59,7 @@ class Normal(animations.base.BaseAnimation):
                         self.__class__.__name__,
                         "colour_selectors",
                         len(value),
-                        0,
+                        1,
                         self._colour_selectors_max_len,
                     )
                 )

@@ -1,4 +1,3 @@
-from collections import OrderedDict
 from typing import Optional
 
 from apiserver.handlers.base_handler import BaseHandler

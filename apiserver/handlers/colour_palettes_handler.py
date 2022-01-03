@@ -17,10 +17,15 @@ class ColourPalettesHandler(BaseHandler):
     def __init__(self, colour_palettes: ColourPalettes) -> None:
         self.colour_palettes = colour_palettes
 
+    def get_palettes(self, palette=None):
+        if palette is None:
+            return Response.from_dict(self.colour_palettes.as_dict(), 200)
+        return None
+
     def router(self, request: Request) -> Optional[Response]:
         if request.path in self.paths:
             if "GET" == request.method:
-                return Response.from_dict(*ALL_UNSUPPORTED)
+                return self.get_palettes()
         elif match := self.path_regex.match(request.path):
             palette = int(match.group(1))
             if match.group(2):
@@ -29,4 +34,10 @@ class ColourPalettesHandler(BaseHandler):
                 ]
                 request.path = match.group(2)
                 return self.colour_palette_handler.router(request)
+            elif match.group(1):
+                try:
+                    if "GET" == request.method:
+                        return self.get_palettes(palette=palette)
+                except AssertionError as e:
+                    return Response.from_dict(*EXCEPTION_ERROR(e))
         return None
