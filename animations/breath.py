@@ -61,10 +61,9 @@ class Breath(animations.normal.Normal):
         )
 
     def loop(self):
-        if self._colour_selector_index + 1 > len(self.colour_selectors):
-            self._colour_selector_index = 0
-            return
         colour = self.colour.as_hsv()
+        if self.change_colour:
+            self._colour_selector_index = (self._colour_selector_index + 1) % len(self.colour_selectors)
         if self.direction.value == "down":
             if self.value is None:
                 self.value = colour.value

@@ -12,7 +12,8 @@ import animations.base
 class Normal(animations.base.BaseAnimation):
     ANIMATION: Animation = Animation("normal")
     _colour_selector_index = 0
-    _colour_selectors_max_len = 1
+    colour_selectors_max_len = 1
+    default_colour_selectors: list = [1]
 
     def __init__(
         self,
@@ -46,21 +47,21 @@ class Normal(animations.base.BaseAnimation):
 
     @property
     def colour_selectors(self) -> list[int]:
-        data = self.store.load(self.get_key("colour_selectors"), default=[1])
+        data = self.store.load(self.get_key("colour_selectors"), default=self.default_colour_selectors)
         assert isinstance(data, list)
         return data
 
     @colour_selectors.setter
     def colour_selectors(self, value: list[int]):
         if isinstance(value, list):
-            if not len(value) <= self._colour_selectors_max_len:
+            if not len(value) <= self.colour_selectors_max_len:
                 raise ValueError(
                     VALUE_NOT_IN_RANGE(
                         self.__class__.__name__,
                         "colour_selectors",
                         len(value),
                         1,
-                        self._colour_selectors_max_len,
+                        self.colour_selectors_max_len,
                     )
                 )
             for item in value:
