@@ -9,7 +9,6 @@ class Animation:
         "normal",
         "breath",
         "rainbow",
-        "cycle",
         "off",
         "manual",
     ]

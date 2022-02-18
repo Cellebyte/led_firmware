@@ -21,10 +21,7 @@ class CustomNeoPixel(NeoPixel):
 
     def __getitem__(
         self, i: Union[int, slice]
-    ) -> Union[list[tuple[int, int, int]], tuple[int, int, int],]:
+    ) -> Union[list[tuple[int, int, int]], tuple[int, int, int]]:
         if isinstance(i, slice):
-            out: list = []
-            for in_i in range(*i.indices(len(self.buf) // self.bpp)):
-                out.append(super().__getitem__(in_i))
-            return out
+            return [ super().__getitem__(in_i) for in_i in range(*i.indices(len(self.buf) // self.bpp))]
         return super().__getitem__(i)

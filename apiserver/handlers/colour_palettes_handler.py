@@ -5,7 +5,7 @@ from apiserver.handlers.base_handler import BaseHandler
 from apiserver.handlers.colour_palette_handler import ColourPaletteHandler
 from apiserver.response import Response
 from driver.colour_palettes import ColourPalettes
-from errors import ALL_UNSUPPORTED, EXCEPTION_ERROR
+from errors import EXCEPTION_ERROR
 from webserver.http import Request
 
 

@@ -8,12 +8,12 @@ def IS_REQUIRED(name: str) -> str:
 PUT_NOT_USEFUL = "Nothing useful provided for update!"
 IMPLEMENTATION_NEEDED = "This function needs to be implemented by a Child Animation"
 MISSING_STATE_FILE = "Cannot find state file {}"
-ALL_UNSUPPORTED = ({"error": "All not supported."}, 501)
-BODY_MISSING = ({"error": "Body needs to be provided!"}, 400)
+ALL_UNSUPPORTED = ({"error": "All not supported.", "code": 501}, 501)
+BODY_MISSING = ({"error": "Body needs to be provided!", "code": 400}, 400)
 
 
 def EXCEPTION_ERROR(e: Exception):
-    return {"error": "{}".format(e)}, 400
+    return {"error": "{}".format(e), "code": 400}, 400
 
 
 def VALUE_NOT_IN_RANGE(cls: str, prefix: str, value, min: int, max: int):

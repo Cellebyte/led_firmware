@@ -12,6 +12,7 @@
         ".git",
         "project.pymakr",
         "env",
-        "venv"
+        "venv",
+        "led-firmware-frontend"
     ]
 }

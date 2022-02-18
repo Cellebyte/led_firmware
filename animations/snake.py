@@ -76,7 +76,7 @@ class Snake(animations.normal.Normal):
             [
                 ("length", self.length),
                 ("steps", self.steps),
-                ("direction", self.direction),
+                ("direction", self.direction.value),
             ]
             + [(key, value) for key, value in super().as_dict().items()]
         )

@@ -34,7 +34,7 @@ class AnimationHandler(BaseHandler):
         except (ValueError, TypeError) as e:
             return Response.from_dict(*EXCEPTION_ERROR(e))
 
-    def post_animation(self, body: str) -> Response:
+    def put_animation(self, body: str) -> Response:
         if not body:
             return Response.from_dict(*BODY_MISSING)
         try:
@@ -49,8 +49,8 @@ class AnimationHandler(BaseHandler):
 
     def router(self, request: Request) -> Optional[Response]:
         if request.path in self.paths:
-            if "POST" == request.method:
-                return self.post_animation(request.body)
+            if "PUT" == request.method:
+                return self.put_animation(request.body)
             elif "GET" == request.method:
                 return self.get_animation()
         elif match := self.path_regex.match(request.path):

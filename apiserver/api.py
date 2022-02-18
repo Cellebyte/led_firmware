@@ -24,7 +24,8 @@ class API:
                 {
                     "error": "METHOD {} :: PATH {} unsupported!".format(
                         request.method, request.path
-                    )
+                    ),
+                    "code": 501
                 },
                 501,
             )
@@ -35,6 +36,7 @@ class API:
             return Response(
                 {
                     "error": "HTTP 1.1 only supported.",
+                    "code": 505
                 },
                 505,
             )

@@ -1,0 +1,535 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: LED Firmware API
+  license:
+    name: MIT
+servers:
+  - url: http://leds.example.com
+paths:
+  /palettes/:
+    get:
+      summary: List all colour palettes available on the MicroController
+      operationId: get_palettes
+      tags:
+        - colour_palettes
+      responses:
+        "200":
+          description: An overview objects of the colour_palettes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ColourPalettes"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /palettes/{pallette_id}/colours/:
+    post:
+      summary: Get all colours from a colour_palette from the MicroController
+      operationId: post_colours
+      parameters:
+        - name: pallette_id
+          in: path
+          required: true
+          description: The id of the colour_palette
+          schema:
+            type: integer
+            format: int32
+      tags:
+        - colour_palettes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RGB"
+      responses:
+        "201":
+          description: The color stored in the colour_palette with its index
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ColourPalette"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      summary: Delet all colours from a colour_palette from the MicroController
+      operationId: delete_colours
+      parameters:
+        - name: pallette_id
+          in: path
+          required: true
+          description: The id of the colour_palette
+          schema:
+            type: integer
+            format: int32
+      tags:
+        - colour_palettes
+      responses:
+        "200":
+          description: All deleted colors which were stored in a colour_palette
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ColourPalette"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    get:
+      summary: Get all colours from a colour_palette from the MicroController
+      operationId: get_colours
+      parameters:
+        - name: pallette_id
+          in: path
+          required: true
+          description: The id of the colour_palette
+          schema:
+            type: integer
+            format: int32
+      tags:
+        - colour_palettes
+      responses:
+        "200":
+          description: Get all colors stored in a colour_palette
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ColourPalette"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /palettes/{pallette_id}/colours/{colour_id}/:
+    post:
+      summary: Store a colour into the colour_palette from the MicroController at this slot
+      operationId: post_colours
+      tags:
+        - colours
+      parameters:
+        - name: pallette_id
+          in: path
+          required: true
+          description: The id of the colour_palette
+          schema:
+            type: integer
+            format: int32
+        - name: colour_id
+          in: path
+          required: true
+          description: The id of the colour in the colour_palette
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RGB"
+      responses:
+        "201":
+          description: The color stored in the colour_palette
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RGB"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    delete:
+      summary: Delete a colour in the colour_palette from the MicroController at this slot
+      operationId: delete_colours
+      tags:
+        - colours
+      parameters:
+        - name: pallette_id
+          in: path
+          required: true
+          description: The id of the colour_palette
+          schema:
+            type: integer
+            format: int32
+        - name: colour_id
+          in: path
+          required: true
+          description: The id of the colour in the colour_palette
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: The color stored in the colour_palette
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RGB"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    get:
+      summary: Get a specific colour from a colour_palette from the MicroController
+      operationId: get_colours
+      tags:
+        - colours
+      parameters:
+        - name: pallette_id
+          in: path
+          required: true
+          description: The id of the colour_palette
+          schema:
+            type: integer
+            format: int32
+        - name: colour_id
+          in: path
+          required: true
+          description: The id of the colour in the colour_palette
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: Get the specific colour of a slot
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RGB"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /leds/:
+    post:
+      summary: Set all Leds with the object provided also sets animation to manual.
+      operationId: post_leds
+      tags:
+        - leds
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RGB"
+      responses:
+        "201":
+          description: The colour the led strip was set to.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RGB"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /leds/{led_id}/:
+    get:
+      parameters:
+        - name: led_id
+          in: path
+          required: true
+          description: The id of the led on the strip
+          schema:
+            type: integer
+            format: int32
+      summary: Get Leds RGB information from led of the strip.
+      operationId: get_leds
+      tags:
+        - leds
+      responses:
+        "200":
+          description: The colour the led strip was set to.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RGB"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      parameters:
+        - name: led_id
+          in: path
+          required: true
+          description: The id of the led on the strip
+          schema:
+            type: integer
+            format: int32
+      summary: Set Leds with the object provided also sets animation to manual.
+      operationId: post_leds
+      tags:
+        - leds
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RGB"
+      responses:
+        "201":
+          description: The colour the led strip was set to.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RGB"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /animation/:
+    get:
+      summary: Get the current active animation
+      operationId: get_animation
+      tags:
+        - animation
+      responses:
+        "200":
+          description: The current active animation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnimationObject"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      summary: Update to the provied animation.
+      operationId: put_animation
+      tags:
+        - animation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnimationObject"
+      responses:
+        "201":
+          description: The new animation which got applied.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnimationObject"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /animation/{animation}:
+    get:
+      summary: Get current configuration for the provided animation
+      parameters:
+        - name: animation
+          in: path
+          required: true
+          description: The Animation name
+          schema:
+            $ref: "#/components/schemas/Animation"
+      responses:
+        "200":
+          description: Get the configuration for the specified
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/NormalAnimation"
+                  - $ref: "#/components/schemas/SnakeAnimation"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    put:
+      summary: Update the configuration for the provided animation
+      parameters:
+        - name: animation
+          in: path
+          required: true
+          description: The Animation name
+          schema:
+            $ref: "#/components/schemas/Animation"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PolyAnimation"
+      responses:
+        "201":
+          description: Update the animation settings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PolyAnimation"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    RGB:
+      type: object
+      required:
+        - "red"
+        - "green"
+        - "blue"
+      properties:
+        red:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 255
+        green:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 255
+        blue:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 255
+
+    ColourPalettes:
+      type: object
+      properties:
+        colour_palettes:
+          type: array
+          items:
+            type: integer
+            format: int32
+        amount:
+          type: integer
+          format: int32
+        slots:
+          type: integer
+          format: int32
+
+    ColourPalette:
+      type: object
+      additionalProperties:
+        $ref: "#/components/schemas/RGB"
+      example:
+        "1":
+          red: 255
+          green: 255
+          blue: 255
+        "2":
+          red: 0
+          green: 0
+          blue: 0
+
+    AnimationObject:
+      type: object
+      required:
+        - animation
+      properties:
+        animation:
+          $ref: "#/components/schemas/Animation"
+
+    Animation:
+      type: string
+      enum:
+        - snake
+        - normal
+        - breath
+        - rainbow
+        - off
+        - manual
+    SnakeAnimation:
+      allOf:
+        - $ref: "#/components/schemas/NormalAnimation"
+        - type: object
+          properties:
+            length:
+              type: integer
+              format: int32
+            steps:
+              type: integer
+              format: int32
+            direction:
+              $ref: "#/components/schemas/AnimationDirection"
+
+    PolyAnimation:
+      oneOf:
+        - $ref: "#/components/schemas/NormalAnimation"
+        - $ref: "#/components/schemas/SnakeAnimation"
+        - $ref: "#/components/schemas/BreathAnimation"
+        - $ref: "#/components/schemas/RainbowAnimation"
+
+    RainbowAnimation:
+      type: object
+      properties:
+        period:
+          type: integer
+          format: int32
+    BreathAnimation:
+      allOf:
+        - $ref: "#/components/schemas/NormalAnimation"
+        - type: object
+          properties:
+            dim_percentage:
+              type: integer
+              format: float
+    NormalAnimation:
+      type: object
+      properties:
+        colour_selectors:
+          type: array
+          items:
+            type: integer
+            format: int32
+        palette_selector:
+          type: integer
+          format: int32
+        current_colour:
+          $ref: "#/components/schemas/RGB"
+        change_colour:
+          type: boolean
+    AnimationDirection:
+      type: string
+      enum:
+        - up
+        - down
+    Error:
+      type: object
+      required:
+        - code
+        - error
+      properties:
+        code:
+          type: integer
+          format: int32
+        error:
+          type: string

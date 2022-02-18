@@ -44,9 +44,12 @@ class ColourPaletteHandler(BaseHandler):
                 free_slot is not None
             ), "The colour Store is full please define a slot to overwrite"
             self.colour_palette[free_slot] = colour
+            return Response.from_dict({free_slot: colour.as_dict()}, 201)
         else:
             self.colour_palette[slot] = colour
         return Response.from_dict(colour.as_dict(), 201)
+        
+        
 
     def delete_colours(self, slot=None):
         if slot is not None:
