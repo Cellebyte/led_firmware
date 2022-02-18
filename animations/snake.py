@@ -12,8 +12,8 @@ import animations.normal
 
 class Snake(animations.normal.Normal):
     ANIMATION: Animation = Animation("snake")
-    _colour_selectors_max_len = 16
-    direction = Direction("up")
+    colour_selectors_max_len = 16
+    _direction = Direction("up")
 
     def __init__(
         self,
@@ -47,6 +47,18 @@ class Snake(animations.normal.Normal):
         assert isinstance(value, int)
         self.store.save(self.get_key("length"), value)
 
+    @property
+    def direction(self) -> Direction:
+        data = Direction(
+            self.store.load(self.get_key("direction"), default=Direction("up").value)
+        )
+        return data
+
+    @direction.setter
+    def direction(self, value: Direction):
+        assert isinstance(value, Direction)
+        self.store.save(self.get_key("direction"), value.value)
+
     def update(self, data: dict):
         if "length" in data.keys() and int(data["length"]) != self.length:
             self.found_key = True
@@ -54,6 +66,9 @@ class Snake(animations.normal.Normal):
         if "steps" in data.keys() and int(data["steps"]) != self.steps:
             self.found_key = True
             self.steps = int(data["steps"])
+        if "direction" in data.keys() and data["direction"] != self.direction.value:
+            self.found_key = True
+            self.direction = Direction(data["direction"])
         return super().update(data)
 
     def as_dict(self) -> dict:
@@ -61,6 +76,7 @@ class Snake(animations.normal.Normal):
             [
                 ("length", self.length),
                 ("steps", self.steps),
+                ("direction", self.direction),
             ]
             + [(key, value) for key, value in super().as_dict().items()]
         )

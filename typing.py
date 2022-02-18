@@ -2,7 +2,6 @@ typings = False
 Union = None
 Optional = None
 Any = None
-Tuple = None
 
 try:
     import typing
@@ -16,7 +15,6 @@ if typings:
     Union = typing.Union
     Optional = typing.Optional
     Any = typing.Any
-    Tuple = typing.Tuple
 else:
 
     class Mock:
@@ -25,9 +23,6 @@ else:
     Union = Mock
     Optional = Mock
     Any = Mock
-    Tuple = Mock
-
 Union = Union
 Optional = Optional
 Any = Any
-Tuple = Tuple

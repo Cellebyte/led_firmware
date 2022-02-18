@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import Tuple, Union
+from typing import Union
 
 from errors import IS_REQUIRED, VALUE_NOT_OF_TYPE
 
@@ -50,17 +50,20 @@ class Vector:
 
     def as_tuple(
         self,
-    ) -> Tuple[Union[int, float], Union[int, float], Union[int, float]]:
+    ) -> tuple[Union[int, float], Union[int, float], Union[int, float]]:
         return (self.x, self.y, self.z)
+
+    def as_normalized_tuple(self) -> tuple[int, int, int]:
+        return (round(self.x), round(self.y), round(self.z))
 
     @classmethod
     def from_tuple(
-        cls, obj: Tuple[Union[int, float], Union[int, float], Union[int, float]]
+        cls, obj: tuple[Union[int, float], Union[int, float], Union[int, float]]
     ):
         if isinstance(obj, tuple) and len(obj) == 3:
             return cls(obj[0], obj[1], obj[2])
         else:
-            raise ValueError(IS_REQUIRED("Tuple with 3 elements."))
+            raise ValueError(IS_REQUIRED("tuple with 3 elements."))
 
     def as_dict(self) -> OrderedDict:
         return OrderedDict(

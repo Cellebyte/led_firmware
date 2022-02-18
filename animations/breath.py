@@ -11,8 +11,8 @@ import animations.normal
 class Breath(animations.normal.Normal):
     ANIMATION: Animation = Animation("breath")
     _value = None
-    _colour_selectors_max_len = 10
     _direction = Direction("up")
+    colour_selectors_max_len = 16
 
     @property
     def value(self) -> Optional[float]:
@@ -61,10 +61,11 @@ class Breath(animations.normal.Normal):
         )
 
     def loop(self):
-        if self._colour_selector_index + 1 > len(self.colour_selectors):
-            self._colour_selector_index = 0
-            return
         colour = self.colour.as_hsv()
+        if self.change_colour:
+            self._colour_selector_index = (self._colour_selector_index + 1) % len(
+                self.colour_selectors
+            ) - 1
         if self.direction.value == "down":
             if self.value is None:
                 self.value = colour.value
