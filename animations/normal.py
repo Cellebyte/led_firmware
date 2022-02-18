@@ -47,7 +47,9 @@ class Normal(animations.base.BaseAnimation):
 
     @property
     def colour_selectors(self) -> list[int]:
-        data = self.store.load(self.get_key("colour_selectors"), default=self.default_colour_selectors)
+        data = self.store.load(
+            self.get_key("colour_selectors"), default=self.default_colour_selectors
+        )
         assert isinstance(data, list)
         return data
 

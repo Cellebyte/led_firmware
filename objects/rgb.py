@@ -1,5 +1,5 @@
 import colorsys
-from typing import Tuple, Union
+from typing import Union
 
 from errors import VALUE_NOT_IN_RANGE
 
@@ -57,7 +57,7 @@ class RGB(objects.vector.Vector):
     def blue(self, value: Union[int, float]):
         self.z = self.validate(value, hint="blue")
 
-    def as_colorsys_tuple(self) -> Tuple[float, float, float]:
+    def as_colorsys_tuple(self) -> tuple[float, float, float]:
         return (self / self.normalization_vector).as_tuple()
 
     def as_hls(self) -> objects.hls.HLS:

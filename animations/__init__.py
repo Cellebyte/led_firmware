@@ -15,27 +15,11 @@ except ImportError:
         return value
 
 
-try:
-    from time import monotonic_ns
-
-    monotonic_ns()  # Test monotonic_ns in 6.x
-
-    def monotonic_ms():
-        """
-        Return monotonic time in milliseconds.
-        """
-        return monotonic_ns() // NANOS_PER_MS
+import time
 
 
-except (ImportError, NotImplementedError):
-    import time
-
-    def monotonic_ms():
-        """
-        Implementation of monotonic_ms for platforms without time.monotonic_ns
-        """
-        return int(time.monotonic() * MS_PER_SECOND)
+def monotonic_ms():
+    return time.ticks_ms()
 
 
-NANOS_PER_MS = const(1000000)
 MS_PER_SECOND = const(1000)

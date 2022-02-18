@@ -3,7 +3,7 @@ import time
 import animations.base
 import uasyncio
 from machine import Pin
-from neopixel import NeoPixel
+from driver.custom_neopixel import CustomNeoPixel as NeoPixel
 from objects.animation import Animation
 from objects.rgb import COLOURS, RGB
 
@@ -62,7 +62,7 @@ class LEDDriver:
             await uasyncio.sleep_ms(5)
 
     def set(self, rgb: RGB, unit):
-        self.pixels[unit] = rgb.normalize().as_tuple()
+        self.pixels[unit] = rgb.as_normalized_tuple()
 
     def set_all(self, rgb: RGB):
         self.pixels.fill(rgb.normalize().as_tuple())
