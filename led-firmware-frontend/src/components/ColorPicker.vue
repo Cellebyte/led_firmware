@@ -23,11 +23,11 @@ export default {
     },
     width: {
       type: Number,
-      default: 300,
+      default: 311,
     },
     height: {
       type: Number,
-      default: 300,
+      default: 311,
     },
     handleSvg: {
       type: String,
