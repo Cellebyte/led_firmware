@@ -26,9 +26,36 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  /palettes/{pallette_id}/:
+    get:
+      parameters:
+        - name: pallette_id
+          in: path
+          required: true
+          description: The id of the colour_palette
+          schema:
+            type: integer
+            format: int32
+      summary:  Get all colours from a colour_palette from the MicroController
+      operationId: get_palettes
+      tags:
+        - colour_palettes
+      responses:
+        "200":
+          description: An overview
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ColourPalette"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /palettes/{pallette_id}/colours/:
     post:
-      summary: Get all colours from a colour_palette from the MicroController
+      summary: Insert a new colour into the colour_palette
       operationId: post_colours
       parameters:
         - name: pallette_id
@@ -39,7 +66,7 @@ paths:
             type: integer
             format: int32
       tags:
-        - colour_palettes
+        - colours
       requestBody:
         content:
           application/json:
@@ -59,7 +86,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
     delete:
-      summary: Delet all colours from a colour_palette from the MicroController
+      summary: Delete all colours from a colour_palette from the MicroController
       operationId: delete_colours
       parameters:
         - name: pallette_id
@@ -70,7 +97,7 @@ paths:
             type: integer
             format: int32
       tags:
-        - colour_palettes
+        - colours
       responses:
         "200":
           description: All deleted colors which were stored in a colour_palette
@@ -96,7 +123,7 @@ paths:
             type: integer
             format: int32
       tags:
-        - colour_palettes
+        - colours
       responses:
         "200":
           description: Get all colors stored in a colour_palette
@@ -279,7 +306,7 @@ paths:
           schema:
             type: integer
             format: int32
-      summary: Set Leds with the object provided also sets animation to manual.
+      summary: Set Leds of this id with the object provided also sets animation to manual.
       operationId: post_leds
       tags:
         - leds
@@ -301,6 +328,40 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  /lens/:
+    get:
+      summary: Get the length of the led strip
+      operationId: get_strip
+      tags:
+        - lenth
+      responses:
+        "200":
+          description: The current length information.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LenObject"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /gc/:
+    get:
+      summary: Trigger manual gc for debugging memory
+      operationId: gc
+      tags:
+        - debug
+      responses:
+        "200":
+          description: empty object
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+
   /animation/:
     get:
       summary: Get the current active animation
@@ -346,6 +407,8 @@ paths:
   /animation/{animation}:
     get:
       summary: Get current configuration for the provided animation
+      tags:
+        - animation
       parameters:
         - name: animation
           in: path
@@ -359,9 +422,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: "#/components/schemas/NormalAnimation"
-                  - $ref: "#/components/schemas/SnakeAnimation"
+                $ref: "#/components/schemas/PolyAnimation"
         default:
           description: unexpected error
           content:
@@ -378,6 +439,8 @@ paths:
           description: The Animation name
           schema:
             $ref: "#/components/schemas/Animation"
+      tags:
+        - animation
       requestBody:
         content:
           application/json:
@@ -434,8 +497,7 @@ components:
           format: int32
         slots:
           type: integer
-          format: int32
-
+          format: int32      
     ColourPalette:
       type: object
       additionalProperties:
@@ -487,6 +549,13 @@ components:
         - $ref: "#/components/schemas/SnakeAnimation"
         - $ref: "#/components/schemas/BreathAnimation"
         - $ref: "#/components/schemas/RainbowAnimation"
+      discriminator:
+        propertyName: animation
+        mapping:
+          normal: "#/components/schemas/NormalAnimation"
+          snake: "#/components/schemas/SnakeAnimation"
+          breath: "#/components/schemas/BreathAnimation"
+          rainbow: "#/components/schemas/RainbowAnimation"
 
     RainbowAnimation:
       type: object
@@ -505,6 +574,8 @@ components:
     NormalAnimation:
       type: object
       properties:
+        animation:
+          $ref: "#/components/schemas/Animation"
         colour_selectors:
           type: array
           items:
@@ -533,3 +604,15 @@ components:
           format: int32
         error:
           type: string
+    LenObject:
+      type: object
+      required:
+        - first
+        - last
+      properties:
+        first:
+          type: integer
+          format: int32
+        last:
+          type: integer
+          format: int32

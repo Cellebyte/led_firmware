@@ -20,7 +20,8 @@ class ColourPalettesHandler(BaseHandler):
     def get_palettes(self, palette=None):
         if palette is None:
             return Response.from_dict(self.colour_palettes.as_dict(), 200)
-        return None
+        else:
+          return Response.from_dict(self.colour_palettes[palette].as_dict(), 200)
 
     def router(self, request: Request) -> Optional[Response]:
         if request.path in self.paths:

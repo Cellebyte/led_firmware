@@ -1,0 +1,13 @@
+// Define variable defaults
+// $enable-rounded: true;
+// $theme-colors: (
+//   "primary": #ff5a17,
+//   "secondary": #ffffff,
+//   "dark": #000000,
+//   "light": #ffffff,
+//   "selfnet-background": #fefefe
+// );
+// Then import Bootstrap an BootstrapVue SCSS files (order is important)
+@import 'node_modules/bootstrap/scss/bootstrap';
+@import 'node_modules/bootstrap-vue-3/src/styles/styles.scss';
+
