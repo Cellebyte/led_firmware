@@ -1,0 +1,62 @@
+{
+  "GENERAL": {
+    "PASSWORD": {
+      "PLACEHOLDER": "Passwort",
+      "DESCRIPTION": "Bitte Passwort eingeben."
+    },
+    "UID": {
+      "PLACEHOLDER": "LDAP Nutzername",
+      "DESCRIPTION": "Bitte LDAP Nutzernamen eingeben."
+    },
+    "POOL": {
+      "CREATE": "Pool erstellen",
+      "EDIT": "Pool bearbeiten",
+      "DESCRIPTION": "Beschreibung",
+      "NAME": "Name",
+      "TYPE": "Typ"
+    },
+    "CIDR": {
+      "CREATE": "CIDR erstellen",
+      "EDIT": "CIDR bearbeiten",
+      "DESCRIPTION": "Beschreibung",
+      "FLAG": "Marker",
+      "PREFIX": "Präfix"
+    },
+    "PROFILE": {
+      "LABEL": "Profil",
+      "TOKENS": "API-Schlüssel"
+    },
+    "LOGIN": {
+      "LABEL": "Einloggen",
+      "DESCRIPTION": "Bitte einloggen."
+    },
+    "LOGOUT": {
+      "LABEL": "Ausloggen",
+      "DESCRIPTION": "Bitte ausloggen."
+    },
+    "LANGUAGE": {
+      "CHANGE_LANGUAGE": "Sprache",
+      "ENGLISH": "Englisch",
+      "GERMAN": "Deutsch"
+    },
+    "SEARCH": {
+      "PLACEHOLDER": "Suche"
+    },
+    "SUBNET": {
+      "ADD": "Delegiere Subnetz"
+    },
+    "BUTTON": {
+      "BACK": "Zurück",
+      "CANCEL": "Abbrechen",
+      "SUBMIT": "Senden",
+      "EDIT": "Bearbeiten",
+      "DELETE": "Löschen",
+      "OK": "Ok",
+      "SAVE": "Speichern",
+      "SEARCH": "Suchen",
+      "CREATE": "Anlegen",
+      "NEW": "Addiere Element",
+      "RESET": "Zurücksetzen"
+    }
+  }
+}

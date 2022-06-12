@@ -1,0 +1,18 @@
+
+
+/* Import Bootstrap Sass Files. */
+// File: custom.scss
+
+// Define your variable overrides here
+$enable-rounded: true;
+$theme-colors: (
+  "primary": #ff5a17,
+  "secondary": #ffffff,
+  "dark": #000000,
+  "light": #ffffff,
+  "selfnet-background": #fefefe
+);
+
+// Include Bootstrap and BootstrapVue SCSS files
+@import '~bootstrap/scss/bootstrap.scss';
+@import '~bootstrap-vue/src/index.scss';
