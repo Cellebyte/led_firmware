@@ -53,7 +53,7 @@ if __name__ == "__main__":
         from apiserver.handlers.colour_palettes_handler import ColourPalettesHandler
         from driver.colour_palettes import ColourPalettes
 
-        colour_palettes = ColourPalettes(store=store, slots=16, amount=4)
+        colour_palettes = ColourPalettes(store=store, slots=7, amount=4)
         led_driver.register_animation(Snake(store, led_driver, colour_palettes))
         led_driver.register_animation(Normal(store, led_driver, colour_palettes))
         led_driver.register_animation(Breath(store, led_driver, colour_palettes))
