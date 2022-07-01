@@ -7,10 +7,6 @@ import iro from '@jaames/iro';
 
 export default {
   props: {
-    value: {
-      type: String,
-      default: '#ffffff',
-    },
     values: {
       type: Array,
       default() {
@@ -18,16 +14,20 @@ export default {
           '#ffffff',
           '#ff00ff',
           '#0000ff',
+          '#00ffff',
+          '#00ff00',
+          '#ff0000',
+          '#ffff00',
         ];
       },
     },
     width: {
       type: Number,
-      default: 311,
+      default: 375,
     },
     height: {
       type: Number,
-      default: 311,
+      default: 375,
     },
     handleSvg: {
       type: String,
@@ -48,11 +48,11 @@ export default {
     },
     handleRadius: {
       type: Number,
-      default: 8,
+      default: 24,
     },
     sliderMargin: {
       type: Number,
-      default: 24,
+      default: 32,
     },
     sliderHeight: {
       type: Number,
@@ -129,6 +129,7 @@ export default {
       });
     },
     onInputEnd(color) {
+      console.log(color.index, color.hexString);
       this.$emit('input:end', {
         color,
       });
@@ -144,7 +145,6 @@ export default {
       width: this.width,
       height: this.height,
       handleSvg: this.handleSvg,
-      // color: this.value,
       colors: this.values,
       padding: this.padding,
       layout: this.layout,
