@@ -7,19 +7,22 @@
       <b-row class="row d-flex justify-content-center">
         <color-picker/>
       </b-row>
+      <b-row class="row d-flex justify-content-center">
+        <new-colour-button/>
+      </b-row>
     </b-container>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
 import ColorPicker from '@/components/ColorPicker.vue';
+import NewColourButton from '@/components/NewColourButton.vue';
 
 @Component({
   components: {
-    HelloWorld,
     ColorPicker,
+    NewColourButton,
   },
 })
 export default class HomeView extends Vue {}

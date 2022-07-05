@@ -10,8 +10,8 @@ from webserver.http import Request
 
 
 class ColourPalettesHandler(BaseHandler):
-    paths = ["/palettes", "/palettes/"]
-    path_regex = ure.compile("/palettes/(\d+)(/.+$)?")
+    paths = ["/api/v1/palettes", "/api/v1/palettes/"]
+    path_regex = ure.compile("/api/v1/palettes/(\d+)(/.+$)?")
     colour_palette_handler = ColourPaletteHandler()
 
     def __init__(self, colour_palettes: ColourPalettes) -> None:
@@ -21,12 +21,14 @@ class ColourPalettesHandler(BaseHandler):
         if palette is None:
             return Response.from_dict(self.colour_palettes.as_dict(), 200)
         else:
-          return Response.from_dict(self.colour_palettes[palette].as_dict(), 200)
+            return Response.from_dict(self.colour_palettes[palette].as_dict(), 200)
 
     def router(self, request: Request) -> Optional[Response]:
         if request.path in self.paths:
             if "GET" == request.method:
                 return self.get_palettes()
+            elif "OPTIONS" == request.method:
+                return Response(body={}, code=200, headers=self.headers)
         elif match := self.path_regex.match(request.path):
             palette = int(match.group(1))
             if match.group(2):
@@ -36,9 +38,8 @@ class ColourPalettesHandler(BaseHandler):
                 request.path = match.group(2)
                 return self.colour_palette_handler.router(request)
             elif match.group(1):
-                try:
-                    if "GET" == request.method:
-                        return self.get_palettes(palette=palette)
-                except AssertionError as e:
-                    return Response.from_dict(*EXCEPTION_ERROR(e))
+                if "GET" == request.method:
+                    return self.get_palettes(palette=palette)
+                elif "OPTIONS" == request.method:
+                    return Response(body={}, code=200, headers=self.headers)
         return None

@@ -8,7 +8,7 @@ from webserver.http import Request
 
 
 class LenHandler(BaseHandler):
-    paths = ["/lens", "/lens/"]
+    paths = ["/api/v1/lens", "/api/v1/lens/"]
 
     def __init__(self, leds: LEDDriver) -> None:
         self.leds = leds
@@ -28,4 +28,6 @@ class LenHandler(BaseHandler):
         if request.path in self.paths:
             if "GET" == request.method:
                 return self.get_strip()
+            elif "OPTIONS" == request.method:
+                return Response(body={}, code=200, headers=self.headers)
         return None

@@ -1,4 +1,4 @@
-import { Api } from '@/types/api';
+import { Api, ColourPalette } from '@/types/api';
 import { LedFirmwareFrontendConfiguration } from '@/types/config';
 
 export interface RootState {
@@ -7,13 +7,9 @@ export interface RootState {
     api: Api
 }
 
-// export interface CIDRDict {
-//     [id: string] : CIDR
-// }
-
-// export interface PoolDict {
-//     [id: string] : Pool
-// }
+export interface ColourPaletteDict {
+    [id: number] : ColourPalette
+}
 
 // export interface TokenDict {
 //     [id: string]: Token
@@ -43,10 +39,10 @@ export interface RootState {
 //     search: CIDRDict;
 // }
 
-// export interface PoolState {
-//     pools: PoolDict
-// }
-
-// export interface TokenState {
-//     tokens: TokenDict
-// }
+export interface ColourPaletteState {
+    activePalette: number,
+    availableSlots: number,
+    availablePalettes: Array<number>,
+    availablePalettesAmount: number
+    colourPalettes: ColourPaletteDict
+}

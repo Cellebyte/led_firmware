@@ -67,7 +67,11 @@ class HTTPServer:
     def parse_request(self, request):
         splitted = request.split("{}{}".format(self.end_line, self.end_line), 1)
         headers = splitted[0]
-        body = splitted[1]
+        body = ""
+        try:
+            body = splitted[1]
+        except IndexError:
+            pass
         headers = headers.split(self.end_line)
         http_proto = headers.pop(0)
         match = self.http_proto_regex.search(http_proto)
@@ -92,9 +96,8 @@ class HTTPServer:
                     response.code, CODE_TO_MESSAGE(response.code), self.end_line
                 )
             )
-            await writer.awrite(
-                "Content-Type: application/json{}".format(self.end_line)
-            )
+            for key, value in response.headers.items():
+                await writer.awrite("{}: {}{}".format(key, value, self.end_line))
             await writer.awrite(
                 "Connection: close{}{}".format(self.end_line, self.end_line)
             )

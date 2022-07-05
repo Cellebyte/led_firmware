@@ -11,8 +11,11 @@ from webserver.http import Request
 
 
 class AnimationHandler(BaseHandler):
-    paths = ["/animation", "/animation/"]
-    path_regex = ure.compile("/animation/({})/?".format("|".join(Animation.SUPPORTED)))
+    paths = ["/api/v1/animation", "/api/v1/animation/"]
+    path_regex = ure.compile(
+        "/api/v1/animation/({})/?".format("|".join(Animation.SUPPORTED))
+    )
+    headers = {"Allow": "GET,PUT,OPTIONS"}
 
     def __init__(self, leds: LEDDriver) -> None:
         self.leds = leds
@@ -53,6 +56,8 @@ class AnimationHandler(BaseHandler):
                 return self.put_animation(request.body)
             elif "GET" == request.method:
                 return self.get_animation()
+            elif "OPTIONS" == request.method:
+                return Response(body={}, code=200, headers=self.headers)
         elif match := self.path_regex.match(request.path):
             animation = Animation(animation=str(match.group(1)))
             try:
@@ -62,6 +67,8 @@ class AnimationHandler(BaseHandler):
                     return self.put_animations_options(
                         request.body, animation=animation
                     )
+                elif "OPTIONS" == request.method:
+                    return Response(body={}, code=200, headers=self.headers)
             except KeyError as e:
                 Response.from_dict(*EXCEPTION_ERROR(e))
         return None

@@ -37,7 +37,7 @@ paths:
             type: integer
             format: int32
       summary:  Get all colours from a colour_palette from the MicroController
-      operationId: get_palettes
+      operationId: get_palette
       tags:
         - colour_palettes
       responses:
@@ -74,7 +74,7 @@ paths:
               $ref: "#/components/schemas/RGB"
       responses:
         "201":
-          description: The color stored in the colour_palette with its index
+          description: The colour stored in the colour_palette with its index
           content:
             application/json:
               schema:
@@ -100,7 +100,7 @@ paths:
         - colours
       responses:
         "200":
-          description: All deleted colors which were stored in a colour_palette
+          description: All deleted colours which were stored in a colour_palette
           content:
             application/json:
               schema:
@@ -126,7 +126,7 @@ paths:
         - colours
       responses:
         "200":
-          description: Get all colors stored in a colour_palette
+          description: Get all colours stored in a colour_palette
           content:
             application/json:
               schema:
@@ -141,7 +141,7 @@ paths:
   /palettes/{pallette_id}/colours/{colour_id}/:
     post:
       summary: Store a colour into the colour_palette from the MicroController at this slot
-      operationId: post_colours
+      operationId: post_colour
       tags:
         - colours
       parameters:
@@ -166,7 +166,7 @@ paths:
               $ref: "#/components/schemas/RGB"
       responses:
         "201":
-          description: The color stored in the colour_palette
+          description: The colour stored in the colour_palette
           content:
             application/json:
               schema:
@@ -180,7 +180,7 @@ paths:
 
     delete:
       summary: Delete a colour in the colour_palette from the MicroController at this slot
-      operationId: delete_colours
+      operationId: delete_colour
       tags:
         - colours
       parameters:
@@ -200,7 +200,7 @@ paths:
             format: int32
       responses:
         "200":
-          description: The color stored in the colour_palette
+          description: The colour stored in the colour_palette
           content:
             application/json:
               schema:
@@ -213,7 +213,7 @@ paths:
                 $ref: "#/components/schemas/Error"
     get:
       summary: Get a specific colour from a colour_palette from the MicroController
-      operationId: get_colours
+      operationId: get_colour
       tags:
         - colours
       parameters:
@@ -486,6 +486,10 @@ components:
 
     ColourPalettes:
       type: object
+      required:
+        - "amount"
+        - "slots"
+        - "colour_palettes"
       properties:
         colour_palettes:
           type: array

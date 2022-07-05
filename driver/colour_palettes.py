@@ -1,6 +1,5 @@
 from collections import OrderedDict
 
-import constants.colour_palettes
 from errors import VALUE_NOT_IN_LIST, VALUE_NOT_IN_RANGE, VALUE_NOT_OF_TYPE
 
 import driver.colour_palette
@@ -18,11 +17,7 @@ class ColourPalettes:
                 store=store,
                 slots=slots,
                 palette=index,
-                default_colours=(
-                    None
-                    if not index == self.amount
-                    else constants.colour_palettes.RainbowColours
-                ),
+                default_colours=None,
             )
             for index in range(1, self.amount + 1)
         }

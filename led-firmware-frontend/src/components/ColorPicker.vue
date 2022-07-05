@@ -2,25 +2,13 @@
     <div ref="picker"></div>
 </template>
 
-<script>
+<script lang="js">
 import iro from '@jaames/iro';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
+  name: 'color-picker',
   props: {
-    values: {
-      type: Array,
-      default() {
-        return [
-          '#ffffff',
-          '#ff00ff',
-          '#0000ff',
-          '#00ffff',
-          '#00ff00',
-          '#ff0000',
-          '#ffff00',
-        ];
-      },
-    },
     width: {
       type: Number,
       default: 375,
@@ -86,17 +74,31 @@ export default {
       type: Boolean,
       default: true,
     },
-    // css: {
-    //   type: Object,
-    //   default: () => return {},
-    // },
   },
   data() {
     return {
       colorPicker: null,
     };
   },
+  created() {
+    this.fetchPalettes().then(() => {
+      this.fetchPalette({ paletteID: this.getActivePalette }).then(() => {
+        console.log(this.getColours);
+      });
+    });
+  },
+  computed: {
+    ...mapGetters('ColourPalettes', {
+      getColours: 'colours',
+      getActivePalette: 'activePalette',
+    }),
+  },
   methods: {
+    ...mapActions({
+      updatePaletteColour: 'ColourPalettes/SET_PALETTE_COLOUR',
+      fetchPalettes: 'ColourPalettes/FETCH_PALETTES',
+      fetchPalette: 'ColourPalettes/FETCH_PALETTE',
+    }),
     onInput(color) {
       this.$emit('input', color.hexString);
     },
@@ -129,6 +131,13 @@ export default {
       });
     },
     onInputEnd(color) {
+      this.updatePaletteColour(
+        {
+          paletteID: this.getActivePalette,
+          colourID: color.index + 1,
+          formData: { red: color.red, green: color.green, blue: color.blue },
+        },
+      );
       console.log(color.index, color.hexString);
       this.$emit('input:end', {
         color,
@@ -141,11 +150,11 @@ export default {
     },
   },
   mounted() {
-    this.colorPicker = new iro.ColorPicker(this.$refs.picker, {
+    this.colorPicker = iro.ColorPicker(this.$refs.picker, {
       width: this.width,
       height: this.height,
       handleSvg: this.handleSvg,
-      colors: this.values,
+      colors: this.getColours,
       padding: this.padding,
       layout: this.layout,
       display: this.display,
@@ -180,9 +189,16 @@ export default {
     this.colorPicker.off('mount', this.onMount);
   },
   watch: {
-    value(newValue) {
-      if (this.colorPicker.color) {
-        this.colorPicker.color.hexString = newValue;
+    getColours(newColours) {
+      if (newColours.length === 0) {
+        return;
+      }
+      // TODO: Fix addition of colors not only updating the values of existing colours
+      if (this.colorPicker.colors && newColours) {
+        this.colorPicker.colors.map((colour, index) => {
+          this.colorPicker.colors[index].hexString = newColours[index];
+          return colour;
+        });
       }
     },
   },

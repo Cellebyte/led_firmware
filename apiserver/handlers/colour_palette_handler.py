@@ -13,6 +13,7 @@ from webserver.http import Request
 class ColourPaletteHandler(BaseHandler):
     paths = ["/colours", "/colours/"]
     path_regex = ure.compile("/colours/(\d+)/?")
+    headers = {"Allow": "GET,POST,DELETE,OPTIONS"}
 
     @property
     def colour_palette(self) -> ColourPalette:
@@ -48,8 +49,6 @@ class ColourPaletteHandler(BaseHandler):
         else:
             self.colour_palette[slot] = colour
         return Response.from_dict(colour.as_dict(), 201)
-        
-        
 
     def delete_colours(self, slot=None):
         if slot is not None:
@@ -68,15 +67,17 @@ class ColourPaletteHandler(BaseHandler):
             )
 
     def router(self, request: Request) -> Optional[Response]:
-        if request.path in self.paths:
-            if "GET" == request.method:
-                return self.get_colours()
-            elif "POST" == request.method:
-                return self.post_colours(request.body)
-            elif "DELETE" == request.method:
-                return self.delete_colours()
-        elif match := self.path_regex.match(request.path):
-            try:
+        try:
+            if request.path in self.paths:
+                if "GET" == request.method:
+                    return self.get_colours()
+                elif "POST" == request.method:
+                    return self.post_colours(request.body)
+                elif "DELETE" == request.method:
+                    return self.delete_colours()
+                elif "OPTIONS" == request.method:
+                    return Response(body={}, code=200, headers=self.headers)
+            elif match := self.path_regex.match(request.path):
                 slot = int(match.group(1))
                 if "GET" == request.method:
                     return self.get_colours(slot=slot)
@@ -84,6 +85,8 @@ class ColourPaletteHandler(BaseHandler):
                     return self.post_colours(request.body, slot=slot)
                 elif "DELETE" == request.method:
                     return self.delete_colours(slot=slot)
-            except AssertionError as e:
-                return Response.from_dict(*EXCEPTION_ERROR(e))
+                elif "OPTIONS" == request.method:
+                    return Response(body={}, code=200, headers=self.headers)
+        except AssertionError as e:
+            return Response.from_dict(*EXCEPTION_ERROR(e))
         return None

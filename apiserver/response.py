@@ -4,9 +4,10 @@ from errors import VALUE_NOT_OF_TYPE
 
 
 class Response:
-    def __init__(self, body: dict, code: int) -> None:
+    def __init__(self, body: dict, code: int, headers: dict = {}) -> None:
         self.code = code
         self.body = body
+        self.headers = headers
 
     @property
     def body(self) -> dict:
@@ -21,6 +22,18 @@ class Response:
         self._body = value
 
     @property
+    def headers(self) -> dict:
+        return self._headers
+
+    @headers.setter
+    def headers(self, value: dict):
+        if not isinstance(value, dict):
+            raise ValueError(
+                VALUE_NOT_OF_TYPE(self.__class__.__name__, "headers", value, dict)
+            )
+        self._headers = value
+
+    @property
     def code(self) -> int:
         return self._code
 
@@ -33,8 +46,8 @@ class Response:
         self._code = value
 
     @classmethod
-    def from_dict(cls, body, code):
-        return cls(body, code)
+    def from_dict(cls, body, code, headers={}):
+        return cls(body, code, headers)
 
     def __str__(self):
         return json.dumps(self.body)

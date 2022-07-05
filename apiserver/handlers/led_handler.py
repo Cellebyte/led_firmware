@@ -12,8 +12,9 @@ from webserver.http import Request
 
 
 class LEDHandler(BaseHandler):
-    paths = ["/leds", "/leds/"]
-    path_regex = ure.compile("/leds/(\d+)")
+    paths = ["/api/v1/leds", "/api/v1/leds/"]
+    path_regex = ure.compile("/api/v1/leds/(\d+)")
+    headers = {"Allow": "GET,POST,OPTIONS"}
 
     def __init__(self, leds: LEDDriver) -> None:
         self.leds = leds
@@ -48,12 +49,18 @@ class LEDHandler(BaseHandler):
                 return self.post_leds(request.body)
             elif "GET" == request.method:
                 return self.get_leds()
+            elif "OPTIONS" == request.method:
+                return Response(body={}, code=200, headers=self.headers)
         elif match := self.path_regex.match(request.path):
             led = int(match.group(1))
             if led >= self.leds.len_leds:
-                return Response.from_dict({"error": "LED unavailable!", "code": 404}, 404)
+                return Response.from_dict(
+                    {"error": "LED unavailable!", "code": 404}, 404
+                )
             if "POST" == request.method:
                 return self.post_leds(request.body, unit=led)
             elif "GET" == request.method:
                 return self.get_leds(unit=led)
+            elif "OPTIONS" == request.method:
+                return Response(body={}, code=200, headers=self.headers)
         return None

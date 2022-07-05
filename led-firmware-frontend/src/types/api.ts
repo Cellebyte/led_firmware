@@ -16,9 +16,9 @@ export interface RGB {
 }
 
 export interface ColourPalettes {
-  colour_palettes?: number[];
-  amount?: number;
-  slots?: number;
+  colour_palettes: number[];
+  amount: number;
+  slots: number;
 }
 
 export type ColourPalette = Record<string, RGB>;
@@ -190,13 +190,11 @@ export class Api<SecurityDataType = any> extends HttpClient<SecurityDataType> {
 
     /**
      * @tags colour_palettes
-     * @name get_palettes
+     * @name get_palette
      * @summary Get all colours from a colour_palette from the MicroController
      * @request GET:/palettes/{pallette_id}/
-     * @originalName getPalettes
-     * @duplicate
      */
-    getPalettes2: (pallette_id: number, params?: RequestParams) =>
+    getPalette: (pallette_id: number, params?: RequestParams) =>
       this.request<ColourPalette, Error>(`/palettes/${pallette_id}/`, "GET", params),
 
     /**
@@ -228,35 +226,29 @@ export class Api<SecurityDataType = any> extends HttpClient<SecurityDataType> {
 
     /**
      * @tags colours
-     * @name post_colours
+     * @name post_colour
      * @summary Store a colour into the colour_palette from the MicroController at this slot
      * @request POST:/palettes/{pallette_id}/colours/{colour_id}/
-     * @originalName postColours
-     * @duplicate
      */
-    postColours2: (pallette_id: number, colour_id: number, data: RGB, params?: RequestParams) =>
+    postColour: (pallette_id: number, colour_id: number, data: RGB, params?: RequestParams) =>
       this.request<RGB, Error>(`/palettes/${pallette_id}/colours/${colour_id}/`, "POST", params, data),
 
     /**
      * @tags colours
-     * @name delete_colours
+     * @name delete_colour
      * @summary Delete a colour in the colour_palette from the MicroController at this slot
      * @request DELETE:/palettes/{pallette_id}/colours/{colour_id}/
-     * @originalName deleteColours
-     * @duplicate
      */
-    deleteColours2: (pallette_id: number, colour_id: number, params?: RequestParams) =>
+    deleteColour: (pallette_id: number, colour_id: number, params?: RequestParams) =>
       this.request<RGB, Error>(`/palettes/${pallette_id}/colours/${colour_id}/`, "DELETE", params),
 
     /**
      * @tags colours
-     * @name get_colours
+     * @name get_colour
      * @summary Get a specific colour from a colour_palette from the MicroController
      * @request GET:/palettes/{pallette_id}/colours/{colour_id}/
-     * @originalName getColours
-     * @duplicate
      */
-    getColours2: (pallette_id: number, colour_id: number, params?: RequestParams) =>
+    getColour: (pallette_id: number, colour_id: number, params?: RequestParams) =>
       this.request<RGB, Error>(`/palettes/${pallette_id}/colours/${colour_id}/`, "GET", params),
   };
   leds = {

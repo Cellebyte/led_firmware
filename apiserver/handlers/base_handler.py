@@ -6,7 +6,8 @@ from webserver.http import Request
 
 
 class BaseHandler:
-    paths = ["/"]
+    paths = ["/api/v1", "/api/v1/"]
+    headers = {"Allow": "GET,OPTIONS"}
 
     def router(self, request: Request) -> Optional[Response]:
         raise NotImplementedError(IMPLEMENTATION_NEEDED)
