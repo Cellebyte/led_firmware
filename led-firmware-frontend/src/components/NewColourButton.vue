@@ -1,6 +1,10 @@
 <template>
   <div>
-    <b-button size="lg" v-on:click="addAdditionalColor">
+    <b-button
+      v-b-tooltip.hover.bottom title="Add a colour to the ColourWheel"
+      size="lg"
+      v-on:click="addAdditionalColor"
+    >
       <b-icon-plus-lg/>
     </b-button>
   </div>

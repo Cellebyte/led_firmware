@@ -1,6 +1,10 @@
 <template>
   <div>
-    <b-button size="lg" v-on:click="deleteAdditionalColour">
+    <b-button
+      v-b-tooltip.hover.bottom title="Delete a colour from the ColourWheel"
+      size="lg"
+      v-on:click="deleteAdditionalColour"
+    >
       <b-icon-dash-lg/>
     </b-button>
   </div>
