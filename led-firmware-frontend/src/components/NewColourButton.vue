@@ -1,7 +1,7 @@
 <template>
   <div>
-    <b-button v-on:click="addAdditionalColor">
-      <b-icon-plus-circle-dotted/>
+    <b-button size="lg" v-on:click="addAdditionalColor">
+      <b-icon-plus-lg/>
     </b-button>
   </div>
 </template>
@@ -14,6 +14,8 @@ export default {
   computed: {
     ...mapGetters('ColourPalettes', {
       getActivePalette: 'activePalette',
+      getAvailableSlots: 'availableSlots',
+      colourIndices: 'colourIndices',
     }),
   },
   methods: {
@@ -21,9 +23,12 @@ export default {
       addPaletteColour: 'ColourPalettes/ADD_PALETTE_COLOUR',
     }),
     addAdditionalColor() {
-      this.addPaletteColour(
-        { paletteID: this.getActivePalette, formData: { red: 255, green: 255, blue: 255 } },
-      );
+      console.log(this.colourIndices);
+      if (!this.colourIndices.includes(this.getAvailableSlots)) {
+        this.addPaletteColour(
+          { paletteID: this.getActivePalette, formData: { red: 255, green: 255, blue: 255 } },
+        );
+      }
     },
   },
 };

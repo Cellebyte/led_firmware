@@ -7,7 +7,7 @@ export default {
   namespaced: true,
 
   state: {
-    activePalette: 0,
+    activePalette: 1,
     availableSlots: 0,
     availablePalettes: [],
     availablePalettesAmount: 0,
@@ -16,7 +16,15 @@ export default {
 
   getters: {
     colourPalettes: (state: ColourPaletteState) => state.colourPalettes,
-    colours: (state: ColourPaletteState) => Object.values(state.colourPalettes[state.activePalette]).map(colour => new iro.Color(`rgb(${colour.red},${colour.green},${colour.blue})`).hexString),
+    colours: (state: ColourPaletteState) => Object.values(
+      state.colourPalettes[state.activePalette],
+    ).map(
+      colour => new iro.Color(`rgb(${colour.red},${colour.green},${colour.blue})`).hexString,
+    ),
+    colourIndices: (state: ColourPaletteState) => Object.keys(
+      state.colourPalettes[state.activePalette],
+    ),
+    availableSlots: (state: ColourPaletteState) => state.availableSlots,
     activePalette: (state: ColourPaletteState) => state.activePalette,
     availablePalettes: (state: ColourPaletteState) => state.availablePalettes,
     availablePalettesAmount: (state: ColourPaletteState) => state.availablePalettesAmount,
@@ -41,8 +49,8 @@ export default {
       id: number, colourID: number, colour: RGB}) {
       Vue.set(state.colourPalettes[payload.id], payload.colourID, payload.colour);
     },
-    DELETE_PALETTE_COLOUR(state: ColourPaletteState, id: number, colourID: number) {
-      Vue.delete(state.colourPalettes[id], colourID);
+    DELETE_PALETTE_COLOUR(state: ColourPaletteState, payload: {id: number, colourID: number}) {
+      Vue.delete(state.colourPalettes[payload.id], payload.colourID);
     },
     DELETE_PALETTE(state: ColourPaletteState, id: number) {
       Vue.set(state.colourPalettes, id, {} as ColourPalette);
@@ -108,7 +116,18 @@ export default {
         payload.paletteID, payload.colourID,
       );
       if (response.status === 200) {
-        context.commit('DELETE_PALETTE_COLOUR', payload.paletteID, payload.colourID);
+        context.commit('DELETE_PALETTE_COLOUR', { id: payload.paletteID, colourID: payload.colourID });
+      }
+    },
+    async DELETE_PALETTE(
+      context: { commit: any; rootState: RootState },
+      payload: { paletteID: number, colourID: number },
+    ) {
+      const response = await context.rootState.api.palettes.deleteColours(
+        payload.paletteID,
+      );
+      if (response.status === 200) {
+        context.commit('DELETE_PALETTE', payload.paletteID);
       }
     },
   },

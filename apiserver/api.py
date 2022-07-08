@@ -8,6 +8,7 @@ class API:
     headers = {
         "Content-Type": "application/json",
         "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Methods": "DELETE"
     }
 
     def __init__(self) -> None:

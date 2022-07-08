@@ -1,5 +1,9 @@
 <template>
-    <div ref="picker"></div>
+  <div ref="picker">
+    <label style="font-size: x-large;">
+      <div class="box" :style="{'background-color':hexColour}"></div> {{ currentColour.hexString }}
+    </label>
+  </div>
 </template>
 
 <script lang="js">
@@ -78,12 +82,13 @@ export default {
   data() {
     return {
       colorPicker: null,
+      currentColour: '',
     };
   },
   created() {
     this.fetchPalettes().then(() => {
       this.fetchPalette({ paletteID: this.getActivePalette }).then(() => {
-        console.log(this.getColours);
+        console.log('Init done');
       });
     });
   },
@@ -92,6 +97,13 @@ export default {
       getColours: 'colours',
       getActivePalette: 'activePalette',
     }),
+    hexColour() {
+      if (this.currentColour) {
+        return this.currentColour.hexString;
+      }
+
+      return '';
+    },
   },
   methods: {
     ...mapActions({
@@ -103,12 +115,14 @@ export default {
       this.$emit('input', color.hexString);
     },
     onColorChange(color, changes) {
+      this.currentColour = color;
       this.$emit('color:change', {
         color,
         changes,
       });
     },
     onColorInit(color, changes) {
+      this.currentColour = color;
       this.$emit('color:init', {
         color,
         changes,
@@ -190,17 +204,48 @@ export default {
   },
   watch: {
     getColours(newColours) {
-      if (newColours.length === 0) {
+      if (!newColours.length === 0 || !this.colorPicker) {
         return;
       }
-      // TODO: Fix addition of colors not only updating the values of existing colours
       if (this.colorPicker.colors && newColours) {
-        this.colorPicker.colors.map((colour, index) => {
-          this.colorPicker.colors[index].hexString = newColours[index];
-          return colour;
-        });
+        if (
+          this.colorPicker.colors.length === newColours.length
+        || this.colorPicker.colors.length < newColours.length
+        ) {
+          let alreadySaved = 0;
+          this.colorPicker.colors.forEach((colour, index) => {
+            this.colorPicker.colors[index].hexString = newColours[index];
+            alreadySaved = index;
+          });
+          newColours.forEach((colour, index) => {
+            if (index > alreadySaved) {
+              this.colorPicker.addColor(newColours[index], index);
+              this.colorPicker.setActiveColor(index);
+            }
+          });
+        } else if (this.colorPicker.colors.length > newColours.length) {
+          let alreadySaved = 0;
+          newColours.forEach((colour, index) => {
+            this.colorPicker.colors[index].hexString = colour;
+            alreadySaved = index;
+          });
+          this.colorPicker.colors.forEach((colour, index) => {
+            if (index > alreadySaved) {
+              this.colorPicker.removeColor(index);
+            }
+          });
+        }
+        // this.colorPicker.forceUpdate();
       }
     },
   },
 };
 </script>
+<style scoped>
+.box {
+  padding: 45px;
+  height: 45px;
+  width: 45px;
+  clear: both;
+}
+</style>
