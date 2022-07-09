@@ -270,13 +270,11 @@ export class Api<SecurityDataType = any> extends HttpClient<SecurityDataType> {
 
     /**
      * @tags leds
-     * @name post_leds
+     * @name post_led
      * @summary Set Leds of this id with the object provided also sets animation to manual.
      * @request POST:/leds/{led_id}/
-     * @originalName postLeds
-     * @duplicate
      */
-    postLeds2: (led_id: number, data: RGB, params?: RequestParams) =>
+    postLed: (led_id: number, data: RGB, params?: RequestParams) =>
       this.request<RGB, Error>(`/leds/${led_id}/`, "POST", params, data),
   };
   lens = {

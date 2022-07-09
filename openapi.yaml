@@ -307,7 +307,7 @@ paths:
             type: integer
             format: int32
       summary: Set Leds of this id with the object provided also sets animation to manual.
-      operationId: post_leds
+      operationId: post_led
       tags:
         - leds
       requestBody:
