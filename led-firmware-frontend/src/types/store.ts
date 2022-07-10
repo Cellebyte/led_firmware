@@ -1,4 +1,6 @@
-import { Api, ColourPalette } from '@/types/api';
+import {
+  Animation, Api, ColourPalette, PolyAnimation,
+} from '@/types/api';
 import { LedFirmwareFrontendConfiguration } from '@/types/config';
 
 export interface RootState {
@@ -45,4 +47,10 @@ export interface ColourPaletteState {
     availablePalettes: Array<number>,
     availablePalettesAmount: number
     colourPalettes: ColourPaletteDict
+}
+
+export interface AnimationsState {
+    currentAnimation: Animation | undefined,
+    animationOptions: PolyAnimation,
+
 }

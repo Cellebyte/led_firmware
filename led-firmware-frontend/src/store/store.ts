@@ -1,10 +1,11 @@
 import Vue from 'vue';
 import Vuex, { StoreOptions } from 'vuex';
 import VuexPersist from 'vuex-persist';
-import ColourPalettes from '@/store/modules/ColourPalettes';
 import { RootState } from '@/types/store';
 import { Api } from '@/types/api';
 import { LedFirmwareFrontendConfiguration } from '@/types/config';
+import ColourPalettes from '@/store/modules/ColourPalettes';
+import Animations from '@/store/modules/Animations';
 
 export default function storeFactory(config: LedFirmwareFrontendConfiguration, API: Api) {
   Vue.use(Vuex);
@@ -24,6 +25,7 @@ export default function storeFactory(config: LedFirmwareFrontendConfiguration, A
     },
     modules: {
       ColourPalettes,
+      Animations,
     },
     plugins: [vuexLocalStorage.plugin],
     strict: debug,

@@ -28,5 +28,5 @@ import DeleteColourButton from '@/components/DeleteColourButton.vue';
     DeleteColourButton,
   },
 })
-export default class HomeView extends Vue {}
+export default class ColourWheel extends Vue {}
 </script>
