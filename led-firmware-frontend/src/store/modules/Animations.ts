@@ -9,8 +9,7 @@ export default {
 
   state: {
     currentAnimation: null,
-    animationOptions: {} as PolyAnimation,
-
+    animationOptions: {} as { [animation in Animation]: PolyAnimation },
   },
 
   getters: {
@@ -22,13 +21,15 @@ export default {
     SET_ACTIVE_ANIMATION(state: AnimationsState, animation: Animation) {
       Vue.set(state, 'currentAnimation', animation);
     },
-    SET_ANIMATION_OPTIONS(state: AnimationsState, animationOptions: PolyAnimation) {
-      Vue.set(state, 'animationOptions', animationOptions);
+    SET_ANIMATION_OPTIONS(
+      state: AnimationsState, payload: { animation: Animation, animationOptions: PolyAnimation },
+    ) {
+      Vue.set(state.animationOptions, payload.animation, payload.animationOptions);
     },
   } as any,
 
   actions: {
-    async FETCH_ANIMATION(context: { commit: any; rootState: RootState}) {
+    async FETCH_ANIMATION(context: { commit: any; rootState: RootState }) {
       const response = await context.rootState.api.animation.getAnimation();
       if (response.data && response.status === 200) {
         context.commit('SET_ACTIVE_ANIMATION', response.data.animation);
@@ -44,10 +45,10 @@ export default {
           context.state.currentAnimation,
         );
         if (response.data && response.status === 200) {
-          context.commit('SET_ANIMATION_OPTIONS', response.data);
+          context.commit('SET_ANIMATION_OPTIONS', { animation: context.state.currentAnimation, animationOptions: response.data });
         }
       } else {
-        context.commit('SET_ANIMATION_OPTIONS', {} as PolyAnimation);
+        context.commit('SET_ANIMATION_OPTIONS', { animation: context.state.currentAnimation, animationOptions: {} as PolyAnimation });
       }
     },
     async CHANGE_ANIMATION(
@@ -68,17 +69,17 @@ export default {
     },
     async UPDATE_ANIMATION_OPTIONS(
       context: {
-      commit: any; rootState: RootState
-    },
+        commit: any; rootState: RootState
+      },
       payload: {
-      animation: Animation; animationOptions: PolyAnimation
-    },
+        animation: Animation; animationOptions: PolyAnimation
+      },
     ) {
       const response = await context.rootState.api.animation.animationUpdate(
         payload.animation, payload.animationOptions,
       );
       if (response.data && response.status === 200) {
-        context.commit('SET_ANIMATION_OPTIONS', response.data);
+        context.commit('SET_ANIMATION_OPTIONS', { animation: payload.animation, animationOptions: response.data });
       }
     },
   },

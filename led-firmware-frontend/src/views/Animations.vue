@@ -4,8 +4,8 @@
       <b-row class="row d-flex justify-content-center">
         <animation-selector :enableOffButton="false" @animationUpdate="onAnimationsUpdate" />
       </b-row>
-      <b-row class="row d-flex justify-content-center">
-        <snake-animation-form />
+      <b-row class="row d-flex pt-5 justify-content-center">
+        <animation-form :animation="animation" />
       </b-row>
     </b-container>
   </div>
@@ -13,25 +13,26 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import SnakeAnimationForm from '@/components/SnakeAnimationForm.vue';
+import AnimationForm from '@/components/AnimationForm.vue';
 import AnimationSelector from '@/components/AnimationSelector.vue';
 import { Animation } from '@/types/api';
 
 @Component({
   data() {
     return {
-      animation: Animation.Normal,
+      animation: null,
     };
   },
+
   components: {
     AnimationSelector,
-    SnakeAnimationForm,
+    AnimationForm,
   },
   methods: {
     onAnimationsUpdate(animation: Animation) {
-      console.log(animation);
+      this.animation = animation;
     },
-  },
+  } as any,
 })
 export default class AnimationsVue extends Vue { }
 </script>

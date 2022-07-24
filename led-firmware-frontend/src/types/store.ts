@@ -51,6 +51,5 @@ export interface ColourPaletteState {
 
 export interface AnimationsState {
     currentAnimation: Animation | undefined,
-    animationOptions: PolyAnimation,
-
+    animationOptions: {[animation in Animation]: PolyAnimation},
 }

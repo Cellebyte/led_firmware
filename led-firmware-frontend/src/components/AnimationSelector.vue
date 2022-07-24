@@ -4,17 +4,17 @@
       v-b-tooltip.hover.top
       title="Switch to the Normal. Animation"
       style="normal"
-      size="lg"
+      size="md"
       v-on:click="changeToNormal"
     >
       <b-img
         v-show="normal"
-        width="64px"
+        width="42px"
         :src="require('@/assets/Normal_on_small.png')"
       />
       <b-img
         v-show="!normal"
-        width="64px"
+        width="42px"
         :src="require('@/assets/Normal_off_small.png')"
       />
     </b-button>
@@ -27,12 +27,12 @@
     >
       <b-img
         v-show="snake"
-        width="64px"
+        width="42px"
         :src="require('@/assets/Snake_on_small.png')"
       />
       <b-img
         v-show="!snake"
-        width="64px"
+        width="42px"
         :src="require('@/assets/Snake_off_small.png')"
       />
     </b-button>
@@ -45,12 +45,12 @@
     >
       <b-img
         v-show="breath"
-        width="64px"
+        width="42px"
         :src="require('@/assets/Breath_on_small.png')"
       />
       <b-img
         v-show="!breath"
-        width="64px"
+        width="42px"
         :src="require('@/assets/Breath_off_small.png')"
       />
     </b-button>
@@ -63,13 +63,13 @@
     >
       <b-img
         v-show="rainbow"
-        width="64px"
-        :src="require('@/assets/Normal_on_small.png')"
+        width="42px"
+        :src="require('@/assets/Rainbow_on_small.png')"
       />
       <b-img
         v-show="!rainbow"
-        width="64px"
-        :src="require('@/assets/Normal_off_small.png')"
+        width="42px"
+        :src="require('@/assets/Rainbow_off_small.png')"
       />
     </b-button>
     <b-button

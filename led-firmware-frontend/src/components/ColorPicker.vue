@@ -1,8 +1,8 @@
 <template>
   <div ref="picker">
-    <label style="font-size: x-large;">
+    <!-- <label style="font-size: large;">
       <div class="box" :style="{'background-color':hexColour}"></div> {{ currentColour.hexString }}
-    </label>
+    </label> -->
   </div>
 </template>
 
@@ -15,11 +15,11 @@ export default {
   props: {
     width: {
       type: Number,
-      default: 375,
+      default: 360,
     },
     height: {
       type: Number,
-      default: 375,
+      default: 360,
     },
     handleSvg: {
       type: String,
@@ -243,9 +243,9 @@ export default {
 </script>
 <style scoped>
 .box {
-  padding: 45px;
-  height: 45px;
-  width: 45px;
+  padding: 32px;
+  height: 32px;
+  width: 32px;
   clear: both;
 }
 </style>
