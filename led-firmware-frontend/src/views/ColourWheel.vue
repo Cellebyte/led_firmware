@@ -7,10 +7,8 @@
       <b-row class="row d-flex justify-content-center">
         <animation-selector />
       </b-row>
-      <b-row
-        class="row d-flex pt-1 justify-content-center"
-      >
-      <b-button-group>
+      <b-row class="row d-flex pt-1 justify-content-center">
+        <b-button-group>
           <previous-palette-button />
           <new-colour-button />
           <delete-colour-button />
