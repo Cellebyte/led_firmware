@@ -9,7 +9,7 @@
         id="input-group-3"
         label-for="input-3"
         v-show="!rainbow"
-        :description="animation + ' pallete'"
+        :description="animation + ' colour pallete.'"
       >
         <b-form-select
           id="input-3"
@@ -32,7 +32,23 @@
           required
         ></b-form-input>
       </b-form-group>
-
+      <b-form-group
+        id="input-group-5"
+        v-show="breath"
+        label-for="input-5"
+        :description="'The ' + animation + ' dim_percentage'"
+      >
+        <b-form-input
+          id="input-5"
+          v-model="form.dimPercentage"
+          type="number"
+          min="0.005"
+          max="1"
+          step="0.005"
+          :placeholder="'Enter ' + animation + ' dim_percentage.'"
+          required
+        ></b-form-input>
+      </b-form-group>
       <b-form-group
         id="input-group-2"
         v-show="snake"
@@ -69,11 +85,11 @@
         v-slot="{ ariaDescribedby }"
       >
         <b-form-checkbox-group
-          v-model="form.checked"
+          v-model="form.changeColour"
           id="checkboxes-4"
           :aria-describedby="ariaDescribedby"
         >
-          <b-form-checkbox value="true"></b-form-checkbox>
+          <b-form-checkbox size="lg" value="true"></b-form-checkbox>
         </b-form-checkbox-group>
       </b-form-group>
 
@@ -112,9 +128,9 @@ export default {
       form: {
         length: 30,
         steps: 1,
-        name: '',
+        dimPercentage: 0.0,
         direction: 'up',
-        checked: [],
+        changeColour: [],
       },
       show: true,
     };

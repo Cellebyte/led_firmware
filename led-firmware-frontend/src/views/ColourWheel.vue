@@ -11,6 +11,7 @@
         <b-button-group>
           <previous-palette-button />
           <new-colour-button />
+          <palette-counter />
           <delete-colour-button />
           <next-palette-button />
         </b-button-group>
@@ -30,6 +31,7 @@ import DeleteColourButton from '@/components/DeleteColourButton.vue';
 import AnimationSelector from '@/components/AnimationSelector.vue';
 import NextPaletteButton from '@/components/NextPaletteButton.vue';
 import PreviousPaletteButton from '@/components/PreviousPaletteButton.vue';
+import PaletteCounter from '@/components/PaletteCounter.vue';
 
 @Component({
   components: {
@@ -39,6 +41,7 @@ import PreviousPaletteButton from '@/components/PreviousPaletteButton.vue';
     AnimationSelector,
     NextPaletteButton,
     PreviousPaletteButton,
+    PaletteCounter,
   },
 })
 export default class ColourWheel extends Vue { }

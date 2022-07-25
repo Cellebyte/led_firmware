@@ -20,7 +20,7 @@ import { Animation } from '@/types/api';
 @Component({
   data() {
     return {
-      animation: null,
+      animation: 'normal',
     };
   },
 
