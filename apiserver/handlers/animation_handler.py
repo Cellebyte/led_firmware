@@ -16,7 +16,6 @@ class AnimationHandler(BaseHandler):
         "/api/v1/animation/({})/?".format("|".join(Animation.SUPPORTED))
     )
     headers = {
-        "Access-Control-Allow-Methods": "GET,PUT,OPTIONS",
         "Allow": "GET,PUT,OPTIONS",
     }
 
