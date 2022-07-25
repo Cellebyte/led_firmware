@@ -62,8 +62,8 @@ export default {
       const response = await context.rootState.api.animation.putAnimation(
         { animation: payload.animation } as AnimationObject,
       );
-      if (response.data && response.status === 200) {
-        context.commit('currentAnimation', response.data.animation as Animation);
+      if (response.data && response.status === 201) {
+        context.commit('SET_ACTIVE_ANIMATION', response.data.animation);
         context.dispatch('FETCH_ANIMATION_OPTIONS');
       }
     },

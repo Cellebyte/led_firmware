@@ -2,7 +2,7 @@
   <b-button-group>
     <b-button
       v-b-tooltip.hover.top
-      title="Switch to the Normal. Animation"
+      title="Switch to Normal."
       style="normal"
       size="md"
       v-on:click="changeToNormal"
@@ -20,7 +20,7 @@
     </b-button>
     <b-button
       v-b-tooltip.hover.top
-      title="Switch to the Snake." Animation
+      title="Switch to the Snake."
       size="lg"
       style="snake"
       v-on:click="changeToSnake"
@@ -38,7 +38,7 @@
     </b-button>
     <b-button
       v-b-tooltip.hover.top
-      title="Switch to the Breath. Animation"
+      title="Switch to the Breath."
       size="lg"
       style="breath"
       v-on:click="changeToBreath"
@@ -56,7 +56,7 @@
     </b-button>
     <b-button
       v-b-tooltip.hover.top
-      title="Switch to the Rainbow Animation."
+      title="Switch to the Rainbow."
       size="lg"
       style="rainbow"
       v-on:click="changeToRainbow"
@@ -75,12 +75,20 @@
     <b-button
       v-if="enableOffButton"
       v-b-tooltip.hover.top
-      title="Switch to Off Animation"
+      title="Switch Lights Off."
       size="lg"
-      style="rainbow"
+      style="off"
       v-on:click="changeToOff"
     >
-      Off
+      <span
+        v-show="off"
+        class="off"
+        style="padding: 0.75rem 0.5rem 0.75rem 0.5rem;"
+      >Off</span>
+      <span
+        v-show="!off"
+        style="padding: 0.75rem 0.5rem 0.75rem 0.5rem;"
+      >Off</span>
     </b-button>
   </b-button-group>
 </template>
@@ -95,11 +103,10 @@ export default Vue.extend({
       type: Boolean,
       default: true,
     },
-  },
-  data() {
-    return {
-      animation: Animation.Normal,
-    };
+    animation: {
+      type: String,
+      default: Animation.Normal,
+    },
   },
   computed: {
     normal() {
@@ -120,28 +127,29 @@ export default Vue.extend({
   } as any,
   methods: {
     changeToNormal() {
-      this.animation = Animation.Normal;
-      this.$emit('animationUpdate', this.animation);
+      this.$emit('animationUpdate', Animation.Normal);
     },
     changeToBreath() {
-      this.animation = Animation.Breath;
-      this.$emit('animationUpdate', this.animation);
+      this.$emit('animationUpdate', Animation.Breath);
     },
     changeToRainbow() {
-      this.animation = Animation.Rainbow;
-      this.$emit('animationUpdate', this.animation);
+      this.$emit('animationUpdate', Animation.Rainbow);
     },
     changeToSnake() {
-      this.animation = Animation.Snake;
-      this.$emit('animationUpdate', this.animation);
+      this.$emit('animationUpdate', Animation.Snake);
     },
     changeToOff() {
-      this.animation = Animation.Off;
-      this.$emit('animationUpdate', this.animation);
+      this.$emit('animationUpdate', Animation.Off);
     },
   },
 });
 </script>
 
 <style scoped>
+.off {
+  border: 1px solid #000000;
+  border-radius: 10px;
+  background-color: #000000;
+  color: #ffffff;
+}
 </style>

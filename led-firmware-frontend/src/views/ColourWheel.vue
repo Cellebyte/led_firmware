@@ -5,7 +5,7 @@
     <!-- <device-color-picker/> -->
     <b-container>
       <b-row class="row d-flex justify-content-center">
-        <animation-selector @animationUpdate="onAnimationsUpdate" />
+        <animation-selector :animation="getActiveAnimation" @animationUpdate="onAnimationsUpdate" />
       </b-row>
       <b-row class="row d-flex pt-1 justify-content-center">
         <b-button-group>
@@ -32,7 +32,7 @@ import AnimationSelector from '@/components/AnimationSelector.vue';
 import NextPaletteButton from '@/components/NextPaletteButton.vue';
 import PreviousPaletteButton from '@/components/PreviousPaletteButton.vue';
 import PaletteCounter from '@/components/PaletteCounter.vue';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 @Component({
   components: {
@@ -44,9 +44,20 @@ import { mapActions } from 'vuex';
     PreviousPaletteButton,
     PaletteCounter,
   },
+  computed: {
+    ...mapGetters('Animations', {
+      getActiveAnimation: 'activeAnimation',
+    }),
+  },
+  created() {
+    this.fetchAnimation().then(() => {
+      console.log('Got animation Update');
+    });
+  },
   methods: {
     ...mapActions({
       updateAnimation: 'Animations/CHANGE_ANIMATION',
+      fetchAnimation: 'Animations/FETCH_ANIMATION',
     }),
     onAnimationsUpdate(animation: Animation) {
       this.updateAnimation({
