@@ -6,15 +6,15 @@
       v-if="show"
     >
       <b-form-group
-        id="input-group-3"
-        label-for="input-3"
+        id="input-group-6"
+        label-for="input-6"
         v-show="!rainbow"
         :description="animation + ' colour pallete.'"
       >
         <b-form-select
-          id="input-3"
-          v-model="form.direction"
-          :options="palettes"
+          id="input-6"
+          v-model="form.paletteSelector"
+          :options="getAvailablePalettes"
           required
         ></b-form-select>
       </b-form-group>
@@ -129,18 +129,27 @@ export default {
         length: 30,
         steps: 1,
         dimPercentage: 0.0,
+        paletteSelector: 0,
+        selectedColours: [],
         direction: 'up',
         changeColour: [],
       },
       show: true,
     };
   },
+  created() {
+    // this.fetchPalettes().then(() => {
+    //   this.fetchPalette({ paletteID: this.getActivePalette }).then(() => {
+    //     console.log('Init done');
+    //   });
+    // });
+  },
   computed: {
+    ...mapGetters('ColourPalettes', {
+      getAvailablePalettes: 'availablePalettes',
+    }),
     directions() {
       return Object.values(AnimationDirection);
-    },
-    palettes() {
-      return [];
     },
     snake() {
       return this.animation === Animation.Snake;

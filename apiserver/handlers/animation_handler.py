@@ -15,7 +15,10 @@ class AnimationHandler(BaseHandler):
     path_regex = ure.compile(
         "/api/v1/animation/({})/?".format("|".join(Animation.SUPPORTED))
     )
-    headers = {"Allow": "GET,PUT,OPTIONS"}
+    headers = {
+        "Access-Control-Allow-Methods": "GET,PUT,OPTIONS",
+        "Allow": "GET,PUT,OPTIONS",
+    }
 
     def __init__(self, leds: LEDDriver) -> None:
         self.leds = leds

@@ -5,7 +5,7 @@
     <!-- <device-color-picker/> -->
     <b-container>
       <b-row class="row d-flex justify-content-center">
-        <animation-selector />
+        <animation-selector @animationUpdate="onAnimationsUpdate" />
       </b-row>
       <b-row class="row d-flex pt-1 justify-content-center">
         <b-button-group>
@@ -32,6 +32,7 @@ import AnimationSelector from '@/components/AnimationSelector.vue';
 import NextPaletteButton from '@/components/NextPaletteButton.vue';
 import PreviousPaletteButton from '@/components/PreviousPaletteButton.vue';
 import PaletteCounter from '@/components/PaletteCounter.vue';
+import { mapActions } from 'vuex';
 
 @Component({
   components: {
@@ -42,6 +43,16 @@ import PaletteCounter from '@/components/PaletteCounter.vue';
     NextPaletteButton,
     PreviousPaletteButton,
     PaletteCounter,
+  },
+  methods: {
+    ...mapActions({
+      updateAnimation: 'Animations/CHANGE_ANIMATION',
+    }),
+    onAnimationsUpdate(animation: Animation) {
+      this.updateAnimation({
+        animation,
+      });
+    },
   },
 })
 export default class ColourWheel extends Vue { }
