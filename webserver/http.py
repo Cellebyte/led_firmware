@@ -33,7 +33,6 @@ class HTTPServer:
     def __init__(self, essid, password, port, handler):
         self.essid = essid
         self.wlan: Optional[network.WLAN] = None
-        self.socket = None
         self.password = password
         self.port = port
         self.handler = handler
