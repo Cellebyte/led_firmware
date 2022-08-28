@@ -111,71 +111,74 @@
   </div>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
+<script lang="ts">
+import {
+  Component, Prop, Vue, Emit,
+} from 'vue-property-decorator';
+import { namespace } from 'vuex-class';
 import { Animation, AnimationDirection } from '@/types/api';
+import { AnimationFormData } from '@/types/components';
 
-export default {
+const colourPalettes = namespace('ColourPalettes');
+
+@Component({
   name: 'animation-form',
-  props: {
-    animation: {
-      type: String,
-      default: 'normal',
-    },
-  },
-  data() {
-    return {
-      form: {
-        length: 30,
-        steps: 1,
-        dimPercentage: 0.0,
-        paletteSelector: 0,
-        selectedColours: [],
-        direction: 'up',
-        changeColour: [],
-      },
-      show: true,
-    };
-  },
-  created() {
-    // this.fetchPalettes().then(() => {
-    //   this.fetchPalette({ paletteID: this.getActivePalette }).then(() => {
-    //     console.log('Init done');
-    //   });
-    // });
-  },
-  computed: {
-    ...mapGetters('ColourPalettes', {
-      getAvailablePalettes: 'availablePalettes',
-    }),
-    directions() {
-      return Object.values(AnimationDirection);
-    },
-    snake() {
-      return this.animation === Animation.Snake;
-    },
-    breath() {
-      return this.animation === Animation.Breath;
-    },
-    rainbow() {
-      return this.animation === Animation.Rainbow;
-    },
-  },
-  methods: {
-    onSubmit(event) {
-      event.preventDefault();
-      alert(aJSON.stringify(this.form));
-    },
-    onReset(event) {
-      event.preventDefault();
-      // Reset our form values
+})
+export default class AnimationForm extends Vue {
+  @Prop({ default: Animation.Normal }) readonly animation!: string;
 
-      // Trick to reset/clear native browser form validation state
-      this.show = false;
-      this.$nextTick(() => {
-        this.show = true;
-      });
-    },
-  },
-};
+  private show: boolean = true;
+
+  private form: AnimationFormData = {
+    length: 30,
+    steps: 1,
+    dimPercentage: 0.0,
+    paletteSelector: 0,
+    selectedColours: [],
+    direction: AnimationDirection.Up,
+    changeColour: [],
+  } as AnimationFormData
+
+  @colourPalettes.Getter
+  public getAvailablePalettes!: () => Array<number>;
+
+  // created() {
+  // this.fetchPalettes().then(() => {
+  //   this.fetchPalette({ paletteID: this.getActivePalette }).then(() => {
+  //     console.log('Init done');
+  //   });
+  // });
+  // },
+  // eslint-disable-next-line class-methods-use-this
+  public get directions() {
+    return [AnimationDirection.Up, AnimationDirection.Down];
+  }
+
+  public get snake() {
+    return this.animation === Animation.Snake;
+  }
+
+  public get breath() {
+    return this.animation === Animation.Breath;
+  }
+
+  public get rainbow() {
+    return this.animation === Animation.Rainbow;
+  }
+
+  public onSubmit(event: any) {
+    event.preventDefault();
+    alert(JSON.stringify(this.form));
+  }
+
+  public onReset(event: any) {
+    event.preventDefault();
+    // Reset our form values
+    // Trick to reset/clear native browser form validation state
+    this.show = false;
+    this.$nextTick(() => {
+      this.show = true;
+    });
+  }
+}
 </script>

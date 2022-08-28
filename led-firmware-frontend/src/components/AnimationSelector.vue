@@ -93,56 +93,73 @@
   </b-button-group>
 </template>
 <script lang="ts">
-import Vue from 'vue';
+import {
+  Component, Prop, Vue, Emit,
+} from 'vue-property-decorator';
 import { Animation } from '@/types/api';
 
-export default Vue.extend({
+
+@Component({
   name: 'animation-selector',
-  props: {
-    enableOffButton: {
-      type: Boolean,
-      default: true,
-    },
-    animation: {
-      type: String,
-      default: Animation.Normal,
-    },
-  },
-  computed: {
-    normal() {
-      return this.animation === Animation.Normal;
-    },
-    snake() {
-      return this.animation === Animation.Snake;
-    },
-    breath() {
-      return this.animation === Animation.Breath;
-    },
-    rainbow() {
-      return this.animation === Animation.Rainbow;
-    },
-    off() {
-      return this.animation === Animation.Off;
-    },
-  } as any,
-  methods: {
-    changeToNormal() {
-      this.$emit('animationUpdate', Animation.Normal);
-    },
-    changeToBreath() {
-      this.$emit('animationUpdate', Animation.Breath);
-    },
-    changeToRainbow() {
-      this.$emit('animationUpdate', Animation.Rainbow);
-    },
-    changeToSnake() {
-      this.$emit('animationUpdate', Animation.Snake);
-    },
-    changeToOff() {
-      this.$emit('animationUpdate', Animation.Off);
-    },
-  },
-});
+})
+export default class AnimationSelector extends Vue {
+  @Prop({ default: true }) readonly enableOffButton!: boolean;
+
+  @Prop({ default: Animation.Normal }) readonly animation!: Animation;
+
+  private privateAnimation: Animation = Animation.Off;
+
+  created(): void {
+    this.privateAnimation = this.animation;
+  }
+
+
+  public get normal(): boolean {
+    return this.privateAnimation === Animation.Normal;
+  }
+
+  public get snake(): boolean {
+    return this.privateAnimation === Animation.Snake;
+  }
+
+  public get breath(): boolean {
+    return this.privateAnimation === Animation.Breath;
+  }
+
+  public get rainbow(): boolean {
+    return this.privateAnimation === Animation.Rainbow;
+  }
+
+  public get off(): boolean {
+    return this.privateAnimation === Animation.Off;
+  }
+
+  @Emit('animationUpdate')
+  public changeTo(animation: Animation): Animation {
+    this.privateAnimation = animation;
+    return animation;
+  }
+
+  public changeToNormal() {
+    this.changeTo(Animation.Normal);
+  }
+
+  public changeToBreath() {
+    this.changeTo(Animation.Breath);
+  }
+
+  public changeToRainbow() {
+    this.changeTo(Animation.Rainbow);
+  }
+
+  public changeToSnake() {
+    this.changeTo(Animation.Snake);
+  }
+
+  public changeToOff() {
+    this.changeTo(Animation.Off);
+  }
+}
 </script>
 
 <style scoped>

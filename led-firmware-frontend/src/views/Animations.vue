@@ -2,7 +2,7 @@
   <div class="animation">
     <b-container>
       <b-row class="row d-flex justify-content-center">
-        <animation-selector :enableOffButton="false" @animationUpdate="onAnimationsUpdate" />
+        <animation-selector :enableOffButton="false" @animationUpdate="animationsUpdate" />
       </b-row>
       <b-row class="row d-flex pt-5 justify-content-center">
         <animation-form :animation="animation" />
