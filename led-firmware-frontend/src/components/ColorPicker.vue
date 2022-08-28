@@ -6,180 +6,218 @@
   </div>
 </template>
 
-<script lang="js">
+<script lang="ts">
 import iro from '@jaames/iro';
-import { mapActions, mapGetters } from 'vuex';
 
-export default {
+import {
+  Component, Prop, Vue, Emit, Watch,
+} from 'vue-property-decorator';
+import { namespace } from 'vuex-class';
+import { RGB } from '@/types/api';
+
+const colourPalettes = namespace('ColourPalettes');
+
+@Component({
   name: 'color-picker',
-  props: {
-    width: {
-      type: Number,
-      default: 360,
-    },
-    height: {
-      type: Number,
-      default: 360,
-    },
-    handleSvg: {
-      type: String,
-      default: null,
-    },
-    handleOrigin: {
-      type: Object,
-      default() {
-        return {
-          x: 0,
-          y: 0,
-        };
-      },
-    },
-    padding: {
-      type: Number,
-      default: 6,
-    },
-    handleRadius: {
-      type: Number,
-      default: 24,
-    },
-    sliderMargin: {
-      type: Number,
-      default: 32,
-    },
-    sliderHeight: {
-      type: Number,
-      default: undefined,
-    },
-    borderWidth: {
-      type: Number,
-      default: 0,
-    },
-    borderColor: {
-      type: String,
-      default: '#ffffff',
-    },
-    display: {
-      type: String,
-      default: 'block',
-    },
-    layout: {
-      type: String,
-      default: 'block',
-    },
-    wheelAngle: {
-      type: Number,
-      default: 0,
-    },
-    wheelDirection: {
-      type: String,
-      default: 'anticlockwise',
-    },
-    wheelLightness: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  data() {
-    return {
-      colorPicker: null,
-      currentColour: '',
-    };
-  },
+})
+export default class ColorPicker extends Vue {
+  @Prop({ default: 360 }) readonly width!: number;
+
+  @Prop({ default: 360 }) readonly height!: number;
+
+  @Prop({ default: undefined }) readonly handleSvg!: string | undefined;
+
+  @Prop({ default: () => ({ x: 0, y: 0 }) }) readonly handleOrigin!: object;
+
+  @Prop({ default: 6 }) readonly padding!: number;
+
+  @Prop({ default: 24 }) readonly handleRadius!: number;
+
+  @Prop({ default: 32 }) readonly sliderMargin!: number;
+
+  @Prop({ default: 0 }) readonly borderWidth!: number;
+
+  @Prop({ default: '#ffffff' }) readonly borderColor!: string;
+
+  @Prop({ default: 'block' }) readonly display!: string;
+
+  @Prop({ default: 'block' }) readonly layout!: string;
+
+  @Prop({ default: 0 }) readonly wheelAngle!: number;
+
+  @Prop({ default: 'anticlockwise' }) readonly wheelDirection!: '' | 'clockwise' | 'anticlockwise' | undefined;
+
+  @Prop({ default: true }) readonly wheelLightness!: boolean;
+
+  private colorPicker: iro.ColorPicker| null = null;
+
+  public currentColour: iro.Color | null = null;
+
+  @colourPalettes.Getter
+  public getActivePalette!: number;
+
+  @colourPalettes.Getter
+  public colours!: Array<string>;
+
+  @colourPalettes.Action
+  public FETCH_PALETTES!: () => Promise<void>;
+
+  @colourPalettes.Action
+  public FETCH_PALETTE!: (paletteID: number) => Promise<void>;
+
+  @colourPalettes.Action
+  public POST_PALETTE_COLOUR!: (
+    value: {
+      paletteID: number,
+      colourID: number,
+      formData: RGB
+    }
+  ) => Promise<void>;
+
   created() {
-    this.fetchPalettes().then(() => {
-      this.fetchPalette({ paletteID: this.getActivePalette }).then(() => {
+    this.FETCH_PALETTES().then(() => {
+      this.FETCH_PALETTE(this.getActivePalette).then(() => {
         console.log('Init done');
       });
     });
-  },
-  computed: {
-    ...mapGetters('ColourPalettes', {
-      getColours: 'colours',
-      getActivePalette: 'activePalette',
-    }),
-    hexColour() {
-      if (this.currentColour) {
-        return this.currentColour.hexString;
-      }
+  }
 
-      return '';
-    },
-  },
-  methods: {
-    ...mapActions({
-      updatePaletteColour: 'ColourPalettes/SET_PALETTE_COLOUR',
-      fetchPalettes: 'ColourPalettes/FETCH_PALETTES',
-      fetchPalette: 'ColourPalettes/FETCH_PALETTE',
-    }),
-    onInput(color) {
-      this.$emit('input', color.hexString);
-    },
-    onColorChange(color, changes) {
-      this.currentColour = color;
-      this.$emit('color:change', {
-        color,
-        changes,
-      });
-    },
-    onColorInit(color, changes) {
-      this.currentColour = color;
-      this.$emit('color:init', {
-        color,
-        changes,
-      });
-    },
-    onInputChange(color, changes) {
-      this.$emit('input:change', {
-        color,
-        changes,
-      });
-    },
-    onInputStart(color) {
-      this.$emit('input:start', {
-        color,
-      });
-    },
-    onInputMove(color) {
-      this.$emit('input:move', {
-        color,
-      });
-    },
-    onInputEnd(color) {
-      this.updatePaletteColour(
-        {
-          paletteID: this.getActivePalette,
-          colourID: color.index + 1,
-          formData: { red: color.red, green: color.green, blue: color.blue },
-        },
-      );
-      console.log(color.index, color.hexString);
-      this.$emit('input:end', {
-        color,
-      });
-    },
-    onMount(colorPicker) {
-      this.$emit('mount', {
-        colorPicker,
-      });
-    },
-  },
+  @Emit('input')
+  public onInput(color: iro.Color) {
+    this.currentColour = color;
+    return color.hexString;
+  }
+
+  @Emit('color:change')
+  public onColorChange(color: iro.Color, changes: any) {
+    this.currentColour = color;
+    return {
+      color,
+      changes,
+    };
+  }
+
+  @Emit('color:init')
+  public onColorInit(color: iro.Color, changes: any) {
+    this.currentColour = color;
+    return {
+      color,
+      changes,
+    };
+  }
+
+  @Emit('input:change')
+  public onInputChange(color: iro.Color, changes: any) {
+    this.currentColour = color;
+    return {
+      color,
+      changes,
+    };
+  }
+
+  @Emit('input:start')
+  public onInputStart(color: iro.Color) {
+    this.currentColour = color;
+    return color;
+  }
+
+  @Emit('input:move')
+  public onInputMove(color: iro.Color) {
+    this.currentColour = color;
+    return color;
+  }
+
+  @Emit('input:end')
+  public onInputEnd(color: iro.Color) {
+    const colourID = color.index + 1;
+    this.POST_PALETTE_COLOUR({
+      paletteID: this.getActivePalette,
+      colourID,
+      formData: { red: color.red, green: color.green, blue: color.blue } as RGB,
+    });
+    console.log(color.index, color.hexString);
+    return color;
+  }
+
+  @Emit('mount')
+  onMount(colorPicker: iro.ColorPicker) {
+    this.colorPicker = colorPicker;
+    return colorPicker;
+  }
+
+  beforeUnmount() {
+    if (this.colorPicker) {
+      this.colorPicker.off('input:end', this.onInput);
+      this.colorPicker.off('color:change', this.onColorChange);
+      this.colorPicker.off('color:init', this.onColorInit);
+      this.colorPicker.off('input:change', this.onInputChange);
+      this.colorPicker.off('input:start', this.onInputStart);
+      this.colorPicker.off('input:move', this.onInputMove);
+      this.colorPicker.off('input:end', this.onInputEnd);
+      this.colorPicker.off('mount', this.onMount);
+    }
+  }
+
+  @Watch('colours', { immediate: true, deep: true })
+  getColours(newColours: Array<iro.Color>) {
+    if ((newColours.length === 0) || !this.colorPicker) {
+      return;
+    }
+    if (this.colorPicker.colors && newColours) {
+      if (
+        this.colorPicker.colors.length === newColours.length
+      || this.colorPicker.colors.length < newColours.length
+      ) {
+        let alreadySaved = 0;
+        this.colorPicker.colors.forEach((_, index) => {
+          if (this.colorPicker) {
+            this.colorPicker.colors[index].set(newColours[index]);
+          }
+          alreadySaved = index;
+        });
+        newColours.forEach((_, index) => {
+          if (index > alreadySaved) {
+            if (this.colorPicker) {
+              this.colorPicker.addColor(newColours[index], index);
+              this.colorPicker.setActiveColor(index);
+            }
+          }
+        });
+      } else if (this.colorPicker.colors.length > newColours.length) {
+        let alreadySaved = 0;
+        newColours.forEach((colour, index) => {
+          if (this.colorPicker) {
+            this.colorPicker.colors[index].set(colour);
+          }
+          alreadySaved = index;
+        });
+        this.colorPicker.setActiveColor(alreadySaved);
+        this.colorPicker.colors.forEach((_, index) => {
+          if (index > alreadySaved) {
+            const deleteIndex = index;
+            if (this.colorPicker) {
+              this.colorPicker.removeColor(deleteIndex);
+            }
+          }
+        });
+      }
+      this.colorPicker.forceUpdate();
+    }
+  }
+
   mounted() {
-    this.colorPicker = iro.ColorPicker(this.$refs.picker, {
+    this.colorPicker = iro.ColorPicker(this.$refs.picker as unknown as HTMLElement, {
       width: this.width,
       height: this.height,
       handleSvg: this.handleSvg,
-      colors: this.getColours,
       padding: this.padding,
-      layout: this.layout,
+      layout: this.layout as any,
       display: this.display,
-      css: this.css,
       wheelDirection: this.wheelDirection,
       wheelAngle: this.wheelAngle,
       wheelLightness: this.wheelLightness,
-      handleOrigin: this.handleOrigin,
       handleRadius: this.handleRadius,
       sliderMargin: this.sliderMargin,
-      sliderHeight: this.sliderHeight,
       borderWidth: this.borderWidth,
       borderColor: this.borderColor,
     });
@@ -191,55 +229,15 @@ export default {
     this.colorPicker.on('input:move', this.onInputMove);
     this.colorPicker.on('input:end', this.onInputEnd);
     this.colorPicker.on('mount', this.onMount);
-  },
-  beforeUnmount() {
-    this.colorPicker.off('input:end', this.onInput);
-    this.colorPicker.off('color:change', this.onColorChange);
-    this.colorPicker.off('color:init', this.onColorInit);
-    this.colorPicker.off('input:change', this.onInputChange);
-    this.colorPicker.off('input:start', this.onInputStart);
-    this.colorPicker.off('input:move', this.onInputMove);
-    this.colorPicker.off('input:end', this.onInputEnd);
-    this.colorPicker.off('mount', this.onMount);
-  },
-  watch: {
-    getColours(newColours) {
-      if (!newColours.length === 0 || !this.colorPicker) {
-        return;
-      }
-      if (this.colorPicker.colors && newColours) {
-        if (
-          this.colorPicker.colors.length === newColours.length
-        || this.colorPicker.colors.length < newColours.length
-        ) {
-          let alreadySaved = 0;
-          this.colorPicker.colors.forEach((colour, index) => {
-            this.colorPicker.colors[index].hexString = newColours[index];
-            alreadySaved = index;
-          });
-          newColours.forEach((colour, index) => {
-            if (index > alreadySaved) {
-              this.colorPicker.addColor(newColours[index], index);
-              this.colorPicker.setActiveColor(index);
-            }
-          });
-        } else if (this.colorPicker.colors.length > newColours.length) {
-          let alreadySaved = 0;
-          newColours.forEach((colour, index) => {
-            this.colorPicker.colors[index].hexString = colour;
-            alreadySaved = index;
-          });
-          this.colorPicker.colors.forEach((colour, index) => {
-            if (index > alreadySaved) {
-              this.colorPicker.removeColor(index);
-            }
-          });
-        }
-        // this.colorPicker.forceUpdate();
-      }
-    },
-  },
-};
+  }
+
+  public hexColour(): string {
+    if (this.currentColour) {
+      return this.currentColour.hexString;
+    }
+    return '';
+  }
+}
 </script>
 <style scoped>
 .box {

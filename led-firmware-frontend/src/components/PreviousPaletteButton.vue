@@ -10,30 +10,32 @@
     </b-button>
   </div>
 </template>
-<script>
-import { mapActions, mapGetters } from 'vuex';
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from 'vuex-class';
 
+const colourPalettes = namespace('ColourPalettes');
 
-export default {
-  name: 'previous-palette-button',
-  computed: {
-    ...mapGetters('ColourPalettes', {
-      getActivePalette: 'activePalette',
-      getAvailablePalettes: 'availablePalettes',
-    }),
-  },
-  methods: {
-    ...mapActions({
-      setActivePalette: 'ColourPalettes/FETCH_PALETTE',
-    }),
-    previousColourPalette() {
-      const currentPallete = this.getActivePalette;
-      const currentIndex = this.getAvailablePalettes.indexOf(currentPallete);
+@Component
+export default class PreviousPaletteButton extends Vue {
+    @colourPalettes.Getter
+    public getActivePalette!: number;
+
+    @colourPalettes.Getter
+    public getAvailablePalettes!: Array<number>;
+
+    @colourPalettes.Action
+    public FETCH_PALETTE!: (paletteID: number) => void ;
+
+    public previousColourPalette(): any {
+      console.log(this.getActivePalette);
+      const currentPalette = this.getActivePalette;
+      const currentIndex = this.getAvailablePalettes.indexOf(currentPalette);
+      console.log(currentIndex);
       const newIndex = currentIndex - 1;
       if (newIndex >= 0) {
-        this.setActivePalette({ paletteID: this.getAvailablePalettes[newIndex] });
+        this.FETCH_PALETTE(this.getAvailablePalettes[newIndex]);
       }
-    },
-  },
-};
+    }
+}
 </script>

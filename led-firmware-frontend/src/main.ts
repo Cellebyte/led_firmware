@@ -15,7 +15,7 @@ import routerFactory from '@/router';
 import Language from '@/utils/Language';
 import App from '@/App.vue';
 import fetchConfig from '@/config';
-import storeFactory from '@/store/store';
+import storeFactory from '@/store';
 import apiFactory from '@/ledFirmwareFrontend';
 
 

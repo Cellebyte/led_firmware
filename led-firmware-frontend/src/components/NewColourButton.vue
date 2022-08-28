@@ -10,31 +10,34 @@
     </b-button>
   </div>
 </template>
-<script>
-import { mapActions, mapGetters } from 'vuex';
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from 'vuex-class';
+import { RGB } from '@/types/api';
 
+const colourPalettes = namespace('ColourPalettes');
 
-export default {
-  name: 'new-colour-button',
-  computed: {
-    ...mapGetters('ColourPalettes', {
-      getActivePalette: 'activePalette',
-      getAvailableSlots: 'availableSlots',
-      colourIndices: 'colourIndices',
-    }),
-  },
-  methods: {
-    ...mapActions({
-      addPaletteColour: 'ColourPalettes/ADD_PALETTE_COLOUR',
-    }),
-    addAdditionalColor() {
+@Component
+export default class NewColourButton extends Vue {
+    @colourPalettes.Getter
+    public getActivePalette!: number;
+
+    @colourPalettes.Getter
+    public getAvailableSlots!: number;
+
+    @colourPalettes.Getter
+    public colourIndices!: Array<string>;
+
+    @colourPalettes.Action
+    public ADD_PALETTE_COLOUR!: (value: {paletteID: number, formData: RGB}) => Promise<void>;
+
+    public addAdditionalColor() {
       console.log(this.colourIndices);
-      if (!this.colourIndices.includes(this.getAvailableSlots)) {
-        this.addPaletteColour(
+      if (!this.colourIndices.includes(this.getAvailableSlots.toString())) {
+        this.ADD_PALETTE_COLOUR(
           { paletteID: this.getActivePalette, formData: { red: 255, green: 255, blue: 255 } },
         );
       }
-    },
-  },
-};
+    }
+}
 </script>

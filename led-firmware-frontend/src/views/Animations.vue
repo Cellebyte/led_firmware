@@ -18,21 +18,16 @@ import AnimationSelector from '@/components/AnimationSelector.vue';
 import { Animation } from '@/types/api';
 
 @Component({
-  data() {
-    return {
-      animation: 'normal',
-    };
-  },
-
   components: {
     AnimationSelector,
     AnimationForm,
   },
-  methods: {
-    onAnimationsUpdate(animation: Animation) {
-      this.animation = animation;
-    },
-  } as any,
 })
-export default class AnimationsVue extends Vue { }
+export default class AnimationsVue extends Vue {
+    public animation: Animation = Animation.Normal;
+
+    public animationsUpdate(animation: Animation): any {
+      this.animation = animation;
+    }
+}
 </script>

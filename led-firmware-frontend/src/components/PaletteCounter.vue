@@ -4,15 +4,14 @@
   </div>
 </template>
 <script lang="ts">
-import Vue from 'vue';
-import { mapGetters } from 'vuex';
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from 'vuex-class';
 
-export default Vue.extend({
-  name: 'palette-counter',
-  computed: {
-    ...mapGetters('ColourPalettes', {
-      getActivePalette: 'activePalette',
-    }),
-  },
-});
+const colourPalettes = namespace('ColourPalettes');
+
+@Component
+export default class PaletteCounter extends Vue {
+    @colourPalettes.Getter
+    public getActivePalette!: number;
+}
 </script>

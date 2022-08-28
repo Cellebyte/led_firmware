@@ -10,33 +10,41 @@
     </b-button>
   </div>
 </template>
-<script>
-import { mapActions, mapGetters } from 'vuex';
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from 'vuex-class';
+import { RGB } from '@/types/api';
 
+const colourPalettes = namespace('ColourPalettes');
 
-export default {
-  name: 'delete-colour-button',
-  computed: {
-    ...mapGetters('ColourPalettes', {
-      getActivePalette: 'activePalette',
-      colours: 'colours',
-      colourIndices: 'colourIndices',
-    }),
-  },
-  methods: {
-    ...mapActions({
-      deletePaletteColour: 'ColourPalettes/DELETE_PALETTE_COLOUR',
-    }),
+@Component
+export default class NewColourButton extends Vue {
+    @colourPalettes.Getter
+    public getActivePalette!: number;
+
+    @colourPalettes.Getter
+    public getAvailableSlots!: number;
+
+    @colourPalettes.Getter
+    public colours!: Array<string>;
+
+    @colourPalettes.Getter
+    public colourIndices!: Array<string>;
+
+    @colourPalettes.Action
+    public DELETE_PALETTE_COLOUR!: (value: {
+      paletteID: number, colourID: number},
+    ) => Promise<void>;
+
     deleteAdditionalColour() {
       if (this.colourIndices[this.colours.length - 1]) {
-        this.deletePaletteColour(
+        this.DELETE_PALETTE_COLOUR(
           {
             paletteID: this.getActivePalette,
-            colourID: this.colourIndices[this.colours.length - 1],
+            colourID: parseInt(this.colourIndices[this.colours.length - 1], 10),
           },
         );
       }
-    },
-  },
-};
+    }
+}
 </script>
