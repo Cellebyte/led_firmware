@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-badge variant="dark" style="font-size: 1.5rem;">{{ getActivePalette }}</b-badge>
+    <b-badge variant="dark" class="huge">{{ getActivePalette }}</b-badge>
   </div>
 </template>
 <script lang="ts">
@@ -15,3 +15,9 @@ export default class PaletteCounter extends Vue {
     public getActivePalette!: number;
 }
 </script>
+<style scoped>
+.huge {
+  font-size: 2.5rem;
+  size: 4rem;
+}
+</style>

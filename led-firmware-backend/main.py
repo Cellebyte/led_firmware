@@ -71,7 +71,6 @@ if __name__ == "__main__":
             loop.create_task(led_driver.start())
             loop.create_task(store.start())
             server = await server
-            await server.wait_closed()
             await uasyncio.sleep_ms(10_000)
 
         try:

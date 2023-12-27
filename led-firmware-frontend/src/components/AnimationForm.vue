@@ -11,12 +11,27 @@
         v-show="!rainbow"
         :description="animation + ' colour pallete.'"
       >
+        <colour-box v-for="colour in getColours" :key="colour" :colour="colour"/>
         <b-form-select
           id="input-6"
           v-model="form.paletteSelector"
           :options="getAvailablePalettes"
           required
         ></b-form-select>
+      </b-form-group>
+      <b-form-group
+        id="input-group-7"
+        v-show="rainbow"
+        label-for="input-7"
+        :description="'The ' + animation + ' period'"
+        >
+        <b-form-input
+          id="input-7"
+          v-model="form.period"
+          type="number"
+          :placeholder="'Enter ' + animation + ' period.'"
+          required
+        ></b-form-input>
       </b-form-group>
       <b-form-group
         id="input-group-1"
@@ -116,13 +131,18 @@ import {
   Component, Prop, Vue, Emit,
 } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
-import { Animation, AnimationDirection } from '@/types/api';
-import { AnimationFormData } from '@/types/components';
+import { Animation, AnimationDirection, RGB } from '@/types/api';
+import { AnimationFormData, PaletteFormOption } from '@/types/components';
+import ColourBox from '@/components/ColourBox.vue';
+import { ColourPaletteDict } from '@/types/store';
 
 const colourPalettes = namespace('ColourPalettes');
 
 @Component({
   name: 'animation-form',
+  components: {
+    ColourBox,
+  },
 })
 export default class AnimationForm extends Vue {
   @Prop({ default: Animation.Normal }) readonly animation!: string;
@@ -140,7 +160,19 @@ export default class AnimationForm extends Vue {
   } as AnimationFormData
 
   @colourPalettes.Getter
-  public getAvailablePalettes!: () => Array<number>;
+  public getAvailablePalettes!: Array<number>;
+
+  @colourPalettes.Getter
+  public getColourPalettes!: ColourPaletteDict;
+
+  public getColours(): RGB[] {
+    if (this.form.paletteSelector !== 0) {
+      const data = Object.values(this.getColourPalettes[this.form.paletteSelector]);
+      alert(JSON.stringify(data));
+      return data;
+    }
+    return [];
+  }
 
   // created() {
   // this.fetchPalettes().then(() => {

@@ -1,8 +1,5 @@
 <template>
   <div ref="picker">
-    <!-- <label style="font-size: large;">
-      <div class="box" :style="{'background-color':hexColour}"></div> {{ currentColour.hexString }}
-    </label> -->
   </div>
 </template>
 
@@ -230,20 +227,5 @@ export default class ColorPicker extends Vue {
     this.colorPicker.on('input:end', this.onInputEnd);
     this.colorPicker.on('mount', this.onMount);
   }
-
-  public hexColour(): string {
-    if (this.currentColour) {
-      return this.currentColour.hexString;
-    }
-    return '';
-  }
 }
 </script>
-<style scoped>
-.box {
-  padding: 32px;
-  height: 32px;
-  width: 32px;
-  clear: both;
-}
-</style>

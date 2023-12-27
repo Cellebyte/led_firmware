@@ -9,3 +9,9 @@ export interface AnimationFormData {
   direction: AnimationDirection,
   changeColour: Array<boolean>,
 }
+
+export interface PaletteFormOption {
+  'v-html': any,
+  html: string,
+  value: number
+}
