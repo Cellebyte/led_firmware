@@ -66,12 +66,13 @@ if __name__ == "__main__":
 
         async def main(http_server: HTTPServer, led_driver: LEDDriver):
             loop = uasyncio.get_event_loop()
-            server = http_server.start()
+            server =  http_server.start()
             loop.create_task(server)
             loop.create_task(led_driver.start())
             loop.create_task(store.start())
-            server = await server
-            await uasyncio.sleep_ms(10_000)
+            await server
+            while True:
+              await uasyncio.sleep_ms(10_000)
 
         try:
             uasyncio.run(main(http_server, led_driver))
