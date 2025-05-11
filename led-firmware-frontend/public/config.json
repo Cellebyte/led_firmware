@@ -1,5 +1,5 @@
 {
-  "API_URL": "http://172.20.10.9/api/v1",
-  "APP_URL": "http://localhost:8181",
+  "API_URL": "http://151.217.100.243/api/v1",
+  "APP_URL": "http://localhost:8182",
   "DEBUG": true
 }
