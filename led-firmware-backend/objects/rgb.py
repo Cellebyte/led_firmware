@@ -80,7 +80,6 @@ class RGB(objects.vector.Vector):
             ).as_tuple()
         )
 
-
 class COLOURS:
     # non-colours
     BLACK = RGB(RGB.MIN, RGB.MIN, RGB.MIN)

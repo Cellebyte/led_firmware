@@ -40,7 +40,7 @@ class LEDHandler(BaseHandler):
     def get_leds(self, unit=None) -> Response:
         if unit is None:
             return Response.from_dict(*ALL_UNSUPPORTED)
-        colour = RGB.from_tuple(self.leds.pixels[unit])
+        colour = self.leds.get(unit)
         return Response.from_dict(colour.as_dict(), 200)
 
     def router(self, request: Request) -> Optional[Response]:

@@ -14,14 +14,18 @@ class LEDDriver:
 
     LED_PIN = 27
     MAX_HUE = RGB.MAX
+    class ChannelMode:
+        RGB = 0
+        GRB = 1
 
-    def __init__(self, leds, meters, store, debug=False) -> None:
+    def __init__(self, leds, meters, store, debug=False, channel_mode=ChannelMode.RGB) -> None:
         self.pin = Pin(self.LED_PIN, Pin.OUT)
         self.pixels = NeoPixel(
             self.pin, int(round(leds * meters)), timing=(300, 1090, 1090, 320)
         )
         self.store: Store = store
         self.debug = debug
+        self.channel_mode = channel_mode
         self.animations = {}
 
     @property
@@ -61,11 +65,20 @@ class LEDDriver:
             await self.loop(count)
             await uasyncio.sleep_ms(5)
 
+    def remap_color_channel(self, pixel: tuple[int, int, int]) -> tuple[int, int, int]:
+        if self.channel_mode == self.ChannelMode.GRB:
+            ## this swaps the color channel of red and green
+            return (pixel[1],pixel[0],pixel[2])
+        return pixel
+
     def set(self, rgb: RGB, unit):
-        self.pixels[unit] = rgb.as_normalized_tuple()
+        self.pixels[unit] = self.remap_color_channel(rgb.as_normalized_tuple())
+
+    def get(self, unit) -> RGB:
+        return RGB.from_tuple(self.remap_color_channel(self.pixels[unit]))
 
     def set_all(self, rgb: RGB):
-        self.pixels.fill(rgb.normalize().as_tuple())
+        self.pixels.fill(self.remap_color_channel(rgb.as_normalized_tuple()))
 
     def reset(self):
         self.set_all(COLOURS.BLACK)

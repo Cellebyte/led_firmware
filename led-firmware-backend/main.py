@@ -36,7 +36,7 @@ if __name__ == "__main__":
     micropython.alloc_emergency_exception_buf(100)
 
     store = Store()
-    led_driver = LEDDriver(282, 1, store=store)
+    led_driver = LEDDriver(432, 1, store=store, channel_mode=LEDDriver.ChannelMode.GRB)
     led_driver.register_animation(Off(store, led_driver))
     led_driver.register_animation(Manual(store, led_driver))
     api = API()
